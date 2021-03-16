@@ -1,0 +1,178 @@
+A happy dream. Met Tranh there.
+Off I went, straight to the watch to stop it from ringing, then put jacket on, prepare breakfast, eat. A little bit piano practice. Seems to have a productive day ahead. But the tiredness of sleep deprivation quickly came in the way, just after 1hour of working with zoom sdk, I nanaged to cram one or some more tutorials on youtube before falling into sleep. After 1 and a half hour of sleep , i continue my habit these several days, walking and listening to japanese. 
+Guilty all the day. Even do nothing wrong, just want to be healthier, more experience. But tired, of the noise. Wear headphones all day long to avoid noises from people talking. marketplace. new keyboard, typing much more comfort. but nothing in mind to type out. got stucked in gt. I got to do this. not i have to do this. this is all my choice, my discover? my responsibility, myself, not something to prove, others are just feedback for me to grow. more rigid plan. find somewhere to sit and work without disturbance from the internet, from people, from things material . Lots of things available to learn from the internet, so much freedom in learning. Need a plan! Can't do anything more, so why not go to sleep for tomorrow, healthy mind, healthy body. So happy and lucky to have family, friends along. Start writing thesis, enjoy this? 1000 words? How long is this? Have any design, coded part to write thesis? 
+
+Should have a main function
+Answer 2 question, What for and what special
+
+code a bit everyday
+get 1% better everyday
+Today, i've learnt alot about webpack, javascript async, await, how to debug a webpack bundle, and got the plan to build an api to return the meeting link to client => can hide the api key from user. Let's try it out
+
+async turn a block of code into a promise with callback. 
+Into it long enough then got the flow? Listen long enough then off the tireness?
+
+got better at typing by typing what i think here instead of following words by word from typeracer.com is a better practice. I feel much more smooth. Enough for 1000 words?
+
+At some point, doing nothing but things still got better.
+
+what is the minimal step that i can take to make that api?
+make a new route in the myblog folder? and try if out, just need to return a simple text without any logic
+
+"DO SOMETHING" principle
+
+Programming is just like practice a piece of music on piano. You need to practice a little bit everyday in order to transfer it into your long term memory. Just after which do you own a new skill. 
+
+Thank you! You saved my day!
+0:25 040321
+I was able to write code, join logic, route, a bit of components for the future app, the integration possibility is now more real. Need continue to code until a server can handle multiple request to join and create meeting show off. Maybe i can watch that youtube video about zoomtopia, book doctor, schedule for more ideas.
+
+040321
+11:36 just get out of bed, and like always feel guilty, regret for taking so much sleep. really worry about my health, why i need to take more than 10h of sleep everyday, is that too much, i'm abnormal? i will not be able to work 9 to 5, i will be a burden to my family? compared to others, i'm inferior? i can't breathe normally and instinctively during sleep? i'm gonna die soon? Maybe, but let's be happy today i still wake up, even it's somehow late for the early morning fresh air. i still have the privillege to think, to love, to talk to see the world around, to read about technological advances... and to type on this new keyboard, feel so smooth. Check facebook a little bit
+
+still worry about the thesis, zoom integration. I've got the signature, i need to have the meeting link to send back to client. Zoom sample app, read doc, seems to divide this credential between backend and frontend already, frontend only have the api key and the signature got from the server.
+=> Read about "Join a meeting"
+
+14:02 typist. I've finished my jp listen while walking routine, i've maintained it for 5 days already. it seems to be quite comfortable, enjoyable, with the combination of outdoor activities and curiosity and something in need which is my listening skill for japanese. Of course i'm free to decide on my daily schedule now, with no constraint from offline class at the university, this puts so much responsibility and pressure on my mental health. That causes the sufferings every morning i had, similar to the time i worked at IMPL. Let's see some google photos for inspiration. Put glasses on for a full day of working in front of computer screen. and i think this keyboard is good enough. tomorrow night, cycling and a little bit of freedom? like the day last semester, i went to circle k near west lake at night? i don't remember what i studied that night. I went there to avoid the noise from my parents' karaoke? Javascript, php experience, maybe ruby and flutter and android dev? who knows ? any of this, still need the time to work on a project. And when I was hired, be in japan, of course, what i have is zero, zero experience, zero asset. need to build them from scratch. Stay as long as possible, may find some allies. 
+
+To which, is the meetConfig sent?
+Those freedom are just illusion. Nothing is free. To enjoy such pleasure from masturbation, i need to trade some of my health off, some of the pain to suffer from after, some of the guilty. What i already have is already too good. not thing need more.
+
+What is needed to generate a signature? apikey, api secret?
+Seems to figure them out here.
+Need an api design structure for making request?
+
+meeting/signature{meetConfigObj}
+=> signature 
+client:
+=> result.text() => response => ZoomMtg.join({signature})
+
+(ok) build an endpoint for signature gen, that receives meetingConf and return the generated signature.
+
+a040T09jMkZTc2VCbkVPWFlTMzVwZy43NjY2MjQ5NjM5My4xNjE0ODQ0NzgwMzgwLjAuMzhSUzlvbnR4UFlXN29hdHFZVWxaUmtUd3ZFcXh1OC81cVJrMVBJWGlxOD0=
+
+.build the front end that run the ZoomMtg.join()
+.create an api for creating a new meeting
+
+"find a razer keyboard price"
+
+050321
+The morning started quite smoothly, with me doing some of my ritual listening to music, having breakfast, practice piano a little bit. But things seem to go off track when i was looking for yoga pad on shopee, i started looking for others as well. And then random surfing on the internet. Guilty. Regret. Why I can't build my morning routine (i mean whole productive morning) after that long period of time? Why can't i just let myself free playing, enjoying, practice piano in the morning, so that i get used to the habit of working, having the flow in the morning. Instead of worrying, tiredness, get used to this before i need to go into the office early in the morning, do the work. Too low self-discipline? Or health bad? I've never let myself be free to enjoy thing. The movie i watch, the game i played, all are just at the time i stole from the time working, tired then off to play, to watch something. but never plan to do so. That's why i never totally free.
+The goal is not that to avoid worry at all cost. Worry is allowed, but at the best situation I can get, i don't need to worry (not avoid it). Thinking and type out. 
+the nearest deadline for me now, are the weekly report that i have to submit to supervisor. the final deadline is the defense event. have a plan. this month finish what next month what. calm my self down by habilt. i don't know about the ability to type fst in the moringin but sleep deprivation really make me unable to type correctly and fast. may need a warmup session to  keep me forcus con the material. focus on the problem in side my mind. i'm off the track. 1000 first words. to describe what did i do in this thesis. how i design, how i build how i test, result, comparesion, createive part. what is new. what is imporove, the applciation. focus on one function that is stand out. from business perspective and from technical perspective. how can i derive theat , while i 'm tired like this. ? go outside? quite non sencse , inaccurate, mind spreading, or facilitate reading in the morning to maintain focus. let's try white a5 docs printed. that's the necessary javascript knowledge. system design software design architecture. read. practice. read. practice. 
+15:37 i have missed the plan of going out on bike and learn japanese listening while walking . I planned it at 15:30. But remember, should not be stressed about this. plan is there, to ref, if already have other useful activity, then can skip, or reorganize plan. 
+
+ mất phương hướng , vậy thì type? không biết nên làm gì tiếp theo, vậy thì type hêre. deepwork room. distraction. noise, my most hatred factors.  type build more some of the things i build not meaningful? why not just build a small component for the web. first start desigining it. ? architecture design, then ui design. function design. how each component communicate? Should i learn react? There are react tutorial here? from scracthc, flutter? for the future, i know these skill will be necessary when i applied for a joib, may working in vietnam a little bit then switch to japan base. which japnaese company offer job position in flutter, i want to type faster but my brain is too slow, for this basic task. why ? what can i do with vue? vue is enough. 1 year of experience in flutter, a lot of flutter project, apply for a job in flutter. Learn new concept, write to learn, figure out the path. 
+Here i'm learning vue js, i know the basic functionalities provided by vue, but for the part that i needed, i don't see any useful tutoiral exists, or directly how can i convert a component in react into vue? vue js. how long does it take to learn vue and js. may be only when i have too high expectation for myself did i feel tired sleepy.
+
+060321
+another overslept, oversleep became a new norm. 
+
+070321
+.sum up GT this week
+.review japanese this week
+.plan for next week (gg calendar)
+i've had a wonderful cycling with friends to day, "just do something" principle 17:00 mua banh mi, nghe minna 16
+still high about last night story upload. quite proud of that journey when looking back "MyPianoJourney", high, want to watch again last night story, 
+so instead of rewatch, why not continue learning the next part?
+.udemy watch. more interested
+
+think about ios dev, a minimal setup i need? dev flow? deploy?
+currently looking for macbook and ios dev setup is a distraction to my workflow
+too cravings: attention, sex. i doubt that anything i do in my life is to fulfill those cravings.?
+
+review this week
+-maintain jp listening streak. (8 days, 8 lessons already)
+-ask? now I love to ask more.
+GT, Web, JP, Personal project. But got stuck at GT then nothing done to others :)
+Piano should keep balance, and aware of the craving for attention
+=> Piano Journey project. until summer. 
+N3? 
+
+Why i want to learn os? database oop skills are much more important for my career as software engineer, compared to os knowledge? because of greedy, want to be anyone, want to have everything. ? 
+
+Remember editting is everything.
+i'm worry that everything will just stop at the idealizing phase, without anything done
+
+i open opera browser for relaxing too often. may find an alternative relaxing method to this. may practice lemon more. or video edit. do the practice exercise in the udemy course for react also quite fun and engaged
+but what i need is a product
+
+too many distraction from youtube and facebook feed
+should find a way to avoid going to this feed
+no random surfing on chrome (block all / dantri -> youtbe)
+
+let's think about the set of skills i would need for my thesis defense event. 
+i will sleep outside, here along with my workspace to work on my problem
+skills:
+- design
+- presentation
+- ask questions
+- gather information/requirements
+- code
+- software design
+- deepwork (to focus on the task, get flow quickly, consistent)
+
+Try figma, still lots of things don't know, keep learning, find a course on figma for improve designing skill. 
+but first have to have an idea
+a calendar, a task list (dashboard)
+nav bar, class, work, things? meeting (learn from Microsoft Teams)
+where to find a quiet place to work on thesis? and think about my career? 
+
+how to make pc world less dynamic?, less distraction? By manage behaviors?
+nghe not bai nay da, chi tiet len tot vai "the beauty unveiled"
+
+
+20 min => return to building module
+
+write condition the javascript way:
+let a variable keep all the content want to toggle
+if block check condition, then set the value of the variable accordingly
+put that variable inside return block
+
+23:07
+i should go to sleep early tonight, because there're lots of things to be done tomorrow. react calendar, japanese, piano
+so fun hangout with friends, 
+but i can't go to sleep now because of the chatting noise next room
+
+make react frontend communicate with nodejs express api server
+d
+got a lot of motivation and orientation after watching youtube coding like traversy, ...
+
+
+110321
+"canvas" i love this word , ~ freedom, creativity, curiosity, flow, in the zone, this has the same meaning with all of those. 
+stay naked when going to sleep seems to help, i don't feel that much tired in the morning, and be able to do my job without drinking coffee and sleep just 5 hours at night.
+
+120321
+now i even become hate sitting at this workspace :))
+too many choices, a little bit uncomfortable still make me thinking , doing research to find an alternative one. :)). Unsettle. never working seriously. i thought i 've become loving to learn on udemy and youtube programming now, but actually, that just the temporary. lightweight pls, just get down
+
+.dong tien dien thoai
+(OK)Viet phieu
+i want to update to the reflection because that is a way to broadcast my personaliity intention and hobby
+
+130321
+20.26: west lake, phan dinh phung, dang van ngu, foodtour cau giay, bida
+happy that pp like it, but i have to continue learning , continue the plan
+aw and Tranh liked that :))
+
+160321
+don phong
+tim tu ngan keo
+less accessed things first
+where to put tu ngan keo
+.di do mat
+i left that deployment code at my hp laptop, so i just can dev the frontend, hello 
+why dont i bring the hp laptop here, or just do the japanese exercise
+because coding now is the defualt activity, no code progression , then no jp, how to consider a progressino?
+what to do next, a lot of task to choose from is my main cause of procrastination
+how to import axios
+how to add header to axios post request
+? if schedule meeting logic lie at the client side, there will only be the communication between client and Zoom cloud?
+? if schedule meeting logic lie at the server side, cross-site csrf? if valid, then, what will be return to the client?
+.csrf
+how to set Config ENV VAR?
+init code gt
+csrf
+meeting button send to server, then server request zoom cloud to schedule a meeting
+use whose id?
