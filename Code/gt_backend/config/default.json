@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://lamnt:lam151098@devconnector.m0cdq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "jwtSecret": "hellworld"
+}
