@@ -1,9 +1,9 @@
-
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/auth");
 
-router.get('/', (req, res, next) => {
-    res.send('Hello');
+router.get("/", auth, (req, res) => {
+  res.send("Hello");
 });
 
 module.exports = router;
