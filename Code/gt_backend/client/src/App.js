@@ -1,27 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
-import Schedule from './Meeting/Schedule';
+import "./App.css";
+import React, { Fragment } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import NavBar from "./components/layout/NavBar";
+import Landing from "./components/layout/Landing";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <Schedule />
-    </div>
+    <Router>
+      <Fragment>
+        <NavBar />
+        <Route exact path="/" component={Landing} />
+        <section className="container">
+          <Switch>
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+          </Switch>
+        </section>
+      </Fragment>
+    </Router>
   );
-}
+};
 
 export default App;
