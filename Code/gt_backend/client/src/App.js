@@ -5,6 +5,7 @@ import NavBar from "./components/layout/NavBar";
 import Landing from "./components/layout/Landing";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import Meeting from "./components/meeting/Meeting";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <Switch>
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
+            <Route exact path="/meeting" component={Meeting} />
           </Switch>
         </section>
       </Fragment>
