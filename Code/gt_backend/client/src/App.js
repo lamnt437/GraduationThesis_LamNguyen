@@ -6,6 +6,8 @@ import Landing from "./components/layout/Landing";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Meeting from "./components/meeting/Meeting";
+import ScheduleMeeting from "./components/meeting/ScheduleMeeting.js";
+import MeetingList from "./components/meeting/MeetingList.js";
 
 const App = () => {
   return (
@@ -18,6 +20,8 @@ const App = () => {
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/meeting" component={Meeting} />
+            <Route exact path="/meeting/schedule" component={ScheduleMeeting} />
+            <Route exact path="/meetings" component={MeetingList} />
           </Switch>
         </section>
       </Fragment>

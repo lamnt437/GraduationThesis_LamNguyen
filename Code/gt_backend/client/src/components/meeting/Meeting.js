@@ -1,5 +1,8 @@
 import React, { useState, Fragment } from "react";
+import { Link } from "react-router-dom";
 import ZoomMeeting from "./ZoomMeeting";
+
+// should change this component name into JoinMeeting
 
 export const Meeting = () => {
   const [meetingState, setMeetingState] = useState({
@@ -16,6 +19,7 @@ export const Meeting = () => {
   };
 
   const onSubmit = (e) => {
+    e.preventDefault();
     setMeetingState({ ...meetingState, inMeeting: true });
   };
 
@@ -77,6 +81,11 @@ export const Meeting = () => {
         </div>
         <input type="submit" className="btn btn-primary" value="Join" />
       </form>
+
+      <p className="my-1">
+        Haven't scheduled yet?{" "}
+        <Link to="/meeting/schedule">Schedule a Meeting</Link>
+      </p>
     </Fragment>
   );
 };

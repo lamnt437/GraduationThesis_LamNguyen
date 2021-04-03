@@ -10,7 +10,7 @@ export function ZoomMeeting(props) {
   //   const { username } = props;
   //   console.log(username);
 
-  useEffect((props) => {
+  useEffect(() => {
     async function initMeeting(props) {
       const { username } = props;
       console.log(username);
