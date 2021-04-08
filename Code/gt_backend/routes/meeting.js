@@ -59,6 +59,23 @@ router.post("/signature", (req, res) => {
   return res.json(signature);
 });
 
+router.get("/token", (req, res) => {
+  /* generate a token */
+  const pl = {
+    iss: config.get("zoomApiKey"),
+  };
+
+  jwt.sign(
+    pl,
+    config.get("zoomApiSecret"),
+    { expiresIn: 360000 },
+    (err, token) => {
+      if (err) throw err;
+      else res.json({ token });
+    }
+  );
+});
+
 router.post("/schedule", (req, res) => {
   const { topic, start_time, password } = req.body;
   const time = dateFormat(start_time, "yyyy-mm-dd'T'HH:MM:ssZ");
