@@ -8,6 +8,7 @@ import Register from "./components/auth/Register";
 import Meeting from "./components/meeting/Meeting";
 import ScheduleMeeting from "./components/meeting/ScheduleMeeting.js";
 import MeetingList from "./components/meeting/MeetingList.js";
+import Calendar from "./components/schedule/Calendar";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
             <Route exact path="/meeting" component={Meeting} />
             <Route exact path="/meeting/schedule" component={ScheduleMeeting} />
             <Route exact path="/meetings" component={MeetingList} />
+            <Route exact path="/dashboard" component={Calendar} />
           </Switch>
         </section>
       </Fragment>
