@@ -1,0 +1,20 @@
+{
+    "meeting": {
+        "topic": "String",
+        "start_time": "Datetime",
+        "start_url": "String",
+        "type": "1,2,8",
+        "password": "String",
+        "occurences": {
+            "week_days": "1,2,3...7",
+            "end_date": "Datetime",
+            "number_of_occurences": "Integer"
+        },
+        "some_advanced_options": "Only keep the basic info as snapshot in the database, others can be easily querried from Zoom api GET meeting"
+    }, 
+
+    "class": {
+        "relationship": "One class may have multiple meeting",
+        "meetings": "Must belong to one class 1 - n relationship"
+    }
+}

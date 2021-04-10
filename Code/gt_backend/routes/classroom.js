@@ -96,6 +96,7 @@ router.put(
   [
     body("topic", "Please enter meeting topic").exists(),
     body("start_time", "Please enter a valid time").exists(),
+    body("duration", "Please enter a valid duration").isNumeric(),
     body("password", "Please enter password with 6 characters").isLength(6),
   ],
   async (req, res) => {
@@ -110,7 +111,7 @@ router.put(
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const { topic, start_time, password, recurrence } = req.body;
+      const { topic, start_time, duration, password } = req.body;
       const time = dateFormat(start_time, "yyyy-mm-dd'T'HH:MM:ssZ");
       // validate info
       // validate date using parser
@@ -119,7 +120,7 @@ router.put(
         duration: 40,
         start_time: time,
         timezone: "Asia/Saigon",
-        recurrence,
+        duration,
         topic,
         type: 2,
         password,
@@ -140,14 +141,14 @@ router.put(
           const savedId = response.data.id;
           const savedStartTime = response.data.start_time;
           const savedPassword = response.data.password;
-          const savedStartUrl = response.data.start_url;
+
 
           const newMeeting = new Meeting({
-            topic: topic,
             meeting_id: savedId,
             start_time: savedStartTime,
             password: savedPassword,
-            start_url: savedStartUrl,
+            duration,
+            topic
           });
 
           try {

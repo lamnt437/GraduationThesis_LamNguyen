@@ -8,8 +8,17 @@ const MeetingSchema = new Schema({
     required: true,
   },
 
+  topic: {
+    type: String
+  },
+
   start_time: {
     type: Date,
+    required: true,
+  },
+
+  duration: {
+    type: Number,
     required: true,
   },
 

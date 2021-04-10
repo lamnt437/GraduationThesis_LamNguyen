@@ -8,7 +8,7 @@ import Register from "./components/auth/Register";
 import Meeting from "./components/meeting/Meeting";
 import ScheduleMeeting from "./components/meeting/ScheduleMeeting.js";
 import MeetingList from "./components/meeting/MeetingList.js";
-import Calendar from "./components/schedule/Calendar";
+import Calendar from "./components/schedule/Calendar.tsx";
 
 const App = () => {
   return (

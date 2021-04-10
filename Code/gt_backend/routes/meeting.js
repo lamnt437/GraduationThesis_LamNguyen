@@ -76,6 +76,7 @@ router.get("/token", (req, res) => {
   );
 });
 
+// TODO add generate token before sending request
 router.post("/schedule", (req, res) => {
   const { topic, start_time, password } = req.body;
   const time = dateFormat(start_time, "yyyy-mm-dd'T'HH:MM:ssZ");
