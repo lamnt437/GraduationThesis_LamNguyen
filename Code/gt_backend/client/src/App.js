@@ -9,25 +9,35 @@ import Meeting from "./components/meeting/Meeting";
 import ScheduleMeeting from "./components/meeting/ScheduleMeeting.js";
 import MeetingList from "./components/meeting/MeetingList.js";
 import Calendar from "./components/schedule/Calendar.tsx";
+import { Provider } from "react-redux";
+import store from "./sandbox/store";
+import Alert from "./components/layout/Alert";
 
 const App = () => {
   return (
-    <Router>
-      <Fragment>
-        <NavBar />
-        <Route exact path="/" component={Landing} />
-        <section className="container">
-          <Switch>
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/meeting" component={Meeting} />
-            <Route exact path="/meeting/schedule" component={ScheduleMeeting} />
-            <Route exact path="/meetings" component={MeetingList} />
-            <Route exact path="/dashboard" component={Calendar} />
-          </Switch>
-        </section>
-      </Fragment>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <Fragment>
+          <NavBar />
+          <Route exact path="/" component={Landing} />
+          <section className="container">
+            <Alert />
+            <Switch>
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/register" component={Register} />
+              <Route exact path="/meeting" component={Meeting} />
+              <Route
+                exact
+                path="/meeting/schedule"
+                component={ScheduleMeeting}
+              />
+              <Route exact path="/meetings" component={MeetingList} />
+              <Route exact path="/dashboard" component={Calendar} />
+            </Switch>
+          </section>
+        </Fragment>
+      </Router>
+    </Provider>
   );
 };
 

@@ -1,7 +1,9 @@
 import React, { Fragment, useState } from "react";
 import axios from "axios";
+import { connect } from "react-redux";
+import { setAlert } from "../../sandbox/actions/alert";
 
-export const Register = () => {
+export const Register = (props) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,7 +19,8 @@ export const Register = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
-      console.log("Not match");
+      // console.log("Not match");
+      props.setAlert("password not match", "danger");
     } else {
       // create user object
       // stringify
@@ -111,4 +114,5 @@ export const Register = () => {
   );
 };
 
-export default Register;
+export default connect(null, { setAlert })(Register);
+// function connect to connect to redux
