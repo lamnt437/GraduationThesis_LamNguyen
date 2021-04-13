@@ -1,40 +1,39 @@
 import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 import { REGISTER_SUCCESS, REGISTER_FAIL, REMOVE_ALERT } from './types';
+import { setAlert } from './alert';
 
-export const setRegisterSuccess = (msg, alertType, timeout = 3000) => (
-  dispatch
-) => {
-  const id = uuidv4();
-
-  dispatch({
-    type: REGISTER_SUCCESS,
-    payload: {
-      msg,
-      alertType,
-      id,
+export const register = (name, email, password) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
     },
-  });
+  };
 
-  setTimeout(() => dispatch({ type: REMOVE_ALERT, payload: id }), timeout);
-};
+  // create user object
+  // stringify
+  // config
+  // send request in a try catch
 
-export const setRegisterFail = (errors, alertType, timeout = 3000) => (
-  dispatch
-) => {
-  for (let i = 0; i < errors.length; i++) {
-    const id = uuidv4();
+  const body = JSON.stringify({ name, password, email });
+  const url = 'http://localhost:3001/api/users';
 
-    const msg = errors[i].msg;
+  // things go oke then dispatch the register success action
+  try {
+    const response = await axios.post(url, body, config);
 
-    dispatch({
-      type: REGISTER_FAIL,
-      payload: {
-        msg,
-        alertType,
-        id,
-      },
-    });
+    // how to check response status? what is returned if unsuccessful?
+    // object of errors?
+    /* if register error, the response will go into catch error part */
 
-    setTimeout(() => dispatch({ type: REMOVE_ALERT, payload: id }), timeout);
+    dispatch({ type: REGISTER_SUCCESS, payload: response.data });
+  } catch (error) {
+    const errors = error.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({ type: REGISTER_FAIL });
   }
 };

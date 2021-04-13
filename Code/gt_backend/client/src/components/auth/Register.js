@@ -1,11 +1,7 @@
 import React, { Fragment, useState } from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { setAlert } from '../../sandbox/actions/alert';
-import {
-  setRegisterSuccess,
-  setRegisterFail,
-} from '../../sandbox/actions/auth';
+import { register } from '../../sandbox/actions/auth';
 import PropTypes from 'prop-types';
 
 export const Register = (props) => {
@@ -24,42 +20,9 @@ export const Register = (props) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
-      // console.log("Not match");
       props.setAlert('password not match', 'danger');
     } else {
-      // create user object
-      // stringify
-      // config
-      // send request in a try catch
-      const newUser = {
-        name,
-        email,
-        password,
-      };
-
-      // add to proxy
-      const url = '/api/users';
-
-      const body = JSON.stringify(newUser);
-
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
-
-      try {
-        const res = await axios.post(url, body, config);
-        console.log(res.data);
-        props.setRegisterSuccess(
-          "You've successfully registered a new account",
-          'success',
-          3000
-        );
-      } catch (err) {
-        console.error(err.response.data);
-        props.setRegisterFail(err.response.data.errors, 'danger', 3000);
-      }
+      props.register(name, email, password);
     }
   };
 
@@ -76,7 +39,6 @@ export const Register = (props) => {
             placeholder='Name'
             name='name'
             value={name}
-            required
             onChange={(e) => onChange(e)}
           />
         </div>
@@ -86,7 +48,6 @@ export const Register = (props) => {
             placeholder='Email Address'
             name='email'
             value={email}
-            required
             onChange={(e) => onChange(e)}
           />
           <small className='form-text'>
@@ -101,7 +62,6 @@ export const Register = (props) => {
             name='password'
             minLength='6'
             value={password}
-            required
             onChange={(e) => onChange(e)}
           />
         </div>
@@ -112,7 +72,6 @@ export const Register = (props) => {
             name='password2'
             minLength='6'
             value={password2}
-            required
             onChange={(e) => onChange(e)}
           />
         </div>
@@ -127,11 +86,8 @@ export const Register = (props) => {
 
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
-  setRegisterFail: PropTypes.func.isRequired,
-  setRegisterSuccess: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
 };
 
-export default connect(null, { setAlert, setRegisterFail, setRegisterSuccess })(
-  Register
-);
+export default connect(null, { setAlert, register })(Register);
 // function connect to connect to redux
