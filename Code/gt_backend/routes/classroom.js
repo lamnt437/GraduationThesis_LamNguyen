@@ -91,6 +91,9 @@ router.get("/:id/meetings", async (req, res) => {
   }
 });
 
+// @route PUT /api/classroom/:id/posts
+// @desc create a new post in classroom
+// @access TODO Private to class member
 router.put(
   "/:id/meetings",
   [
@@ -142,13 +145,12 @@ router.put(
           const savedStartTime = response.data.start_time;
           const savedPassword = response.data.password;
 
-
           const newMeeting = new Meeting({
             meeting_id: savedId,
             start_time: savedStartTime,
             password: savedPassword,
             duration,
-            topic
+            topic,
           });
 
           try {
