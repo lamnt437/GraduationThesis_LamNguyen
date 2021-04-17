@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import ZoomMeeting from "./ZoomMeeting";
-const dateFormat = require("dateformat");
+import React, { useState } from 'react';
+import ZoomMeeting from './ZoomMeeting';
+const dateFormat = require('dateformat');
 
 export const MeetingItem = (props) => {
   const [meetingInfo, setMeetingInfo] = useState({
     meeting_id: props.meeting_id,
     password: props.password,
-    username: "Unknown",
-    email: "unknown@email.com",
+    username: 'Unknown',
+    email: 'unknown@email.com',
     role: 0,
     inMeeting: false,
   });
@@ -19,7 +19,7 @@ export const MeetingItem = (props) => {
   };
   return (
     <div>
-      <h1>{props.meeting_id}</h1>
+      <h1>{props.topic}</h1>
       <p>Time: {dateFormat(props.start_time, "yyyy-mm-dd'T'HH:MM:ssZ")}</p>
       <p>Password: {props.password}</p>
       <button onClick={(e) => onClick(e)}>Meet</button>

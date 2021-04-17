@@ -1,6 +1,6 @@
-import axios from "axios";
-import React, { Component } from "react";
-import MeetingItem from "./MeetingItem";
+import axios from 'axios';
+import React, { Component } from 'react';
+import MeetingItem from './MeetingItem';
 
 class MeetingList extends Component {
   state = {
@@ -8,7 +8,7 @@ class MeetingList extends Component {
   };
 
   async componentDidMount() {
-    const url = "http://localhost:3001/api/meeting";
+    const url = 'http://localhost:3001/api/meeting';
     try {
       const response = await axios.get(url);
       //   console.log(response);
@@ -22,6 +22,7 @@ class MeetingList extends Component {
     let meetings = this.state.meetings.map((meeting) => {
       return (
         <MeetingItem
+          topic={meeting.topic}
           meeting_id={meeting.meeting_id}
           password={meeting.password}
           start_time={meeting.start_time}

@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { ZoomMtg } from "@zoomus/websdk";
-import axios from "axios";
-import configData from "../../config.json";
+import React, { useEffect } from 'react';
+import { ZoomMtg } from '@zoomus/websdk';
+import axios from 'axios';
+import configData from '../../config.json';
 
 // keep signature generate function in the backend side
 
@@ -16,12 +16,12 @@ export function ZoomMeeting(props) {
       console.log(username);
       // meeting info
       var meetingNumber = props.meetingNumber;
-      var leaveUrl = "http://localhost:3000";
+      var leaveUrl = 'http://localhost:3000';
       var userName = props.username;
       var userEmail = props.email;
       var passWord = props.password;
       var role = props.role;
-      var signatureEndpoint = "http://localhost:3001/api/meeting/signature";
+      var signatureEndpoint = 'http://localhost:3001/api/meeting/signature';
 
       const meetingInfo = {
         meetingNumber,
@@ -32,7 +32,7 @@ export function ZoomMeeting(props) {
 
       const reqConfig = {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       };
 
@@ -67,18 +67,19 @@ export function ZoomMeeting(props) {
     }
 
     function showMeeting() {
-      const zoomRoot = document.getElementById("zmmtg-root");
-      zoomRoot.style.display = "block";
+      const zoomRoot = document.getElementById('zmmtg-root');
+      zoomRoot.style.display = 'block';
     }
 
     showMeeting();
-    ZoomMtg.setZoomJSLib("https://source.zoom.us/1.9.1/lib", "/av");
+    ZoomMtg.setZoomJSLib('https://source.zoom.us/1.9.1/lib', '/av');
+    // ZoomMtg.setZoomJSLib('node_modules/@zoomus/websdk/dist/lib', '/av');
     ZoomMtg.preLoadWasm();
     ZoomMtg.prepareJssdk();
     initMeeting(props);
   }, []);
 
-  return <div className="App">Zoom</div>;
+  return <div className='App'>Zoom</div>;
 }
 
 export default ZoomMeeting;
