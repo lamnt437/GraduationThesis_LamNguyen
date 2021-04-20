@@ -1,7 +1,68 @@
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-import { REGISTER_SUCCESS, REGISTER_FAIL, REMOVE_ALERT } from './types';
+import {
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  USER_LOADED,
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT,
+} from './types';
 import { setAlert } from './alert';
+import setAuthToken from '../../utils/setAuthToken';
+
+export const loadUser = () => async (dispatch) => {
+  // check local storage
+  if (localStorage.token) {
+    setAuthToken(localStorage.token);
+  }
+
+  try {
+    const res = await axios.get('http://localhost:3001/api/auth');
+
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: AUTH_ERROR,
+    });
+  }
+};
+
+export const login = (email, password) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const body = JSON.stringify({ email, password });
+  const url = 'http://localhost:3001/api/auth';
+
+  try {
+    const res = await axios.post(url, body, config);
+
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: res.data,
+    });
+
+    dispatch(loadUser());
+  } catch (error) {
+    const errors = error.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: LOGIN_FAIL,
+    });
+  }
+};
 
 export const register = (name, email, password) => async (dispatch) => {
   const config = {
@@ -27,6 +88,8 @@ export const register = (name, email, password) => async (dispatch) => {
     /* if register error, the response will go into catch error part */
 
     dispatch({ type: REGISTER_SUCCESS, payload: response.data });
+
+    dispatch(loadUser());
   } catch (error) {
     const errors = error.response.data.errors;
 
@@ -36,4 +99,10 @@ export const register = (name, email, password) => async (dispatch) => {
 
     dispatch({ type: REGISTER_FAIL });
   }
+};
+
+export const logout = () => (dispatch) => {
+  dispatch({
+    type: LOGOUT,
+  });
 };

@@ -1,5 +1,5 @@
 import './App.css';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import NavBar from './components/layout/NavBar';
 import Landing from './components/layout/Landing';
@@ -12,8 +12,18 @@ import Calendar from './components/schedule/Calendar.tsx';
 import { Provider } from 'react-redux';
 import store from './sandbox/store';
 import Alert from './components/layout/Alert';
+import { loadUser } from './sandbox/actions/auth';
+import setAuthToken from './utils/setAuthToken';
+
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
+}
 
 const App = () => {
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
+
   return (
     <Provider store={store}>
       <Router>
