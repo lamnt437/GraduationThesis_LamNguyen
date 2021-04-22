@@ -8,13 +8,22 @@ const dateFormat = require('dateformat');
 const zoomApi = require('../services/zoomapi');
 const { ROLE_TEACHER, ROLE_ADMIN } = require('../config/constants');
 const User = require('../models/User');
+const classroomDataAccess = require('../data_access/classroom');
 
 // @route /api/classroom
 // desc get all classes
-// access Private admin
+// access Private
 router.get('/', auth, async (req, res) => {
   if (req.user.role !== ROLE_ADMIN) {
-    return res.status(401).json({ msg: 'Access denied' });
+    try {
+      const classrooms = await classroomDataAccess.getRelatedClasses(
+        req.user.id
+      );
+      return res.json({ classrooms });
+    } catch (error) {
+      console.error(error.message);
+      return res.status(500).json({ msg: 'Server error' });
+    }
   }
 
   try {
@@ -89,19 +98,6 @@ router.post(
     }
   }
 );
-
-// @route GET /api/classroom
-// @desc get all classes available
-//
-router.get('/', async (req, res) => {
-  try {
-    const classes = await ClassRoom.find();
-    res.json(classes);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ msg: 'Server error' });
-  }
-});
 
 // @route   GET /api/classroom/:id/meetings
 // @desc    get all meetings of the current class
