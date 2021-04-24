@@ -9,11 +9,13 @@ import Meeting from './components/meeting/Meeting';
 import ScheduleMeeting from './components/meeting/ScheduleMeeting.js';
 import MeetingList from './components/meeting/MeetingList.js';
 import Calendar from './components/schedule/Calendar.tsx';
+import ClassList from './components/classroom/ClassList';
 import { Provider } from 'react-redux';
 import store from './sandbox/store';
 import Alert from './components/layout/Alert';
 import { loadUser } from './sandbox/actions/auth';
 import setAuthToken from './utils/setAuthToken';
+import PrivateRoute from './components/routing/PrivateRoute';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -42,7 +44,8 @@ const App = () => {
                 component={ScheduleMeeting}
               />
               <Route exact path='/meetings' component={MeetingList} />
-              <Route exact path='/dashboard' component={Calendar} />
+              <PrivateRoute exact path='/dashboard' component={Calendar} />
+              <PrivateRoute exact path='/classroom' component={ClassList} />
             </Switch>
           </section>
         </Fragment>

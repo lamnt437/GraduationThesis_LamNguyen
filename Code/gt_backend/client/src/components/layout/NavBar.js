@@ -25,7 +25,7 @@ const NavBar = ({ auth: { isAuthenticated, loading }, logout }) => {
           <Link to='/dashboard'>Dashboard</Link>
         </li>
         <li>
-          <Link to='/class'>Classes</Link>
+          <Link to='/classroom'>Classroom</Link>
         </li>
         <li>
           <Link to='/meeting'>Meeting</Link>
