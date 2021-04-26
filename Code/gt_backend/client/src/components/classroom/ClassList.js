@@ -1,38 +1,26 @@
-import React, { Component, Fragment } from 'react';
-import { fetchClassRoom } from '../../services/classroom';
-import ClassOverview from './ClassOverview';
+import React, { Fragment, useEffect } from 'react';
+import ClassItem from './ClassItem';
 
-//
-
-class ClassList extends Component {
-  state = {
-    classrooms: [],
-  };
-
-  async componentDidMount() {
-    // load all class of this member
-    // how to use lookup?
-    // need to get state of this app about current user, user id to make query to the server
-    // => need to finish login function
-    const res = await fetchClassRoom();
-    this.setState({ classrooms: res.data.classrooms });
-    // console.log(classrooms);
-    console.log(this.state.classrooms);
-  }
-
-  render() {
-    return (
-      <Fragment>
-        {this.state.classrooms ? (
-          this.state.classrooms.map((classroom) => (
-            <ClassOverview item={classroom} />
-          ))
-        ) : (
-          <h1>No class to display</h1>
-        )}
-      </Fragment>
-    );
-  }
-}
+const ClassList = (props) => {
+  useEffect(() => {
+    console.log(props.classrooms);
+  }, []);
+  return (
+    <Fragment>
+      <ul>
+        {Array.isArray(props.classrooms)
+          ? props.classrooms.map((classroom) => (
+              <ClassItem
+                key={classroom._id}
+                id={classroom._id}
+                name={classroom.name}
+                description={classroom.description}
+              />
+            ))
+          : null}
+      </ul>
+    </Fragment>
+  );
+};
 
 export default ClassList;

@@ -1,0 +1,13 @@
+.ClassThumbnail {
+  padding: 8px;
+  flex-grow: 0;
+  max-width: 33.33%;
+  flex-basis: 33.33%;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: Open Sans, sans-serif;
+  font-style: normal;
+  font-size: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+}

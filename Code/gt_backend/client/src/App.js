@@ -16,6 +16,8 @@ import Alert from './components/layout/Alert';
 import { loadUser } from './sandbox/actions/auth';
 import setAuthToken from './utils/setAuthToken';
 import PrivateRoute from './components/routing/PrivateRoute';
+import AllClassrooms from './pages/AllClassrooms';
+import ClassDetail from './pages/ClassDetail';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -45,7 +47,12 @@ const App = () => {
               />
               <Route exact path='/meetings' component={MeetingList} />
               <PrivateRoute exact path='/dashboard' component={Calendar} />
-              <PrivateRoute exact path='/classroom' component={ClassList} />
+              <PrivateRoute exact path='/classroom' component={AllClassrooms} />
+              <PrivateRoute
+                exact
+                path='/classroom/:id'
+                component={ClassDetail}
+              />
             </Switch>
           </section>
         </Fragment>
