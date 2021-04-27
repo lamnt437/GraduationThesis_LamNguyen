@@ -1,5 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { fetchClassroom } from '../services/classroom';
+import ClassDetailComponent from '../components/classroom/ClassDetail';
 
 const ClassDetail = (props) => {
   const params = useParams();
@@ -29,17 +31,19 @@ const ClassDetail = (props) => {
     },
   ];
 
-  useEffect(() => {
-    setClassDetail(dummyClasses[params.id]);
+  useEffect(async () => {
+    const res = await fetchClassroom(params.id);
+    console.log(res);
+    setClassDetail(res.data.classroom);
     // fetch a class
     // set state
   }, []);
   return (
     <Fragment>
-      <h1>{classDetail.name}</h1>
-      <div>
-        <p>Description: {classDetail.description}</p>
-      </div>
+      <ClassDetailComponent
+        name={classDetail.name}
+        description={classDetail.description}
+      />
     </Fragment>
   );
 };

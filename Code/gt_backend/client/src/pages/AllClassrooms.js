@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { fetchClassRoom } from '../services/classroom';
+import { fetchClassRooms } from '../services/classroom';
 import ClassList from '../components/classroom/ClassList';
 
 const AllClassrooms = () => {
@@ -22,7 +22,7 @@ const AllClassrooms = () => {
 
   useEffect(async () => {
     try {
-      const res = await fetchClassRoom();
+      const res = await fetchClassRooms();
       console.log(res.data);
       setClassrooms(res.data.classrooms);
     } catch (err) {
