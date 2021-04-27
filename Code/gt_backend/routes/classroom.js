@@ -39,23 +39,28 @@ router.get('/', auth, async (req, res) => {
 // desc class by id
 // access Private members + admin
 router.get('/:id', auth, async (req, res) => {
-  // get classrooom
-  const classroom = await ClassRoom.findOne();
-  if (!classroom) {
-    return res.status(404).json({ msg: 'Classroom not found' });
-  }
-  // check if user is supervisor or member
-  const user = req.user;
+  try {
+    // get classrooom
+    const classroom = await ClassRoom.findById(req.params.id);
+    if (!classroom) {
+      return res.status(404).json({ msg: 'Classroom not found' });
+    }
+    // check if user is supervisor or member
+    const user = req.user;
 
-  if (
-    user.role !== ROLE_ADMIN &&
-    !classroom.supervisor_ids.includes(user.id) &&
-    !classroom.member_ids.includes(user.id)
-  ) {
-    return res.status(401).json({ msg: 'Access denied' });
-  }
+    if (
+      user.role !== ROLE_ADMIN &&
+      !classroom.supervisor_ids.includes(user.id) &&
+      !classroom.member_ids.includes(user.id)
+    ) {
+      return res.status(401).json({ msg: 'Access denied' });
+    }
 
-  res.json({ classroom });
+    res.json({ classroom });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
 });
 
 // @route POST /api/classroom
