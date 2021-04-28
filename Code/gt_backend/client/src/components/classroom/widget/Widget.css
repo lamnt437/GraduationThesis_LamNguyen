@@ -1,0 +1,7 @@
+.widgets {
+  padding: 30px;
+}
+
+.widgets > h3 {
+  color: #4a4a4a;
+}
