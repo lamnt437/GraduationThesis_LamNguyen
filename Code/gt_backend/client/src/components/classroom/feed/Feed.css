@@ -1,0 +1,30 @@
+.feed {
+  flex: 1;
+  padding: 30px 125px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.feed__classroom {
+  background-color: #2e81f4;
+  color: white;
+  border-radius: 10px;
+  padding: 3rem;
+  /* margin: 3rem auto; */
+  width: 100%;
+  max-width: 40rem;
+  box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.75);
+}
+
+.feed__classroom p {
+  font-size: 2.5rem;
+}
+
+.feed__classroom figcaption {
+  font-style: italic;
+  font-size: 1.5rem;
+  text-align: right;
+  color: #a1e0e0;
+}

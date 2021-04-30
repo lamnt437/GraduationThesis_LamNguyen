@@ -43,6 +43,7 @@ const ClassDetail = (props) => {
       <ClassDetailComponent
         name={classDetail.name}
         description={classDetail.description}
+        classId={classDetail._id}
       />
     </Fragment>
   );
