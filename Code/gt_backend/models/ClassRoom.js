@@ -26,6 +26,11 @@ const ClassSchema = new mongoose.Schema({
     ref: 'users',
   },
 
+  requests: {
+    type: [Schema.Types.ObjectId],
+    ref: 'users',
+  },
+
   posts: [
     {
       user: {

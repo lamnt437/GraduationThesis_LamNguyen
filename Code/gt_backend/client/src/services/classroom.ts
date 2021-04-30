@@ -12,11 +12,13 @@ export const fetchClassRooms = async () => {
 };
 
 export const fetchClassroom = async (id: String) => {
-  try {
-    const classroom = await axios.get(url + `/${id}`);
-    // console.log(classroom);
-    return classroom;
-  } catch (err) {
-    console.error(err.message);
-  }
+  // try {
+  //   const classroom = await axios.get(url + `/${id}`);
+  //   // console.log(classroom);
+  //   return classroom;
+  // } catch (err) {
+  //   console.error(err.message);
+  // }
+  const res = await axios.get(url + `/${id}`);
+  return res;
 };

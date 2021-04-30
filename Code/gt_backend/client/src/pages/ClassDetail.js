@@ -15,27 +15,30 @@ const ClassDetail = (props) => {
   const [classDetail, setClassDetail] = useState({});
 
   useEffect(async () => {
-    const res = await fetchClassroom(params.id);
-    console.log(res);
-    setClassDetail(res.data.classroom);
+    // TODO validate res isRelated here
+    try {
+      const res = await fetchClassroom(params.id);
+      console.log(res);
+    } catch (error) {
+      console.error(error.message);
+      console.log(error.response);
+      if (error.response.status === 401) {
+        // redirect to ClassRequest
+        console.log('redirect to classrequest');
+      }
+    }
+
+    // setClassDetail(res.data.classroom);
     // fetch a class
     // set state
   }, []);
   return (
     <Fragment>
-      <Switch>{/* <Route exact path='/login' component={Login} /> */}</Switch>
-      <Header />
-
-      <div className={classes.app__body}>
-        <Sidebar />
-        <Feed
-          name={classDetail.name}
-          description={classDetail.description}
-          classId={classDetail.classId}
-          posts={classDetail.posts}
-        />
-        <Widget />
-      </div>
+      {/* <ClassDetailComponent
+        name={classDetail.name}
+        description={classDetail.description}
+        classId={classDetail._id}
+      /> */}
     </Fragment>
   );
 };
