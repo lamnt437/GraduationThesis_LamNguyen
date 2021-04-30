@@ -486,6 +486,60 @@ router.get('/:id/request', auth, async (req, res) => {
   }
 });
 
+router.put('/:id/request/:reqId', auth, async (req, res) => {
+  try {
+    const classId = req.params.id;
+    if (!mongoose.isValidObjectId(classId)) {
+      return res.status(404).json({ msg: 'Classroom not found' });
+    }
+    const reqId = req.params.reqId;
+    if (!mongoose.isValidObjectId(reqId)) {
+      return res.status(404).json({ msg: 'Request not found' });
+    }
+
+    // find class
+    const classroom = await ClassRoom.findById(req.params.id);
+    if (!classroom) {
+      return res.status(404).json({ msg: 'Class not found' });
+    }
+
+    // check if user is supervisor
+    const user = req.user;
+    if (!isSupervisor(classroom, user)) {
+      return res.status(401).json({ msg: 'Unauthorized' });
+    }
+
+    // request exists?
+    const requests = classroom.requests;
+    if (Array.isArray(requests)) {
+      if (requests.includes(reqId)) {
+        // add member
+        classroom.member_ids.push(reqId);
+        // remove request
+        removeElement(classroom.requests, reqId);
+        classroom.save();
+        console.log(classroom);
+        return res.json({ msg: 'Request approved' });
+      }
+    }
+
+    return res.status(400).json({ msg: 'Request not found' });
+  } catch (error) {
+    if (error.kind === 'ObjectId') {
+      res.status(404).json({ errors: [{ msg: 'Classroom not found' }] });
+    }
+    console.error(error.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+const removeElement = (array, value) => {
+  var index = array.indexOf(value);
+  if (index > -1) {
+    array.splice(index, 1);
+  }
+};
+
 const isSupervisor = (classroom, user) => {
   if (!classroom.supervisor_ids.includes(user.id)) {
     return false;
