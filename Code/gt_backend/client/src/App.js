@@ -18,6 +18,7 @@ import setAuthToken from './utils/setAuthToken';
 import PrivateRoute from './components/routing/PrivateRoute';
 import AllClassrooms from './pages/AllClassrooms';
 import ClassDetail from './pages/ClassDetail';
+import NotFound from './pages/NotFound';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -53,6 +54,10 @@ const App = () => {
                 path='/classroom/:id'
                 component={ClassDetail}
               />
+              {/* TODO build not found page*/}
+              <Route path='*'>
+                <NotFound />
+              </Route>
             </Switch>
           </section>
         </Fragment>

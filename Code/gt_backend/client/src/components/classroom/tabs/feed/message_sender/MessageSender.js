@@ -10,8 +10,17 @@ const MessageSender = (props) => {
     text: '',
   });
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
+    // TODO redirect after submit post (React course 282 programmatic)
+    // TODO prevent unwanted transition to other page
+    // TODO add loading spinner
     e.preventDefault();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
 
     // TODO validate input
     const url = `http://localhost:3001/api/classroom/${props.classId}/posts`;
@@ -19,7 +28,7 @@ const MessageSender = (props) => {
 
     try {
       console.log(body);
-      const res = axios.put(url, body);
+      const res = await axios.put(url, body, config);
       console.log(res);
     } catch (err) {
       console.error(err.message);
