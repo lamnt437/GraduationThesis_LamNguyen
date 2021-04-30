@@ -280,6 +280,48 @@ router.put(
   }
 );
 
+// GET
+// @route   GET /api/classroom/:id/members
+// @access  ADMIN, supervisors, members
+router.get('/:id/members', auth, async (req, res) => {
+  // get class
+  const classroom = await ClassRoom.findById(req.params.id);
+  if (!classroom) {
+    return res.status(404).json({ msg: 'Classroom not found' });
+  }
+
+  // check if user related
+  if (!isRelated(classroom, req.user)) {
+    return res.status(401).json({ msg: 'Unauthorized' });
+  }
+
+  // get member by look up
+  try {
+    // const classWithMembers = await ClassRoom.aggregate([
+    //   {
+    //     $lookup: {
+    //       from: 'users',
+    //       localField: 'member_ids',
+    //       foreignField: '_id',
+    //       as: 'members',
+    //     },
+    //   },
+    // ]).findById(req.params.id);
+    // const members = classWithMembers.members;
+    // console.log(members);
+    // res.status.json({ members });
+    const member_ids = classroom.member_ids;
+    console.log(member_ids);
+
+    const members = await User.find({ _id: { $in: member_ids } });
+
+    res.json({ members });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
 // POST
 // @route   POST /api/classroom/:id/posts
 // @desc    add post to a classroom
@@ -332,3 +374,15 @@ router.put(
 );
 
 module.exports = router;
+
+const isRelated = (classroom, user) => {
+  if (
+    user.role !== ROLE_ADMIN &&
+    !classroom.supervisor_ids.includes(user.id) &&
+    !classroom.member_ids.includes(user.id)
+  ) {
+    return false;
+  } else {
+    return true;
+  }
+};
