@@ -9,6 +9,7 @@ const zoomApi = require('../services/zoomapi');
 const { ROLE_TEACHER, ROLE_ADMIN } = require('../config/constants');
 const User = require('../models/User');
 const classroomDataAccess = require('../data_access/classroom');
+const mongoose = require('mongoose');
 
 // @route /api/classroom
 // desc get all classes
@@ -48,16 +49,16 @@ router.get('/:id', auth, async (req, res) => {
     // check if user is supervisor or member
     const user = req.user;
 
-    if (
-      user.role !== ROLE_ADMIN &&
-      !classroom.supervisor_ids.includes(user.id) &&
-      !classroom.member_ids.includes(user.id)
-    ) {
+    if (!isRelated(classroom, user)) {
       return res.status(401).json({ msg: 'Access denied' });
     }
 
     res.json({ classroom });
   } catch (error) {
+    if (error.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Classroom not found' });
+    }
+
     console.error(error.message);
     res.status(500).json({ msg: 'Server error' });
   }
@@ -285,7 +286,12 @@ router.put(
 // @access  ADMIN, supervisors, members
 router.get('/:id/members', auth, async (req, res) => {
   // get class
-  const classroom = await ClassRoom.findById(req.params.id);
+  const classId = req.params.id;
+  if (!mongoose.isValidObjectId(classId)) {
+    return res.status(404).json({ msg: 'Classroom not found' });
+  }
+
+  const classroom = await ClassRoom.findById(classId);
   if (!classroom) {
     return res.status(404).json({ msg: 'Classroom not found' });
   }
@@ -311,11 +317,46 @@ router.get('/:id/members', auth, async (req, res) => {
     // console.log(members);
     // res.status.json({ members });
     const member_ids = classroom.member_ids;
-    console.log(member_ids);
+    // console.log(member_ids);
 
-    const members = await User.find({ _id: { $in: member_ids } });
+    const members = await User.find(
+      { _id: { $in: member_ids } },
+      { password: 0 }
+    );
 
     res.json({ members });
+  } catch (err) {
+    if (error.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Classroom not found' });
+    }
+
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+router.get('/:id/supervisors', auth, async (req, res) => {
+  // get class
+  const classroom = await ClassRoom.findById(req.params.id);
+  if (!classroom) {
+    return res.status(404).json({ msg: 'Classroom not found' });
+  }
+
+  // check if user related
+  if (!isRelated(classroom, req.user)) {
+    return res.status(401).json({ msg: 'Unauthorized' });
+  }
+
+  try {
+    const supervisor_ids = classroom.supervisor_ids;
+    // console.log(supervisor_ids);
+
+    const supervisors = await User.find(
+      { _id: { $in: supervisor_ids } },
+      { password: 0 }
+    );
+
+    res.json({ supervisors });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error' });
@@ -373,7 +414,93 @@ router.put(
   }
 );
 
-module.exports = router;
+// route    POST /api/classroom/:id/request
+// desc     user add request to join class
+// access   Private user
+router.post('/:id/request', auth, async (req, res) => {
+  try {
+    // find class
+    const classroom = await ClassRoom.findById(req.params.id);
+    if (!classroom) {
+      return res.status(404).json({ msg: 'Class not found' });
+    }
+    // check if user in class member/ super
+    const user = req.user;
+    if (isRelated(classroom, user)) {
+      return res
+        .status(400)
+        .json({ msg: 'Invalid request. User can not join' });
+    }
+
+    // check if request sent
+    if (Array.isArray(classroom.requests)) {
+      if (classroom.requests.includes(user.id)) {
+        return res.status(400).json({ msg: 'Request already sent' });
+      }
+    }
+    // send request
+    classroom.requests = [];
+    classroom.requests.push(user.id);
+    classroom.save();
+    res.json({ msg: 'Request sent' });
+  } catch (error) {
+    if (error.kind === 'ObjectId') {
+      res.status(404).json({ errors: [{ msg: 'Classroom not found' }] });
+    }
+    console.log(error.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+router.get('/:id/request', auth, async (req, res) => {
+  try {
+    const classId = req.params.id;
+    if (!mongoose.isValidObjectId(classId)) {
+      return res.status(404).json({ msg: 'Classroom not found' });
+    }
+    // find class
+    const classroom = await ClassRoom.findById(req.params.id);
+    if (!classroom) {
+      return res.status(404).json({ msg: 'Class not found' });
+    }
+
+    // check if user is supervisor
+    const user = req.user;
+    if (!isSupervisorOrAdmin(classroom, user)) {
+      return res.status(401).json({ msg: 'Unauthorized' });
+    }
+
+    // list request
+    const requests = classroom.requests;
+    if (Array.isArray(requests)) {
+      res.json({ requests });
+    } else {
+      res.json({ requests: [] });
+    }
+  } catch (error) {
+    if (error.kind === 'ObjectId') {
+      res.status(404).json({ errors: [{ msg: 'Classroom not found' }] });
+    }
+    console.error(error.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+const isSupervisor = (classroom, user) => {
+  if (!classroom.supervisor_ids.includes(user.id)) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+const isSupervisorOrAdmin = (classroom, user) => {
+  if (user.role !== ROLE_ADMIN && !classroom.supervisor_ids.includes(user.id)) {
+    return false;
+  } else {
+    return true;
+  }
+};
 
 const isRelated = (classroom, user) => {
   if (
@@ -386,3 +513,6 @@ const isRelated = (classroom, user) => {
     return true;
   }
 };
+
+module.exports = router;
+// TODO handle route not found
