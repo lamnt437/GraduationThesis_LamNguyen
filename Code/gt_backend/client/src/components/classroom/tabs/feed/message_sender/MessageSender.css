@@ -38,6 +38,13 @@
   cursor: pointer;
 }
 
+.messageSender__top > form > button:hover {
+  background-color: gray;
+  border-radius: 15px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
 .messgeSender__input {
   flex: 1;
 }

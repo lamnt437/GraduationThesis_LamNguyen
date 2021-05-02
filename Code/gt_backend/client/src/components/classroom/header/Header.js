@@ -2,6 +2,7 @@ import React from 'react';
 import './Header.css';
 import logo from './img/ClassZoom.png';
 
+import { NavLink, useRouteMatch } from 'react-router-dom';
 import SearchIcon from '@material-ui/icons/Search';
 import HomeIcon from '@material-ui/icons/Home';
 import FlagIcon from '@material-ui/icons/Flag';
@@ -27,9 +28,11 @@ export const Header = () => {
       <div className='header__center'>
         <div className='header__option header__option--active'>
           <HomeIcon fontSize='large' />
+          {/* TODO navigation link in header*/}
         </div>
         <div className='header__option'>
           <FlagIcon fontSize='large' />
+          <NavLink to='/classroom/:id/task'></NavLink>
         </div>
         <div className='header__option'>
           <SubscriptionsOutlinedIcon fontSize='large' />
@@ -39,6 +42,7 @@ export const Header = () => {
         </div>
         <div className='header__option'>
           <SupervisedUserCircleIcon fontSize='large' />
+          <NavLink to='/classroom/:id/member'></NavLink>
         </div>
       </div>
       <div className='header__right'>
