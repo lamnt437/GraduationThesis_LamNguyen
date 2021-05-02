@@ -12,6 +12,7 @@ const meetingRouter = require('./routes/meeting');
 const postRouter = require('./routes/posts');
 const authRouter = require('./routes/auth');
 const classRouter = require('./routes/classroom');
+const profileRouter = require('./routes/profile');
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use('/api/meeting', meetingRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/classroom', classRouter);
+app.use('/api/profile', profileRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
