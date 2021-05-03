@@ -48,7 +48,7 @@ router.put('/zoom', auth, async (req, res) => {
     const authString = Buffer.from(decodedString).toString('base64');
     // console.log({ authString });
     // TODO send code, client key, client secret in zoom convention
-    const url = `https://zoom.us/oauth/token?grant_type=authorization_code&code=${code}&redirect_uri=http://localhost:3000`;
+    const url = `https://zoom.us/oauth/token?grant_type=authorization_code&code=${code}&redirect_uri=http://localhost:3000/profile`;
     const reqConfig = {
       headers: {
         Authorization: `Basic ${authString}`,

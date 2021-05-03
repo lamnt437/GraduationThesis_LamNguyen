@@ -6,6 +6,7 @@ import { register } from '../../sandbox/actions/auth';
 import PropTypes from 'prop-types';
 
 export const Register = (props) => {
+  // TODO add teacher role
   const [formData, setFormData] = useState({
     name: '',
     email: '',
