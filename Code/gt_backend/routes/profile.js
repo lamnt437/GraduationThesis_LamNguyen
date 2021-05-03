@@ -95,4 +95,20 @@ router.put('/zoom/refresh', auth, async (req, res) => {
   }
 });
 
+router.get('/zoom/revoke/:token', async (req, res) => {
+  const token = req.params.token;
+
+  try {
+    const verification = await zoomService.isValidToken(token);
+
+    if (verification) {
+      res.json({ msg: 'OK' });
+    } else {
+      res.json({ msg: 'not OK' });
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;

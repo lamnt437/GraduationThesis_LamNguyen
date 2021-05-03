@@ -99,7 +99,7 @@ router.post('/schedule', auth, async (req, res) => {
   console.log(req.user);
   const profile = await User.findById(req.user.id);
 
-  let accessToken = profile.access_token;
+  var accessToken = profile.access_token;
   if (!accessToken) {
     return res.status(403).json({
       msg: "Account hasn't connected to zoom service",
@@ -107,30 +107,57 @@ router.post('/schedule', auth, async (req, res) => {
     });
   }
 
+  // // validate token
+  // try {
+  //   const isValidToken = await zoomService.isValidToken(accessToken);
+  //   // console.log(verification.data);
+  //   if (!isValidToken) {
+  //     // refresh token
+  //     const refreshToken = profile.refresh_token;
+  //     const refreshRes = await zoomService.refreshAccessToken(refreshToken);
+  //     console.log({ refreshRes });
+  //     accessToken = refreshRes.data.access_token;
+  //     console.log({ newAccessToken: accessToken });
+
+  //     // save token to account
+  //     profile.access_token = accessToken;
+  //     profile.save();
+  //     console.log({ refreshProfile: profile });
+  //   }
+  // } catch (err) {
+  //   console.error(err.message);
+  //   return res.status(500).json({ msg: 'Error while refresh access token' });
+  // }
+
   // validate token
-  try {
-    const verification = await zoomService.verifyToken(accessToken);
-    console.log(verification.data);
-  } catch (err) {
-    // refresh token if needed
-    console.error(err.message);
-    const refreshToken = profile.refresh_token;
+  const isValid = zoomService.isValidToken(accessToken);
+
+  if (!isValid) {
     try {
-      const refreshRes = await zoomService.refreshAccessToken(refreshToken);
-      console.log({ refreshRes });
-      accessToken = refreshRes.data.access_token;
+      // need refresh
+      console.log('Refreshing.............................');
+      // get refresh token from profile
+      const refreshToken = profile.refresh_token;
+      console.log({ refreshToken });
+
+      // run refreshAccessToken service
+      const zoomRes = await zoomService.refreshAccessToken(refreshToken);
+      accessToken = zoomRes.data.access_token;
 
       // save token to account
       profile.access_token = accessToken;
+      profile.refresh_token = zoomRes.data.refresh_token;
       profile.save();
-      console.log({ refreshProfile: profile });
-    } catch (error) {
-      console.error(error.message);
+
+      console.log({ newAccessToken: accessToken });
+    } catch (err) {
+      console.log(err);
       return res.status(500).json({ msg: 'Error while refresh access token' });
     }
   }
 
   // send request
+  console.log({ accessToken });
   try {
     const response = await zoomService.createMeeting(
       topic,

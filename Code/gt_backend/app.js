@@ -13,6 +13,7 @@ const postRouter = require('./routes/posts');
 const authRouter = require('./routes/auth');
 const classRouter = require('./routes/classroom');
 const profileRouter = require('./routes/profile');
+const sandboxRouter = require('./routes/sandbox');
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use('/api/posts', postRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/classroom', classRouter);
 app.use('/api/profile', profileRouter);
+app.use('/api/sandbox', sandboxRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -2,6 +2,7 @@ const zoomApi = require('./zoomapi');
 const axios = require('axios');
 const dateFormat = require('dateformat');
 const config = require('config');
+const jwt = require('jsonwebtoken');
 
 async function createMeeting(
   topic,
@@ -19,11 +20,14 @@ async function createMeeting(
     type: 2,
     password,
   };
+
+  const body = JSON.stringify(payload);
   // token passed from caller
 
   const apiUrl = 'https://api.zoom.us/v2/users/me/meetings';
   const options = {
     headers: {
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${AccessToken}`,
     },
   };
@@ -31,7 +35,7 @@ async function createMeeting(
   console.log({ options });
 
   axios
-    .post(apiUrl, payload, options)
+    .post(apiUrl, body, options)
     .then(async (response) => {
       const savedId = response.data.id;
       const savedStartTime = response.data.start_time;
@@ -62,6 +66,7 @@ async function createMeeting(
         };
       } catch (err) {
         console.error(err.message);
+
         // res.status(500).json({ msg: 'Server error' });
         return {
           meeting: {},
@@ -72,7 +77,7 @@ async function createMeeting(
       }
     })
     .catch((error) => {
-      console.error(error.message);
+      console.log(error);
       return {
         meeting: {},
         errors: {
@@ -123,27 +128,21 @@ const refreshAccessToken = async (refreshToken) => {
   return zoomRes;
 };
 
-const verifyToken = async (token) => {
-  const url = `https://zoom.us/oauth/revoke?token=${token}`;
-
-  // header config
-  const clientId = config.get('zoomClientId');
-  const clientSecret = config.get('zoomClientSecret');
-  const decodedString = `${clientId}:${clientSecret}`;
-  const authString = Buffer.from(decodedString).toString('base64');
-  const reqConfig = {
-    headers: {
-      Authorization: `Basic ${authString}`,
-      'Content-Type': 'application/json',
-    },
-  };
-
-  const zoomRes = await axios.post(url, {}, reqConfig);
-
-  return zoomRes;
+const isValidToken = (token) => {
+  try {
+    const decoded = jwt.decode(token);
+    const exp = decoded.exp;
+    if (Date.now() >= exp * 1000) {
+      return false;
+    } else {
+      return true;
+    }
+  } catch (err) {
+    return false;
+  }
 };
 
 module.exports.createMeeting = createMeeting;
 module.exports.getAccessToken = getAccessToken;
 module.exports.refreshAccessToken = refreshAccessToken;
-module.exports.verifyToken = verifyToken;
+module.exports.isValidToken = isValidToken;
