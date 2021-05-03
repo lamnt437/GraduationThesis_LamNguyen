@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const User = require('../models/User');
 const config = require('config');
 const auth = require('../middleware/auth');
+const zoomService = require('../services/meetingOAuth');
+const { ERROR_NO_OAUTH } = require('../config/errorCodes');
 
 // route    GET /api/profile
 // desc     get current user profile
@@ -40,23 +42,7 @@ router.put('/zoom', auth, async (req, res) => {
 
   // send code to zoom
   try {
-    // create authString
-    const clientId = config.get('zoomClientId');
-    const clientSecret = config.get('zoomClientSecret');
-    const decodedString = `${clientId}:${clientSecret}`;
-    // const authString = btoa(decodedString);
-    const authString = Buffer.from(decodedString).toString('base64');
-    // console.log({ authString });
-    // TODO send code, client key, client secret in zoom convention
-    const url = `https://zoom.us/oauth/token?grant_type=authorization_code&code=${code}&redirect_uri=http://localhost:3000/profile`;
-    const reqConfig = {
-      headers: {
-        Authorization: `Basic ${authString}`,
-      },
-    };
-
-    // to zoom server to get token and refresh token
-    const zoomRes = await axios.post(url, {}, reqConfig);
+    const zoomRes = await zoomService.getAccessToken(code);
 
     const access_token = zoomRes.data.access_token;
     const refresh_token = zoomRes.data.refresh_token;
@@ -67,6 +53,39 @@ router.put('/zoom', auth, async (req, res) => {
     console.log(profile);
     profile.access_token = access_token;
     profile.refresh_token = refresh_token;
+    profile.save();
+
+    res.json({ access_token });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+// route    PUT /api/profile/zoom/refresh
+// desc     refresh oauth authorization to account
+// reqBody  {}
+// access   Private
+router.put('/zoom/refresh', auth, async (req, res) => {
+  try {
+    // get refresh token from account
+    const profile = await User.findById(req.user.id);
+    // check if has refresh token
+    if (!profile.refresh_token) {
+      return res.status(403).json({
+        msg: "Account hasn't connected to zoom service",
+        error_code: ERROR_NO_OAUTH,
+      });
+    }
+
+    // request new token
+    const refreshToken = profile.refresh_token;
+    const zoomRes = await zoomService.refreshAccessToken(refreshToken);
+
+    const access_token = zoomRes.data.access_token;
+
+    // save new access token to user profile
+    profile.access_token = access_token;
     profile.save();
 
     res.json({ access_token });
