@@ -147,12 +147,13 @@ router.post('/schedule', auth, async (req, res) => {
     let meeting = new Meeting({ ...zoomRes.data });
     console.log({ zoomRes: zoomRes.data });
     // meeting = { ...zoomRes.data };
-    meeting.zoom_id = meeting.id;
+    meeting.zoom_id = zoomRes.data.id;
     console.log({ meeting });
     if (meeting.type == 8) {
       meeting.duration = zoomRes.data.occurrences[0].duration;
       meeting.start_time = zoomRes.data.occurrences[0].start_time;
     }
+    meeting.creator = req.user.id;
     meeting.save();
     res.json({ meeting });
   } catch (err) {

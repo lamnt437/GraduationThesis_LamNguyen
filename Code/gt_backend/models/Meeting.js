@@ -64,6 +64,16 @@ const MeetingSchema = new Schema({
       type: Number,
     },
   },
+
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'users',
+  },
+
+  classroom: {
+    type: Schema.Types.ObjectId,
+    ref: 'classrooms',
+  },
 });
 
 module.exports = Meeting = mongoose.model('meetings', MeetingSchema);
