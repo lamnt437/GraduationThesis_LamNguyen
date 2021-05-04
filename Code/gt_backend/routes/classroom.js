@@ -10,6 +10,7 @@ const { ROLE_TEACHER, ROLE_ADMIN } = require('../config/constants');
 const User = require('../models/User');
 const classroomDataAccess = require('../data_access/classroom');
 const mongoose = require('mongoose');
+const zoomService = require('../services/meetingOAuth');
 
 // @route /api/classroom
 // desc get all classes
@@ -128,100 +129,230 @@ router.get('/:id/meetings', async (req, res) => {
 // @route PUT /api/classroom/:id/posts
 // @desc create a new post in classroom
 // @access TODO Private to class member
+
+// const { topic, start_time, password, duration, type } = req.body;
+//   const time = dateFormat(start_time, "yyyy-mm-dd'T'HH:MM:ssZ");
+
+//   let recurrence = {};
+//   if (type == 8) {
+//     recurrence = req.body.recurrence;
+//   }
+
+//   console.log({ recurrence });
+
+//   // get token
+//   // check if user connected to zoom service
+//   console.log(req.user);
+//   const profile = await User.findById(req.user.id);
+
+//   var accessToken = profile.access_token;
+//   if (!accessToken) {
+//     return res.status(403).json({
+//       msg: "Account hasn't connected to zoom service",
+//       error_code: ERROR_NO_OAUTH,
+//     });
+//   }
+
+//   // validate token
+//   const isValid = zoomService.isValidToken(accessToken);
+
+//   if (!isValid) {
+//     try {
+//       // need refresh
+//       console.log('Refreshing.............................');
+//       // get refresh token from profile
+//       const refreshToken = profile.refresh_token;
+//       console.log({ refreshToken });
+
+//       // run refreshAccessToken service
+//       const zoomRes = await zoomService.refreshAccessToken(refreshToken);
+//       accessToken = zoomRes.data.access_token;
+
+//       // save token to account
+//       profile.access_token = accessToken;
+//       profile.refresh_token = zoomRes.data.refresh_token;
+//       profile.save();
+
+//       console.log({ newAccessToken: accessToken });
+//     } catch (err) {
+//       console.log(err);
+//       return res.status(500).json({ msg: 'Error while refresh access token' });
+//     }
+//   }
+
+//   // send request
+//   try {
+//     const zoomRes = await zoomService.createMeeting(
+//       topic,
+//       time,
+//       duration,
+//       password,
+//       type,
+//       recurrence,
+//       accessToken
+//     );
+
+//     let meeting = new Meeting({ ...zoomRes.data });
+//     console.log({ zoomRes: zoomRes.data });
+//     // meeting = { ...zoomRes.data };
+//     meeting.zoom_id = zoomRes.data.id;
+//     console.log({ meeting });
+//     if (meeting.type == 8) {
+//       meeting.duration = zoomRes.data.occurrences[0].duration;
+//       meeting.start_time = zoomRes.data.occurrences[0].start_time;
+//     }
+//     meeting.creator = req.user.id;
+//     meeting.save();
+//     res.json({ meeting });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ msg: 'Error when creating meeting' });
+//   }
+
 router.put(
   '/:id/meetings',
+  auth,
   [
     body('topic', 'Please enter meeting topic').exists(),
     body('start_time', 'Please enter a valid time').exists(),
-    body('duration', 'Please enter a valid duration').isNumeric(),
+    body(
+      'duration',
+      'Please enter a valid duration in number of minutes'
+    ).isNumeric(),
     body('password', 'Please enter password with 6 characters').isLength(6),
   ],
   async (req, res) => {
+    // TODO check is supervisor
+    // validate classroom
+    var classroom;
+
     try {
-      const classRoom = await ClassRoom.findById(req.params.id);
-      if (!classRoom) {
+      classroom = await ClassRoom.findById(req.params.id);
+      if (!classroom) {
         return res.status(404).json({ msg: 'Classroom not found' });
       }
-
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-
-      const { topic, start_time, duration, password } = req.body;
-      const time = dateFormat(start_time, "yyyy-mm-dd'T'HH:MM:ssZ");
-      // validate info
-      // validate date using parser
-      // get meeting data from body of request
-      let payload = {
-        duration: 40,
-        start_time: time,
-        timezone: 'Asia/Saigon',
-        duration,
-        topic,
-        type: 2,
-        password,
-      };
-
-      const AccessToken = await zoomApi.generateToken();
-      const apiUrl = 'https://api.zoom.us/v2/users/me/meetings';
-      const options = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${AccessToken}`,
-        },
-      };
-
-      axios
-        .post(apiUrl, payload, options)
-        .then(async (response) => {
-          const savedId = response.data.id;
-          const savedStartTime = response.data.start_time;
-          const savedPassword = response.data.password;
-
-          const newMeeting = new Meeting({
-            meeting_id: savedId,
-            start_time: savedStartTime,
-            password: savedPassword,
-            duration,
-            topic,
-          });
-
-          try {
-            // save meeting info to database
-            await newMeeting.save();
-            const exactTime = dateFormat(
-              newMeeting.start_time,
-              "yyyy-mm-dd'T'HH:MM:ssZ"
-            );
-
-            // save meeting id into class
-            const meeting_id = newMeeting.id;
-            classRoom.meetings.push(meeting_id);
-            await classRoom.save();
-
-            res.json({
-              meeting: {
-                db_id: newMeeting.id,
-                data: response.data,
-              },
-            });
-          } catch (err) {
-            console.error(err.message);
-            res.status(500).json({ msg: 'Server error' });
-          }
-        })
-        .catch((error) => {
-          console.error(error.message);
-          res.send('Error when sending request to Zoom Cloud');
-        });
     } catch (err) {
       if (err.kind === 'ObjectId') {
         return res.status(404).json({ msg: 'Classroom not found' });
       }
-      console.error(err.message);
+      console.log(err);
       return res.status(500).json({ msg: 'Server error' });
     }
+
+    console.log({ classroom });
+
+    // check request is from supervisor
+    const user = req.user;
+    if (!isSupervisor(classroom, user)) {
+      return res.status(403).json({
+        msg: 'Unauthorized request. Only supervisor can schedule meetings',
+      });
+    }
+
+    // validate input
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    // normal or recurrence meeting
+    const { topic, duration, password } = req.body;
+    let type = req.body.type;
+    // default meeting type is 2 (normal)
+    if (!type) {
+      type = 2;
+    }
+    let recurrence = {};
+    if (type == 8) {
+      recurrence = req.body.recurrence;
+    }
+
+    var start_time;
+    try {
+      start_time = dateFormat(req.body.start_time, "yyyy-mm-dd'T'HH:MM:ssZ");
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ errors: [{ msg: 'Invalid start_time' }] });
+    }
+
+    // get Zoom access token
+    const profile = await User.findById(req.user.id);
+    var accessToken = profile.access_token;
+    if (!accessToken) {
+      return res.status(403).json({
+        msg: "Account hasn't connected to zoom service",
+        error_code: ERROR_NO_OAUTH,
+      });
+    }
+
+    // validate token
+    const isValid = zoomService.isValidToken(accessToken);
+    if (!isValid) {
+      try {
+        // need refresh
+        console.log('Refreshing.............................');
+        // get refresh token from profile
+        const refreshToken = profile.refresh_token;
+        console.log({ refreshToken });
+
+        // run refreshAccessToken service
+        const zoomRes = await zoomService.refreshAccessToken(refreshToken);
+        accessToken = zoomRes.data.access_token;
+
+        // save token to account
+        profile.access_token = accessToken;
+        profile.refresh_token = zoomRes.data.refresh_token;
+        profile.save();
+
+        console.log({ newAccessToken: accessToken });
+      } catch (err) {
+        console.log(err);
+        return res
+          .status(500)
+          .json({ msg: 'Error while refresh access token' });
+      }
+    }
+
+    // request new meeting
+    var meeting;
+    try {
+      const zoomRes = await zoomService.createMeeting(
+        topic,
+        start_time,
+        duration,
+        password,
+        type,
+        recurrence,
+        accessToken
+      );
+
+      meeting = new Meeting({ ...zoomRes.data });
+      console.log({ zoomRes: zoomRes.data });
+
+      meeting.zoom_id = zoomRes.data.id;
+      console.log({ meeting });
+      if (meeting.type == 8) {
+        meeting.duration = zoomRes.data.occurrences[0].duration;
+        meeting.start_time = zoomRes.data.occurrences[0].start_time;
+      }
+      meeting.creator = req.user.id;
+      meeting.classroom = classroom._id;
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ msg: 'Error when create meeting' });
+    }
+
+    // save new meeting
+    try {
+      meeting.save();
+      classroom.meeting_ids.push(meeting._id);
+      classroom.save();
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ msg: 'Error when save new meeting' });
+    }
+
+    res.json({ meeting });
   }
 );
 
