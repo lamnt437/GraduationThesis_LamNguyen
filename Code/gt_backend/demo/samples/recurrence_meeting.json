@@ -1,4 +1,5 @@
-{
+[
+  {
     "uuid": "b9psR2FKQPSjNeNb0+fG2w==",
     "id": 75830853784,
     "host_id": "24OMxgRMTYunnLbYQaMobg",
@@ -15,50 +16,117 @@
     "pstn_password": "123456",
     "encrypted_password": "ZVNBdk9OWWFHaXRidmkwR1FlOUZCQT09",
     "occurrences": [
-        {
-            "occurrence_id": "1617962400000",
-            "start_time": "2021-04-09T10:00:00Z",
-            "duration": 40,
-            "status": "available"
-        }
+      {
+        "occurrence_id": "1617962400000",
+        "start_time": "2021-04-09T10:00:00Z",
+        "duration": 40,
+        "status": "available"
+      }
     ],
     "settings": {
-        "host_video": false,
-        "participant_video": false,
-        "cn_meeting": false,
-        "in_meeting": false,
-        "join_before_host": false,
-        "jbh_time": 0,
-        "mute_upon_entry": false,
-        "watermark": false,
-        "use_pmi": false,
-        "approval_type": 2,
-        "audio": "voip",
-        "auto_recording": "none",
-        "enforce_login": false,
-        "enforce_login_domains": "",
-        "alternative_hosts": "",
-        "close_registration": false,
-        "show_share_button": false,
-        "allow_multiple_devices": false,
-        "registrants_confirmation_email": true,
-        "waiting_room": true,
-        "request_permission_to_unmute_participants": false,
-        "registrants_email_notification": true,
-        "meeting_authentication": false,
-        "encryption_type": "enhanced_encryption",
-        "approved_or_denied_countries_or_regions": {
-            "enable": false
-        },
-        "breakout_room": {
-            "enable": false
-        },
-        "device_testing": false
+      "host_video": false,
+      "participant_video": false,
+      "cn_meeting": false,
+      "in_meeting": false,
+      "join_before_host": false,
+      "jbh_time": 0,
+      "mute_upon_entry": false,
+      "watermark": false,
+      "use_pmi": false,
+      "approval_type": 2,
+      "audio": "voip",
+      "auto_recording": "none",
+      "enforce_login": false,
+      "enforce_login_domains": "",
+      "alternative_hosts": "",
+      "close_registration": false,
+      "show_share_button": false,
+      "allow_multiple_devices": false,
+      "registrants_confirmation_email": true,
+      "waiting_room": true,
+      "request_permission_to_unmute_participants": false,
+      "registrants_email_notification": true,
+      "meeting_authentication": false,
+      "encryption_type": "enhanced_encryption",
+      "approved_or_denied_countries_or_regions": {
+        "enable": false
+      },
+      "breakout_room": {
+        "enable": false
+      },
+      "device_testing": false
     },
     "recurrence": {
-        "type": 2,
-        "repeat_interval": 1,
-        "weekly_days": "2,4,6",
-        "end_times": 1
+      "type": 2,
+      "repeat_interval": 1,
+      "weekly_days": "2,4,6",
+      "end_times": 1
     }
-}
+  },
+
+  {
+    "uuid": "93721N0oTYyNcWnsK7TtdQ==",
+    "id": 75971940887,
+    "host_id": "24OMxgRMTYunnLbYQaMobg",
+    "host_email": "lamnt437@gmail.com",
+    "topic": "Check occurences",
+    "type": 8,
+    "status": "waiting",
+    "timezone": "Asia/Saigon",
+    "created_at": "2021-05-04T00:19:53Z",
+    "start_url": "https://us04web.zoom.us/s/75971940887?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiIyNE9NeGdSTVRZdW5uTGJZUWFNb2JnIiwiaXNzIjoid2ViIiwic3R5IjoxMDAsIndjZCI6InVzMDQiLCJjbHQiOjAsInN0ayI6IkUtVlllNnRPQUhadWxHU3A1OVhwZnFvc3BVdnh6bTF5UldGSkVKcDZnSXcuQmdZZ1EyMVFVbEY0YTBSMWRXWkRLMHQ1VUZGblJtbHdiek00VEU1V1ZIbFlaMmxBT0dNMU1HUTVNR0UwT1RKalpqTXlNRE0yTWprNE5tTTBNMll4T0dZeVpEYzRaVFptTkdZME16ZzFNek16T0RVeU9XRmtZV1ZoWldFMVpHUXdPVFZoTmdBTU0wTkNRWFZ2YVZsVE0zTTlBQVIxY3pBMEFBQUJlVFMtMnFBQUVuVUFBQUEiLCJleHAiOjE2MjAwOTQ3OTMsImlhdCI6MTYyMDA4NzU5MywiYWlkIjoidWdFRzNoRC1Ub1MwMjAxN1A3ZU9rQSIsImNpZCI6IiJ9.WtDfD21xG0PU4M4hVm2etHxLk9jUUDFOCVADbT_G5N0",
+    "join_url": "https://us04web.zoom.us/j/75971940887?pwd=U0ZickpvN1RuWGJsSGE3WHp6QW5XZz09",
+    "password": "123456",
+    "h323_password": "123456",
+    "pstn_password": "123456",
+    "encrypted_password": "U0ZickpvN1RuWGJsSGE3WHp6QW5XZz09",
+    "occurrences": [
+      {
+        "occurrence_id": "1620399600000",
+        "start_time": "2021-05-07T15:00:00Z",
+        "duration": 40,
+        "status": "available"
+      }
+    ],
+    "settings": {
+      "host_video": false,
+      "participant_video": false,
+      "cn_meeting": false,
+      "in_meeting": false,
+      "join_before_host": false,
+      "jbh_time": 0,
+      "mute_upon_entry": false,
+      "watermark": false,
+      "use_pmi": false,
+      "approval_type": 2,
+      "audio": "voip",
+      "auto_recording": "none",
+      "enforce_login": false,
+      "enforce_login_domains": "",
+      "alternative_hosts": "",
+      "close_registration": false,
+      "show_share_button": false,
+      "allow_multiple_devices": false,
+      "registrants_confirmation_email": true,
+      "waiting_room": true,
+      "request_permission_to_unmute_participants": false,
+      "registrants_email_notification": true,
+      "meeting_authentication": false,
+      "encryption_type": "enhanced_encryption",
+      "approved_or_denied_countries_or_regions": {
+        "enable": false
+      },
+      "breakout_room": {
+        "enable": false
+      },
+      "alternative_hosts_email_notification": true,
+      "device_testing": false
+    },
+    "recurrence": {
+      "type": 2,
+      "repeat_interval": 1,
+      "weekly_days": "6,7",
+      "end_times": 1
+    }
+  }
+]

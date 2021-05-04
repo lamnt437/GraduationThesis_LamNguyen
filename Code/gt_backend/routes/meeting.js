@@ -80,19 +80,16 @@ router.get('/token', (req, res) => {
   );
 });
 
-// TODO add generate token before sending request
 router.post('/schedule', auth, async (req, res) => {
-  const { topic, start_time, password } = req.body;
-  const duration = 40;
+  const { topic, start_time, password, duration, type } = req.body;
   const time = dateFormat(start_time, "yyyy-mm-dd'T'HH:MM:ssZ");
 
-  /* PREVIOUS THOUGHTS */
-  // check if user has one (connected to zoom oauth service)
-  // if no token, then return error code, so that front end can notify user about
-  // requirement to authorize
-  // check if token is valid
-  // yes, then proceed
-  // no, then use refresh token
+  let recurrence = {};
+  if (type == 8) {
+    recurrence = req.body.recurrence;
+  }
+
+  console.log({ recurrence });
 
   // get token
   // check if user connected to zoom service
@@ -106,28 +103,6 @@ router.post('/schedule', auth, async (req, res) => {
       error_code: ERROR_NO_OAUTH,
     });
   }
-
-  // // validate token
-  // try {
-  //   const isValidToken = await zoomService.isValidToken(accessToken);
-  //   // console.log(verification.data);
-  //   if (!isValidToken) {
-  //     // refresh token
-  //     const refreshToken = profile.refresh_token;
-  //     const refreshRes = await zoomService.refreshAccessToken(refreshToken);
-  //     console.log({ refreshRes });
-  //     accessToken = refreshRes.data.access_token;
-  //     console.log({ newAccessToken: accessToken });
-
-  //     // save token to account
-  //     profile.access_token = accessToken;
-  //     profile.save();
-  //     console.log({ refreshProfile: profile });
-  //   }
-  // } catch (err) {
-  //   console.error(err.message);
-  //   return res.status(500).json({ msg: 'Error while refresh access token' });
-  // }
 
   // validate token
   const isValid = zoomService.isValidToken(accessToken);
@@ -157,20 +132,32 @@ router.post('/schedule', auth, async (req, res) => {
   }
 
   // send request
-  console.log({ accessToken });
   try {
-    const response = await zoomService.createMeeting(
+    const zoomRes = await zoomService.createMeeting(
       topic,
       time,
       duration,
       password,
+      type,
+      recurrence,
       accessToken
     );
 
-    res.json(response);
+    // TODO save meeting to db
+    let meeting = new Meeting({ ...zoomRes.data });
+    console.log({ zoomRes: zoomRes.data });
+    // meeting = { ...zoomRes.data };
+    meeting.zoom_id = meeting.id;
+    console.log({ meeting });
+    if (meeting.type == 8) {
+      meeting.duration = zoomRes.data.occurrences[0].duration;
+      meeting.start_time = zoomRes.data.occurrences[0].start_time;
+    }
+    meeting.save();
+    res.json({ meeting });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ msg: 'Server error' });
+    console.log(err);
+    res.status(500).json({ msg: 'Error when creating meeting' });
   }
 });
 

@@ -1,0 +1,53 @@
+{
+  "uuid": "TxfKNE/kQAW8Ne4phG/oCg==",
+  "id": 71262549815,
+  "host_id": "24OMxgRMTYunnLbYQaMobg",
+  "host_email": "lamnt437@gmail.com",
+  "topic": "API Test",
+  "type": 2,
+  "status": "waiting",
+  "start_time": "2021-05-12T10:00:00Z",
+  "duration": 40,
+  "timezone": "Asia/Saigon",
+  "created_at": "2021-05-04T00:06:13Z",
+  "start_url": "https://us04web.zoom.us/s/71262549815?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiIyNE9NeGdSTVRZdW5uTGJZUWFNb2JnIiwiaXNzIjoid2ViIiwic3R5IjoxMDAsIndjZCI6InVzMDQiLCJjbHQiOjAsInN0ayI6IlpYcUR5eC1KdTl6QTVKc2NyY3Z6NUl6VE5xR08yWVJQaWFqSEE0dmR6X1kuQmdZZ1EyMVFVbEY0YTBSMWRXWkRLMHQ1VUZGblJtbHdiek00VEU1V1ZIbFlaMmxBT0dNMU1HUTVNR0UwT1RKalpqTXlNRE0yTWprNE5tTTBNMll4T0dZeVpEYzRaVFptTkdZME16ZzFNek16T0RVeU9XRmtZV1ZoWldFMVpHUXdPVFZoTmdBTU0wTkNRWFZ2YVZsVE0zTTlBQVIxY3pBMEFBQUJlVFN5VnlRQUVuVUFBQUEiLCJleHAiOjE2MjAwOTM5NzMsImlhdCI6MTYyMDA4Njc3MywiYWlkIjoidWdFRzNoRC1Ub1MwMjAxN1A3ZU9rQSIsImNpZCI6IiJ9.09dQNwx2TYiiEW2riSDWwhnlbDEAj2Oui6DMSgkHejs",
+  "join_url": "https://us04web.zoom.us/j/71262549815?pwd=N1lWdzQxN3k1TktUTGpLbjBMNHpldz09",
+  "password": "123456",
+  "h323_password": "123456",
+  "pstn_password": "123456",
+  "encrypted_password": "N1lWdzQxN3k1TktUTGpLbjBMNHpldz09",
+  "settings": {
+    "host_video": false,
+    "participant_video": false,
+    "cn_meeting": false,
+    "in_meeting": false,
+    "join_before_host": false,
+    "jbh_time": 0,
+    "mute_upon_entry": false,
+    "watermark": false,
+    "use_pmi": false,
+    "approval_type": 2,
+    "audio": "voip",
+    "auto_recording": "none",
+    "enforce_login": false,
+    "enforce_login_domains": "",
+    "alternative_hosts": "",
+    "close_registration": false,
+    "show_share_button": false,
+    "allow_multiple_devices": false,
+    "registrants_confirmation_email": true,
+    "waiting_room": true,
+    "request_permission_to_unmute_participants": false,
+    "registrants_email_notification": true,
+    "meeting_authentication": false,
+    "encryption_type": "enhanced_encryption",
+    "approved_or_denied_countries_or_regions": {
+      "enable": false
+    },
+    "breakout_room": {
+      "enable": false
+    },
+    "alternative_hosts_email_notification": true,
+    "device_testing": false
+  }
+}

@@ -9,6 +9,8 @@ async function createMeeting(
   start_time,
   duration,
   password,
+  type,
+  recurrence,
   AccessToken
 ) {
   let payload = {
@@ -17,9 +19,15 @@ async function createMeeting(
     timezone: 'Asia/Saigon',
     duration,
     topic,
-    type: 2,
+    type,
     password,
   };
+
+  if (type == 8) {
+    payload.recurrence = recurrence;
+  }
+
+  console.log({ payload });
 
   const body = JSON.stringify(payload);
   // token passed from caller
@@ -34,57 +42,60 @@ async function createMeeting(
 
   console.log({ options });
 
-  axios
-    .post(apiUrl, body, options)
-    .then(async (response) => {
-      const savedId = response.data.id;
-      const savedStartTime = response.data.start_time;
-      const savedPassword = response.data.password;
+  const zoomRes = await axios.post(apiUrl, body, options);
+  return zoomRes;
 
-      const newMeeting = new Meeting({
-        meeting_id: savedId,
-        start_time: savedStartTime,
-        password: savedPassword,
-        duration,
-        topic,
-      });
+  // axios
+  //   .post(apiUrl, body, options)
+  //   .then(async (response) => {
+  //     const savedId = response.data.id;
+  //     const savedStartTime = response.data.start_time;
+  //     const savedPassword = response.data.password;
 
-      try {
-        // save meeting info to database
-        await newMeeting.save();
-        const exactTime = dateFormat(
-          newMeeting.start_time,
-          "yyyy-mm-dd'T'HH:MM:ssZ"
-        );
+  //     const newMeeting = new Meeting({
+  //       meeting_id: savedId,
+  //       start_time: savedStartTime,
+  //       password: savedPassword,
+  //       duration,
+  //       topic,
+  //     });
 
-        return {
-          meeting: {
-            db_id: newMeeting.id,
-            data: response.data,
-          },
-          errors: {},
-        };
-      } catch (err) {
-        console.error(err.message);
+  //     try {
+  //       // save meeting info to database
+  //       await newMeeting.save();
+  //       const exactTime = dateFormat(
+  //         newMeeting.start_time,
+  //         "yyyy-mm-dd'T'HH:MM:ssZ"
+  //       );
 
-        // res.status(500).json({ msg: 'Server error' });
-        return {
-          meeting: {},
-          errors: {
-            msg: 'Server error',
-          },
-        };
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      return {
-        meeting: {},
-        errors: {
-          msg: 'Error when sending request to ZoomApi',
-        },
-      };
-    });
+  //       return {
+  //         meeting: {
+  //           db_id: newMeeting.id,
+  //           data: response.data,
+  //         },
+  //         errors: {},
+  //       };
+  //     } catch (err) {
+  //       console.error(err.message);
+
+  //       // res.status(500).json({ msg: 'Server error' });
+  //       return {
+  //         meeting: {},
+  //         errors: {
+  //           msg: 'Server error',
+  //         },
+  //       };
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //     return {
+  //       meeting: {},
+  //       errors: {
+  //         msg: 'Error when sending request to ZoomApi',
+  //       },
+  //     };
+  //   });
 }
 
 const getAccessToken = async (code) => {
