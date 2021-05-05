@@ -29,6 +29,9 @@ export const Header = () => {
         <div className='header__option header__option--active'>
           <HomeIcon fontSize='large' />
           {/* TODO navigation link in header*/}
+          {/* TODO members/meetings/feeds/tasks/material */}
+          {/* load all posts, meetings, members and fill into redux store */}
+          {/* load class overview vs load class detail */}
         </div>
         <div className='header__option'>
           <FlagIcon fontSize='large' />

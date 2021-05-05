@@ -16,6 +16,8 @@ const zoomService = require('../services/meetingOAuth');
 // desc get all classes
 // access Private
 router.get('/', auth, async (req, res) => {
+  // fetch only the overview
+  // fetch only the onver view of the lcass
   if (req.user.role !== ROLE_ADMIN) {
     try {
       const classrooms = await classroomDataAccess.getRelatedClasses(
