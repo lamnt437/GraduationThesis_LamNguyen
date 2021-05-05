@@ -1,18 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const { body, validationResult } = require('express-validator');
-const axios = require('axios');
+
+// models
 const ClassRoom = require('../models/ClassRoom');
-const auth = require('../middleware/auth');
-const dateFormat = require('dateformat');
-const zoomApi = require('../services/zoomapi');
-const { ROLE_TEACHER, ROLE_ADMIN } = require('../config/constants');
+const Meeting = require('../models/Meeting');
 const User = require('../models/User');
-const classroomDataAccess = require('../data_access/classroom');
+// middlewares
+const auth = require('../middleware/auth');
+// utils
+const { body, validationResult } = require('express-validator');
+const dateFormat = require('dateformat');
 const mongoose = require('mongoose');
+const classroomDataAccess = require('../data_access/classroom');
 const zoomService = require('../services/meetingOAuth');
 
-// @route /api/classroom
+const { ROLE_TEACHER, ROLE_ADMIN } = require('../config/constants');
+
+// @route GET /api/classroom
 // desc get all classes
 // access Private
 router.get('/', auth, async (req, res) => {
@@ -39,7 +43,7 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// @route /api/classroom
+// @route GET /api/classroom/:id
 // desc class by id
 // access Private members + admin
 router.get('/:id', auth, async (req, res) => {
@@ -107,26 +111,6 @@ router.post(
     }
   }
 );
-
-// @route   GET /api/classroom/:id/meetings
-// @desc    get all meetings of the current class
-// @access  Private
-router.get('/:id/meetings', async (req, res) => {
-  try {
-    const classroom = await ClassRoom.findById(req.params.id);
-    if (!classroom) {
-      return res.status(404).json({ msg: 'Classroom not found' });
-    }
-    res.json({ meetings: classroom.meetings });
-  } catch (error) {
-    if (error.kind === 'ObjectId') {
-      return res.status(404).json({ msg: 'Classroom not found' });
-    }
-
-    console.error(error.message);
-    res.status(500).json({ msg: 'Server error' });
-  }
-});
 
 // @route PUT /api/classroom/:id/posts
 // @desc create a new post in classroom
@@ -211,6 +195,9 @@ router.get('/:id/meetings', async (req, res) => {
 //     res.status(500).json({ msg: 'Error when creating meeting' });
 //   }
 
+// route  PUT /api/classroom/:id/meetings
+// desc   schedule a meeting in classroom
+// access Private members
 router.put(
   '/:id/meetings',
   auth,
@@ -358,7 +345,7 @@ router.put(
   }
 );
 
-// @route /api/classroom/:id/members
+// @route PUT /api/classroom/:id/members
 // @body { member_id: id }
 // @desc  add members to class
 // @access
@@ -468,6 +455,9 @@ router.get('/:id/members', auth, async (req, res) => {
   }
 });
 
+// route  GET /api/classroom/:id/supervisors
+// desc   get all supervisors of a classroom
+// access Private related
 router.get('/:id/supervisors', auth, async (req, res) => {
   // get class
   const classroom = await ClassRoom.findById(req.params.id);
@@ -496,8 +486,35 @@ router.get('/:id/supervisors', auth, async (req, res) => {
   }
 });
 
+// route  GET /api/classroom/:id/meetings
+// desc   get meetings from a classroom
+// access Private related
+router.get('/:id/meetings', auth, async (req, res) => {
+  // get class
+  const classroom = await ClassRoom.findById(req.params.id);
+  if (!classroom) {
+    return res.status(404).json({ msg: 'Classroom not found' });
+  }
+
+  // check if user related
+  if (!isRelated(classroom, req.user)) {
+    return res.status(403).json({ msg: 'Unauthorized' });
+  }
+
+  try {
+    const meeting_ids = classroom.meeting_ids;
+
+    const meetings = await Meeting.find({ _id: { $in: meeting_ids } });
+
+    res.json({ meetings });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
 // POST
-// @route   POST /api/classroom/:id/posts
+// @route   PUT /api/classroom/:id/posts
 // @desc    add post to a classroom
 // @access  Private: admin, supervisors, members
 router.put(
@@ -585,6 +602,9 @@ router.post('/:id/request', auth, async (req, res) => {
   }
 });
 
+// route  GET /api/classroom/:id/request
+// desc   get requests to join in a classroom
+// access Private supervisors or admins
 router.get('/:id/request', auth, async (req, res) => {
   try {
     const classId = req.params.id;
@@ -619,6 +639,9 @@ router.get('/:id/request', auth, async (req, res) => {
   }
 });
 
+// route  PUT /api/classroom/:id/request/:reqId
+// desc   approve request to join
+// access Private supervisors
 router.put('/:id/request/:reqId', auth, async (req, res) => {
   try {
     const classId = req.params.id;

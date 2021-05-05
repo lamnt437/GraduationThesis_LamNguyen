@@ -35,8 +35,14 @@ function generateSignature(apiKey, apiSecret, meetingNumber, role) {
 }
 
 // @route GET /api/meeting
-// @access Public
-router.get('/', async (req, res) => {
+// @access Private
+router.get('/', auth, async (req, res) => {
+  const user = req.user;
+
+  // find all related classroom
+  // get all meetings
+
+  // find all personal meetings (user is the creator)
   try {
     const meetings = await Meeting.find();
     res.json({ meetings });
@@ -143,7 +149,6 @@ router.post('/schedule', auth, async (req, res) => {
       accessToken
     );
 
-    // TODO save meeting to db
     let meeting = new Meeting({ ...zoomRes.data });
     console.log({ zoomRes: zoomRes.data });
     // meeting = { ...zoomRes.data };
