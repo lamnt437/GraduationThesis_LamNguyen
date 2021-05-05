@@ -1,13 +1,17 @@
-const axios = require('axios');
+import axios from 'axios';
 
-export async function fetchMeeting() {
-    const url = "http://localhost:3001/api/meeting";
+export const fetchMeetingFromClassroom = async (classId: String) => {
+  const url = `http://localhost:3001/api/classroom/${classId}/meetings`;
 
-    // TODO what to return if error occurs 
-    try {
-      const response = await axios.get(url);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-    }
-}
+  const response = await axios.get(url);
+
+  return response;
+};
+
+export const fetchMeeting = async () => {
+  const url = `http://localhost:3001/api/meeting/`;
+
+  const response = await axios.get(url);
+
+  return response;
+};

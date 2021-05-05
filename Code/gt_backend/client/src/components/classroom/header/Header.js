@@ -2,7 +2,7 @@ import React from 'react';
 import './Header.css';
 import logo from './img/ClassZoom.png';
 
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
 import SearchIcon from '@material-ui/icons/Search';
 import HomeIcon from '@material-ui/icons/Home';
 import FlagIcon from '@material-ui/icons/Flag';
@@ -16,6 +16,18 @@ import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 export const Header = () => {
+  {
+    /* TODO navigation link in header*/
+  }
+  {
+    /* TODO members/meetings/feeds/tasks/material */
+  }
+  {
+    /* load all posts, meetings, members and fill into redux store */
+  }
+  {
+    /* load class overview vs load class detail */
+  }
   return (
     <div className='header'>
       <div className='header__left'>
@@ -26,27 +38,11 @@ export const Header = () => {
         </div>
       </div>
       <div className='header__center'>
-        <div className='header__option header__option--active'>
-          <HomeIcon fontSize='large' />
-          {/* TODO navigation link in header*/}
-          {/* TODO members/meetings/feeds/tasks/material */}
-          {/* load all posts, meetings, members and fill into redux store */}
-          {/* load class overview vs load class detail */}
-        </div>
-        <div className='header__option'>
-          <FlagIcon fontSize='large' />
-          <NavLink to='/classroom/:id/task'></NavLink>
-        </div>
-        <div className='header__option'>
-          <SubscriptionsOutlinedIcon fontSize='large' />
-        </div>
-        <div className='header__option'>
-          <StorefrontOutlinedIcon fontSize='large' />
-        </div>
-        <div className='header__option'>
-          <SupervisedUserCircleIcon fontSize='large' />
-          <NavLink to='/classroom/:id/member'></NavLink>
-        </div>
+        <HeaderOption Icon={HomeIcon} title='home' />
+        <HeaderOption Icon={FlagIcon} title='tasks' />
+        <HeaderOption Icon={SubscriptionsOutlinedIcon} title='meetings' />
+        <HeaderOption Icon={StorefrontOutlinedIcon} title='store' />
+        <HeaderOption Icon={SupervisedUserCircleIcon} title='members' />
       </div>
       <div className='header__right'>
         <div className='header__info'>
@@ -67,6 +63,26 @@ export const Header = () => {
           <ExpandMoreIcon />
         </IconButton>
       </div>
+    </div>
+  );
+};
+
+const HeaderOption = ({ Icon, title }) => {
+  const match = useRouteMatch();
+  const history = useHistory();
+
+  const onClickHandler = (e) => {
+    e.preventDefault();
+    console.log(title + ' clicked');
+    history.push(`${match.url}/${title}`);
+  };
+
+  return (
+    <div
+      className='header__option header__option'
+      onClick={(e) => onClickHandler(e)}
+    >
+      {Icon && <Icon fontSize='large' />}
     </div>
   );
 };

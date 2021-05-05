@@ -50,11 +50,7 @@ const App = () => {
               <Route exact path='/meetings' component={MeetingList} />
               <PrivateRoute exact path='/dashboard' component={Calendar} />
               <PrivateRoute exact path='/classroom' component={AllClassrooms} />
-              <PrivateRoute
-                exact
-                path='/classroom/:id'
-                component={ClassDetail}
-              />
+              <PrivateRoute path='/classroom/:id' component={ClassDetail} />
               <PrivateRoute exact path='/profile' component={Profile} />
               {/* TODO build not found page*/}
               <Route path='*'>

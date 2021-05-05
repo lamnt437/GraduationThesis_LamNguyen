@@ -38,8 +38,12 @@ class Calendar extends Component {
   };
 
   async componentDidMount() {
-    const meetings = await fetchMeeting();
-    this.setState({ meetings: meetings.meetings });
+    try {
+      const response = await fetchMeeting();
+      this.setState({ meetings: response.data.meetings });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   render() {

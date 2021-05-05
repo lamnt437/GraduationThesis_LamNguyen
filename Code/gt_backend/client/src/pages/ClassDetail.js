@@ -9,6 +9,7 @@ import ClassDetailComponent from '../components/classroom/ClassDetail';
 // import Feed from '../components/classroom/tabs/feed/Feed';
 // import Widget from '../components/classroom/widget/Widget';
 import ClassRequest from '../components/classroom/ClassRequest';
+import ClassItem from '../components/classroom/ClassItem';
 
 const ClassDetail = () => {
   const params = useParams();
@@ -52,7 +53,12 @@ const ClassDetail = () => {
           />
         );
       } else {
-        renderedComp = <ClassRequest classId={params.id} />;
+        renderedComp = (
+          <div>
+            <ClassItem />
+            <ClassRequest classId={params.id} />
+          </div>
+        );
       }
     } else {
       renderedComp = <div>Not Found</div>;
