@@ -18,7 +18,7 @@ router.get('/', auth, async (req, res) => {
   }
 
   try {
-    const profile = await User.find({ _id: user.id }, { password: 0 });
+    const profile = await User.findOne({ _id: user.id }, { password: 0 });
     // console.log(profile);
     res.json({ profile });
   } catch (err) {

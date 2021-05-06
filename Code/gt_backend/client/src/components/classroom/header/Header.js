@@ -15,7 +15,7 @@ import ForumIcon from '@material-ui/icons/Forum';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-export const Header = () => {
+export const Header = ({ username }) => {
   {
     /* TODO navigation link in header*/
   }
@@ -47,7 +47,7 @@ export const Header = () => {
       <div className='header__right'>
         <div className='header__info'>
           <Avatar />
-          <h4>Lam Nguyen</h4>
+          <h4>{username}</h4>
         </div>
 
         <IconButton>
