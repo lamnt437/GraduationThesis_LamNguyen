@@ -22,3 +22,15 @@ export const fetchClassroom = async (id: String) => {
   const res = await axios.get(url + `/${id}`);
   return res;
 };
+
+export const fetchMembers = async (id: String) => {
+  const res = await axios.get(url + `/${id}/members`);
+
+  return res;
+};
+
+export const fetchSupervisors = async (id: String) => {
+  const res = await axios.get(url + `/${id}/supervisors`);
+
+  return res;
+};
