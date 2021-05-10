@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import MeetingItem from './MeetingItem';
 import { fetchMeetingFromClassroom } from '../../../../services/meeting.ts';
 
@@ -40,6 +41,14 @@ const MeetingList = ({ classId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
+  const history = useHistory();
+  const match = useRouteMatch();
+
+  const onCreateHandler = (e) => {
+    e.preventDefault();
+    history.push(`/meeting/schedule`);
+  };
+
   useEffect(async () => {
     try {
       const response = await fetchMeetingFromClassroom(classId);
@@ -65,8 +74,11 @@ const MeetingList = ({ classId }) => {
     } else {
       renderedComp = (
         <div>
+          <button onClick={(e) => onCreateHandler(e)}>Tạo meeting mới</button>
           {Array.isArray(meetingList) &&
-            meetingList.map((meeting) => <MeetingItem meeting={meeting} />)}
+            meetingList.map((meeting) => (
+              <MeetingItem meeting={meeting} key={meeting._id} />
+            ))}
         </div>
       );
     }

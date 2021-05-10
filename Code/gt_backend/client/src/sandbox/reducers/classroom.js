@@ -1,4 +1,9 @@
-import { LOAD_CLASS_SUCCESS, LOAD_CLASS_FAIL } from '../actions/types';
+import {
+  LOAD_CLASS_SUCCESS,
+  LOAD_CLASS_FAIL,
+  CREATE_CLASS_SUCCESS,
+  CREATE_CLASS_FAIL,
+} from '../actions/types';
 
 const initialState = {
   name: null,
@@ -17,6 +22,7 @@ export default function (state = initialState, action) {
 
   switch (type) {
     case LOAD_CLASS_SUCCESS:
+    case CREATE_CLASS_SUCCESS:
       return {
         ...state,
         ...payload,
@@ -25,6 +31,7 @@ export default function (state = initialState, action) {
       };
 
     case LOAD_CLASS_FAIL:
+    case CREATE_CLASS_FAIL:
       return {
         name: null,
         description: null,

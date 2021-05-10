@@ -1,5 +1,7 @@
 .widgets {
   padding: 30px;
+  position: sticky;
+  right: 0px;
 }
 
 .widgets > h3 {

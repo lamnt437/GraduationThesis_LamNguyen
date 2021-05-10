@@ -21,7 +21,10 @@ export const ClassDetail = (props) => {
         <Sidebar username={props.user?.name} avatar={props.user?.avatar} />
         {/* TODO design sub-route for classroom */}
         <Route path={`${match.path}/meetings`}>
-          <MeetingList classId={props.classId} />
+          <MeetingList
+            className={classes.center__comp}
+            classId={props.classId}
+          />
         </Route>
         {/* check path to  show meeting list instead of feed */}
         {/* feed load class detail from redux instead of passing params */}
@@ -32,10 +35,14 @@ export const ClassDetail = (props) => {
             description={props.description}
             classId={props.classId}
             posts={props.posts}
+            // className={classes.center__comp}
           />
         </Route>
         <Route path={`${match.path}/members`} exact>
-          <MemberList classId={props.classId} />
+          <MemberList
+            classId={props.classId}
+            className={classes.center__comp}
+          />
         </Route>
 
         {/* <MeetingList /> */}

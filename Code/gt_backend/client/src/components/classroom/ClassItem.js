@@ -1,4 +1,3 @@
-import React, { Fragment } from 'react';
 import classes from './css/ClassItem.module.css';
 import { Link } from 'react-router-dom';
 // import './css/classi.css';

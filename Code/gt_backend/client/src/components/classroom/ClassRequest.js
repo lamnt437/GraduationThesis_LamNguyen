@@ -14,6 +14,7 @@ const ClassRequest = (props) => {
     };
     try {
       const res = axios.post(url, {}, config);
+      console.log(res);
     } catch (err) {
       console.error(err.message);
     }

@@ -1,5 +1,5 @@
 import './App.css';
-import React, { Fragment, useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import NavBar from './components/layout/NavBar';
 import Landing from './components/layout/Landing';
@@ -9,7 +9,6 @@ import Meeting from './components/meeting/Meeting';
 import ScheduleMeeting from './components/meeting/ScheduleMeeting.js';
 import MeetingList from './components/meeting/MeetingList.js';
 import Calendar from './components/schedule/Calendar.tsx';
-import ClassList from './components/classroom/ClassList';
 import { Provider } from 'react-redux';
 import store from './sandbox/store';
 import Alert from './components/layout/Alert';
@@ -17,7 +16,6 @@ import { loadUser } from './sandbox/actions/auth';
 import setAuthToken from './utils/setAuthToken';
 import PrivateRoute from './components/routing/PrivateRoute';
 import AllClassrooms from './pages/AllClassrooms';
-import ClassDetail from './pages/ClassDetail';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 
@@ -49,8 +47,8 @@ const App = () => {
               />
               <Route exact path='/meetings' component={MeetingList} />
               <PrivateRoute exact path='/dashboard' component={Calendar} />
-              <PrivateRoute exact path='/classroom' component={AllClassrooms} />
-              <PrivateRoute path='/classroom/:id' component={ClassDetail} />
+              <PrivateRoute path='/classroom' component={AllClassrooms} />
+
               <PrivateRoute exact path='/profile' component={Profile} />
               {/* TODO build not found page*/}
               <Route path='*'>

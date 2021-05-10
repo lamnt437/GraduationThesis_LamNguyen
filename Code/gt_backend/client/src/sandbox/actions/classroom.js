@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { LOAD_CLASS_FAIL, LOAD_CLASS_SUCCESS } from './types';
+import {
+  LOAD_CLASS_FAIL,
+  LOAD_CLASS_SUCCESS,
+  CREATE_CLASS_SUCCESS,
+  CREATE_CLASS_FAIL,
+} from './types';
 
 export const getClassDetail = (id) => async (dispatch) => {
   const url = `http://localhost:3001/api/classroom/${id}`;
@@ -33,5 +38,40 @@ export const getClassDetail = (id) => async (dispatch) => {
   } catch (err) {
     console.log(err);
     dispatch({ type: LOAD_CLASS_FAIL });
+  }
+};
+
+export const createClass = (name, description) => async (dispatch) => {
+  const url = 'http://localhost:3001/api/classroom';
+
+  const options = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  console.log({
+    createClass: {
+      name,
+      description,
+    },
+  });
+
+  const payload = {
+    name,
+    description,
+  };
+
+  const body = JSON.stringify(payload);
+  console.log({ body });
+
+  try {
+    const response = await axios.post(url, body, options);
+    console.log(response);
+
+    dispatch({ type: CREATE_CLASS_SUCCESS });
+  } catch (error) {
+    console.log(error.message);
+    dispatch({ type: CREATE_CLASS_FAIL });
   }
 };

@@ -13,7 +13,8 @@ export const OAuth = () => {
         <img
           src='https://marketplacecontent.zoom.us/zoom_marketplace/img/add_to_zoom.png'
           height='32'
-          alt='Add to ZOOM'
+          width='135'
+          alt='Connect to ZOOM'
         />
       </a>
     </div>

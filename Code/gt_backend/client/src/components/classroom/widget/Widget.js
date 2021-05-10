@@ -4,7 +4,7 @@ import './Widget.css';
 const Widget = () => {
   return (
     <div className='widgets'>
-      <h3>Tasks</h3>
+      <h3>Nhiệm vụ</h3>
     </div>
   );
 };

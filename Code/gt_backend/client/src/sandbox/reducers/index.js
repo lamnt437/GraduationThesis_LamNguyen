@@ -6,4 +6,5 @@ import classroom from './classroom';
 export default combineReducers({
   alert,
   auth,
+  classroom,
 });

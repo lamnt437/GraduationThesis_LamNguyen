@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchMyProfile } from '../../services/profile.ts';
 import { Avatar } from '@material-ui/core';
+import OAuth from '../meeting/OAuth';
 
 const Profile = () => {
   const [profile, setProfile] = useState({});
@@ -31,6 +32,7 @@ const Profile = () => {
           <h1>{profile.name}</h1>
           <p>{profile.email}</p>
           <p>{profile.role == 2 ? 'Teacher' : 'Student'}</p>
+          <OAuth />
         </div>
       );
     }

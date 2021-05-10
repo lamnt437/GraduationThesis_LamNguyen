@@ -1,0 +1,10 @@
+.allclassrooms_container {
+}
+
+.allclassrooms_container > button {
+  border-radius: 6px;
+  color: #fff;
+  background-color: #1e88e5;
+  padding: 8px 22px;
+  cursor: pointer;
+}
