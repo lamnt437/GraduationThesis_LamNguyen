@@ -33,3 +33,23 @@ export const fetchPosts = async (id: String) => {
 
   return res;
 };
+
+export const addPost = async (text: String, classId: String) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const postContent = {
+    text,
+  };
+
+  // TODO validate input
+  const url = `http://localhost:3001/api/classroom/${classId}/posts`;
+  const body = JSON.stringify(postContent);
+
+  const response = await axios.put(url, body, config);
+
+  return response;
+};
