@@ -20,7 +20,7 @@ export const Feed = ({ classId, name, description, posts }) => {
 
       {/* profilePic, image, username, timestamp, message */}
       {Array.isArray(posts) &&
-        posts.map((post) => <Post message={post.text} />)}
+        posts.map((post) => <Post message={post.text} key={post._id} />)}
     </div>
   );
 };

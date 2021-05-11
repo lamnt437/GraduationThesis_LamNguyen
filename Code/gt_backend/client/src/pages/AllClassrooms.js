@@ -63,7 +63,7 @@ const AllClassrooms = () => {
         <ClassCreate />
       </Route>
 
-      <Route path={`${match.url}/:id`} exact>
+      <Route path={`${match.url}/:id`}>
         <ClassDetail />
       </Route>
     </Switch>
