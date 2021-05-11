@@ -10,6 +10,7 @@ import { Avatar, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ForumIcon from '@material-ui/icons/Forum';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import TodayIcon from '@material-ui/icons/Today';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 export const Header = ({ username }) => {
@@ -24,6 +25,7 @@ export const Header = ({ username }) => {
       </div>
       <div className='header__center'>
         <HeaderOption Icon={HomeIcon} title='home' />
+        <HeaderOption Icon={TodayIcon} title='calendar' />
         <HeaderOption Icon={FlagIcon} title='tasks' />
         <HeaderOption Icon={SubscriptionsOutlinedIcon} title='meetings' />
         <HeaderOption Icon={SupervisedUserCircleIcon} title='members' />

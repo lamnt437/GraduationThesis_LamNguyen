@@ -5,7 +5,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import ChatIcon from '@material-ui/icons/Chat';
 import VideoLibraryIcon from '@material-ui/icons/VideoLibrary';
 
-const Sidebar = ({ username, avatar }) => {
+const Sidebar = () => {
   return (
     // TODO after having designed sub Router, create navigation inside sidebar
     <div className='sidebar'>

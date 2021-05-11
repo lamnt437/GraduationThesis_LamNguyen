@@ -7,6 +7,7 @@ import Feed from './tabs/feed/Feed';
 import Widget from './widget/Widget';
 import MeetingList from './tabs/meeting/MeetingList';
 import MemberList from './tabs/member/MemberList';
+import ClassCalendar from './tabs/calendar/ClassCalendar.jsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -38,6 +39,7 @@ export const ClassDetail = (props) => {
             // className={classes.center__comp}
           />
         </Route>
+
         <Route path={`${match.path}/members`} exact>
           <MemberList
             classId={props.classId}
@@ -45,7 +47,19 @@ export const ClassDetail = (props) => {
           />
         </Route>
 
-        {/* <MeetingList /> */}
+        <Route path={`${match.path}/members`} exact>
+          <MemberList
+            classId={props.classId}
+            className={classes.center__comp}
+          />
+        </Route>
+
+        <Route path={`${match.path}/calendar`}>
+          <ClassCalendar
+            className={classes.center__comp}
+            classId={props.classId}
+          />
+        </Route>
         <Widget />
       </div>
     </Fragment>
