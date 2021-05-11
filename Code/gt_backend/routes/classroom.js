@@ -5,6 +5,7 @@ const router = express.Router();
 const ClassRoom = require('../models/ClassRoom');
 const Meeting = require('../models/Meeting');
 const User = require('../models/User');
+const Post = require('../models/Post');
 // middlewares
 const auth = require('../middleware/auth');
 // utils
@@ -527,42 +528,100 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
     // get class
+    let classroom = null;
     try {
-      const classroom = await ClassRoom.findById(req.params.id);
+      classroom = await ClassRoom.findById(req.params.id);
       if (!classroom) {
         return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
       }
-
-      // check access permission
-      const user = req.user;
-      if (
-        !user.role === ROLE_ADMIN &&
-        !classroom.supervisor_ids.includes(user.id) &&
-        !classroom.member_ids.includes(user.id)
-      ) {
-        return res.status(401).json({ msg: 'Access denied' });
-      }
-
-      // add posts
-      const post = {
-        user: user.id,
-        text: req.body.text,
-      };
-
-      classroom.posts.push(post);
-      classroom.save();
-      // return post
-      res.json({ post });
-    } catch (error) {
-      if (error.kind === 'ObjectId') {
+    } catch (err) {
+      if (err.kind === 'ObjectId') {
         return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
       }
+      console.log(err);
+      return res.status(500).json({ msg: 'Server error' });
+    }
+
+    // check access permission
+    const user = req.user;
+    if (!isRelated(classroom, user)) {
+      return res.status(403).json({ msg: 'Unauthorized' });
+    }
+
+    // add post
+    try {
+      const post = new Post({
+        user: user.id,
+        text: req.body.text,
+      });
+
+      post.save();
+      classroom.posts.push(post._id);
+      classroom.save();
+
+      res.json({ post });
+    } catch (error) {
       console.error(error.message);
       res.status(500).json({ msg: 'Server error' });
     }
   }
 );
+
+router.get('/:id/posts', auth, async (req, res) => {
+  // get class
+  let classroom = null;
+  try {
+    classroom = await ClassRoom.findById(req.params.id);
+    if (!classroom) {
+      return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
+    }
+  } catch (err) {
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
+    }
+    console.log(err);
+    return res.status(500).json({ msg: 'Server error' });
+  }
+
+  // check permission
+  const user = req.user;
+  if (!isRelated(classroom, user)) {
+    return res.status(403).json({ msg: 'Unauthorized' });
+  }
+
+  // get posts
+  const post_ids = classroom.posts;
+  try {
+    var posts = await Post.find({ _id: { $in: post_ids } });
+
+    // solve await in loop
+    if (Array.isArray(posts)) {
+      const postPromises = posts.map(async (post) => {
+        let owner = await User.findById(post.user);
+        console.log({ owner });
+
+        const fullPost = {
+          ...post._doc,
+          username: owner.name,
+          avatar: owner.avatar,
+        };
+
+        console.log({ fullPost });
+        return fullPost;
+      });
+
+      posts = await Promise.all(postPromises);
+      console.log({ posts });
+    }
+
+    res.json({ posts });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
 
 // route    POST /api/classroom/:id/request
 // desc     user add request to join class

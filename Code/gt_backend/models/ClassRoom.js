@@ -31,19 +31,10 @@ const ClassSchema = new mongoose.Schema({
     ref: 'users',
   },
 
-  posts: [
-    {
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: 'users',
-      },
-
-      text: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+  posts: {
+    type: [Schema.Types.ObjectId],
+    ref: 'posts',
+  },
 });
 
 module.exports = ClassRoom = mongoose.model('classrooms', ClassSchema);
