@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 import classes from './css/ClassDetail.module.css';
 import Header from './header/Header';
@@ -20,23 +20,20 @@ export const ClassDetail = (props) => {
 
       <div className={classes.app__body}>
         <Sidebar username={props.user?.name} avatar={props.user?.avatar} />
-        {/* TODO design sub-route for classroom */}
+
         <Route path={`${match.path}/meetings`}>
           <MeetingList
             className={classes.center__comp}
             classId={props.classId}
           />
         </Route>
-        {/* check path to  show meeting list instead of feed */}
-        {/* feed load class detail from redux instead of passing params */}
-        {/* use hook from react to see from which url this component is render */}
+
         <Route path={[`${match.path}`, `${match.path}/home`]} exact>
           <Feed
             name={props.name}
             description={props.description}
             classId={props.classId}
-            posts={props.posts}
-            // className={classes.center__comp}
+            className={classes.center__comp}
           />
         </Route>
 

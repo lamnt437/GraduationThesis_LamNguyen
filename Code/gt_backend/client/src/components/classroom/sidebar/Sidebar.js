@@ -7,7 +7,7 @@ import VideoLibraryIcon from '@material-ui/icons/VideoLibrary';
 
 const Sidebar = () => {
   return (
-    // TODO after having designed sub Router, create navigation inside sidebar
+    // TODO add class name + info
     <div className='sidebar'>
       {/* <SidebarRow src={avatar} title={username} /> */}
       <SidebarRow Icon={EmojiFlagsIcon} title='Nhiệm vụ' name='tasks' />

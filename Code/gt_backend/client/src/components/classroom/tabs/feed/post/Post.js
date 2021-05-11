@@ -6,15 +6,18 @@ import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import NearMeIcon from '@material-ui/icons/NearMe';
 import { ExpandMoreOutlined } from '@material-ui/icons';
+// import { dateFormat } from 'dateformat';
 
 const Post = ({ profilePic, image, username, timestamp, message }) => {
+  const created_at = new Date(timestamp);
+
   return (
     <div className='classpost'>
       <div className='post__top'>
         <Avatar src={profilePic} className='post__avatar' />
         <div className='post__topInfo'>
           <h3>{username}</h3>
-          <p>{timestamp}</p>
+          <p>{created_at.toString()}</p>
         </div>
       </div>
 

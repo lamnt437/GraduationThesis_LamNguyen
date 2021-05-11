@@ -20,7 +20,6 @@ const ClassDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(async () => {
-    // TODO validate res isRelated here
     try {
       const res = await fetchClassroom(params.id);
       console.log(res);
@@ -49,7 +48,6 @@ const ClassDetail = () => {
             name={classDetail.name}
             description={classDetail.description}
             classId={classDetail._id}
-            posts={classDetail.posts}
           />
         );
       } else {
