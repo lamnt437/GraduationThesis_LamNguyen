@@ -9,6 +9,7 @@ import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Loading from '../../../layout/Loading';
 
 export const Feed = ({ classId, user }) => {
   // TODO change sorting by query params (React course 284)
@@ -39,18 +40,20 @@ export const Feed = ({ classId, user }) => {
         user={user}
       />
 
-      {isLoading
-        ? '<div>Loading ....</div>'
-        : Array.isArray(posts) &&
-          posts.map((post) => (
-            <Post
-              username={post.username}
-              timestamp={post.created_at}
-              message={post.text}
-              key={post._id}
-              avatar={post.avatar}
-            />
-          ))}
+      {isLoading ? (
+        <Loading />
+      ) : (
+        Array.isArray(posts) &&
+        posts.map((post) => (
+          <Post
+            username={post.username}
+            timestamp={post.created_at}
+            message={post.text}
+            key={post._id}
+            avatar={post.avatar}
+          />
+        ))
+      )}
     </div>
   );
 };
@@ -71,7 +74,7 @@ const MessageSender = ({ posts, setPosts, classId, user }) => {
       newPost.username = user.name;
       newPost.avatar = user.avatar;
 
-      setPosts([...posts, newPost]);
+      setPosts([newPost, ...posts]);
       setPostContent({ ...postContent, text: '' });
     } catch (err) {
       console.error(err.message);

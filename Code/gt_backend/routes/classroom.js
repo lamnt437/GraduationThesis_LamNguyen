@@ -594,13 +594,14 @@ router.get('/:id/posts', auth, async (req, res) => {
   // get posts
   const post_ids = classroom.posts;
   try {
-    var posts = await Post.find({ _id: { $in: post_ids } });
+    var posts = await Post.find({ _id: { $in: post_ids } }).sort({
+      created_at: -1,
+    });
 
     // solve await in loop
     if (Array.isArray(posts)) {
       const postPromises = posts.map(async (post) => {
         let owner = await User.findById(post.user);
-        console.log({ owner });
 
         const fullPost = {
           ...post._doc,
@@ -608,12 +609,10 @@ router.get('/:id/posts', auth, async (req, res) => {
           avatar: owner.avatar,
         };
 
-        console.log({ fullPost });
         return fullPost;
       });
 
       posts = await Promise.all(postPromises);
-      console.log({ posts });
     }
 
     res.json({ posts });
