@@ -10,6 +10,11 @@ const MeetingSchema = new Schema({
 
   topic: {
     type: String,
+    required: true,
+  },
+
+  description: {
+    type: String,
   },
 
   start_time: {

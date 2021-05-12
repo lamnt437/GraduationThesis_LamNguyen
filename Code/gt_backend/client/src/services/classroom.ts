@@ -53,3 +53,38 @@ export const addPost = async (text: String, classId: String) => {
 
   return response;
 };
+
+export const addMeeting = async (
+  classId: String,
+  topic: String,
+  description: String,
+  start_time: Date,
+  duration: Number,
+  password: String,
+  type: Number,
+  recurrence: any
+) => {
+  const url = `http://localhost:3001/api/classroom/${classId}/meetings`;
+
+  const meeting = {
+    topic,
+    description,
+    start_time,
+    duration,
+    password,
+    type,
+    recurrence,
+  };
+
+  const body = JSON.stringify(meeting);
+  console.log(body);
+
+  const reqConfig = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const response = await axios.put(url, body, reqConfig);
+  return response;
+};

@@ -21,13 +21,6 @@ export const ClassDetail = (props) => {
       <div className={classes.app__body}>
         <Sidebar username={props.user?.name} avatar={props.user?.avatar} />
 
-        <Route path={`${match.path}/meetings`}>
-          <MeetingList
-            className={classes.center__comp}
-            classId={props.classId}
-          />
-        </Route>
-
         <Route path={[`${match.path}`, `${match.path}/home`]} exact>
           <Feed
             name={props.name}
@@ -37,24 +30,31 @@ export const ClassDetail = (props) => {
           />
         </Route>
 
-        <Route path={`${match.path}/members`} exact>
-          <MemberList
-            classId={props.classId}
-            className={classes.center__comp}
-          />
-        </Route>
-
-        <Route path={`${match.path}/members`} exact>
-          <MemberList
-            classId={props.classId}
-            className={classes.center__comp}
-          />
-        </Route>
-
         <Route path={`${match.path}/calendar`}>
           <ClassCalendar
             className={classes.center__comp}
             classId={props.classId}
+          />
+        </Route>
+
+        {/* <Route path={`${match.path}/tasks`} exact>
+          <TaskList
+            classId={props.classId}
+            className={classes.center__comp}
+          />
+        </Route> */}
+
+        <Route path={`${match.path}/meetings`}>
+          <MeetingList
+            className={classes.center__comp}
+            classId={props.classId}
+          />
+        </Route>
+
+        <Route path={`${match.path}/members`} exact>
+          <MemberList
+            classId={props.classId}
+            className={classes.center__comp}
           />
         </Route>
         <Widget />

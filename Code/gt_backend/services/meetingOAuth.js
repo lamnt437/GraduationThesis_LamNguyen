@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
 async function createMeeting(
   topic,
+  description,
   start_time,
   duration,
   password,
@@ -14,6 +15,7 @@ async function createMeeting(
   AccessToken
 ) {
   let payload = {
+    description,
     duration,
     start_time,
     timezone: 'Asia/Saigon',

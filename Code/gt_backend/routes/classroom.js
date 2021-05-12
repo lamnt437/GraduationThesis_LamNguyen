@@ -246,7 +246,7 @@ router.put(
     }
 
     // normal or recurrence meeting
-    const { topic, duration, password } = req.body;
+    const { topic, description, duration, password } = req.body;
     let type = req.body.type;
     // default meeting type is 2 (normal)
     if (!type) {
@@ -308,6 +308,7 @@ router.put(
     try {
       const zoomRes = await zoomService.createMeeting(
         topic,
+        description,
         start_time,
         duration,
         password,
