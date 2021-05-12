@@ -44,6 +44,36 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+router.get('/find', async (req, res) => {
+  // find class
+  const findId = req.query.id;
+
+  // parseinto mongodb objectid
+  if (!mongoose.isValidObjectId(findId)) {
+    return res.status(404).json({ msg: 'Class not found' });
+  }
+
+  try {
+    const foundClass = await ClassRoom.findOne(
+      { _id: findId },
+      { _id: 1, name: 1, description: 1 }
+    );
+    if (!foundClass) {
+      return res.status(404).json({ msg: 'Class not found' });
+    }
+
+    return res.json({ classroom: foundClass });
+  } catch (err) {
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Class not found' });
+    }
+    console.log(err);
+    return res.status(500).json({ msg: 'Server error' });
+  }
+  const foundClass = await ClassRoom.findById(findId);
+  // return
+});
+
 // @route GET /api/classroom/:id
 // desc class by id
 // access Private members + admin
