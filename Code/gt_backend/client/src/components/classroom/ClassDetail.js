@@ -7,6 +7,7 @@ import Feed from './tabs/feed/Feed';
 import Widget from './widget/Widget';
 import MeetingList from './tabs/meeting/MeetingList';
 import MemberList from './tabs/member/MemberList';
+import RequestList from './tabs/member/RequestList';
 import ClassCalendar from './tabs/calendar/ClassCalendar.jsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -56,6 +57,7 @@ export const ClassDetail = (props) => {
             classId={props.classId}
             className={classes.center__comp}
           />
+          <RequestList classId={props.classId} />
         </Route>
         <Widget />
       </div>

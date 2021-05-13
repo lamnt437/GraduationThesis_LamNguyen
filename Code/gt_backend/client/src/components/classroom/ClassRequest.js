@@ -1,33 +1,29 @@
-import React from 'react';
-import axios from 'axios';
+import { requestClassroom } from '../../services/classroom';
+import classes from './css/ClassItem.module.css';
 
-const ClassRequest = (props) => {
-  const requestButtonClickHandler = (e) => {
+const ClassRequest = ({ name, description, classId }) => {
+  const requestButtonClickHandler = async (e) => {
     e.preventDefault();
 
-    const url = `http://localhost:3001/api/classroom/${props.classId}/request`;
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
     try {
-      const res = axios.post(url, {}, config);
-      console.log(res);
+      const response = await requestClassroom(classId);
     } catch (err) {
-      console.error(err.message);
+      console.log(err);
     }
   };
 
   return (
-    <div>
-      {/* basic classroom info */}
-      {/* button send request */}
+    <li className={classes.item}>
+      <figure>
+        <blockquote>
+          <p>{name}</p>
+        </blockquote>
+        <figcaption>{description}</figcaption>
+      </figure>
       <button onClick={(e) => requestButtonClickHandler(e)}>
         Request to join
       </button>
-    </div>
+    </li>
   );
 };
 

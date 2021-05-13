@@ -16,6 +16,41 @@ export const fetchClassroom = async (id: String) => {
   return res;
 };
 
+export const findClassroom = async (id: String) => {
+  const res = await axios.get(url + `/find?id=${id}`);
+  return res;
+};
+
+export const requestClassroom = async (classId: String) => {
+  const url = `http://localhost:3001/api/classroom/${classId}/request`;
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const res = axios.post(url, {}, config);
+
+  return res;
+};
+
+// route  PUT /api/classroom/:id/request/:reqId
+// desc   approve request to join
+// access Private supervisors
+export const approveRequest = async (classId: String, requestId: String) => {
+  const url = `http://localhost:3001/api/classroom/${classId}/request/${requestId}`;
+
+  const res = axios.put(url);
+  return res;
+};
+
+// route GET /api/classroom/:id/request
+export const fetchRequest = async (classId: String) => {
+  const res = await axios.get(`${url}/${classId}/request`);
+  return res;
+};
+
 export const fetchMembers = async (id: String) => {
   const res = await axios.get(url + `/${id}/members`);
 

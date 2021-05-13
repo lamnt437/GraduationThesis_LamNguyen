@@ -695,34 +695,58 @@ router.post('/:id/request', auth, async (req, res) => {
 // desc   get requests to join in a classroom
 // access Private supervisors or admins
 router.get('/:id/request', auth, async (req, res) => {
+  const classId = req.params.id;
+  if (!mongoose.isValidObjectId(classId)) {
+    return res.status(404).json({ msg: 'Classroom not found' });
+  }
+
+  var classroom = null;
+
   try {
-    const classId = req.params.id;
-    if (!mongoose.isValidObjectId(classId)) {
-      return res.status(404).json({ msg: 'Classroom not found' });
-    }
     // find class
-    const classroom = await ClassRoom.findById(req.params.id);
+    classroom = await ClassRoom.findById(req.params.id);
     if (!classroom) {
       return res.status(404).json({ msg: 'Class not found' });
     }
-
-    // check if user is supervisor
-    const user = req.user;
-    if (!isSupervisorOrAdmin(classroom, user)) {
-      return res.status(401).json({ msg: 'Unauthorized' });
+  } catch (err) {
+    if (err.kind === 'ObjectId') {
+      res.status(404).json({ errors: [{ msg: 'Classroom not found' }] });
     }
+  }
 
-    // list request
-    const requests = classroom.requests;
+  // check if user is supervisor
+  const user = req.user;
+  if (!isSupervisorOrAdmin(classroom, user)) {
+    return res.status(401).json({ msg: 'Unauthorized' });
+  }
+
+  // list request
+  // TODO fetch request profile info name email id /link to public profile
+  var requests = classroom.requests;
+
+  try {
     if (Array.isArray(requests)) {
+      // fetch request info using await loop
+      const requestPromises = requests.map(async (request) => {
+        const requester = await User.findOne(
+          { _id: request },
+          { _id: 1, name: 1, email: 1 }
+        );
+
+        const fullRequest = {
+          _id: request,
+          username: requester.name,
+          email: requester.email,
+        };
+        return fullRequest;
+      });
+
+      requests = await Promise.all(requestPromises);
       res.json({ requests });
     } else {
       res.json({ requests: [] });
     }
   } catch (error) {
-    if (error.kind === 'ObjectId') {
-      res.status(404).json({ errors: [{ msg: 'Classroom not found' }] });
-    }
     console.error(error.message);
     res.status(500).json({ msg: 'Server error' });
   }
