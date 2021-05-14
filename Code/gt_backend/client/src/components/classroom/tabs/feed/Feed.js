@@ -51,6 +51,7 @@ export const Feed = ({ classId, user }) => {
             message={post.text}
             key={post._id}
             avatar={post.avatar}
+            image={post.image}
           />
         ))
       )}
@@ -61,14 +62,21 @@ export const Feed = ({ classId, user }) => {
 const MessageSender = ({ posts, setPosts, classId, user }) => {
   const [postContent, setPostContent] = useState({
     text: '',
+    image: null,
   });
+
+  let inputFileProp = null;
 
   const submitHandler = async (e) => {
     // TODO prevent unwanted transition to other page
     e.preventDefault();
 
     try {
-      const response = await addPost(postContent.text, classId);
+      const fd = new FormData();
+      fd.append('text', postContent.text);
+      fd.append('image', postContent.image);
+
+      const response = await addPost(fd, classId);
 
       let newPost = response.data.post;
       newPost.username = user.name;
@@ -86,6 +94,10 @@ const MessageSender = ({ posts, setPosts, classId, user }) => {
     setPostContent({ ...postContent, [e.target.name]: e.target.value });
   };
 
+  const fileSelectedHandler = (e) => {
+    setPostContent({ ...postContent, image: e.target.files[0] });
+  };
+
   return (
     <div className='messageSender'>
       <div className='messageSender__top'>
@@ -98,16 +110,26 @@ const MessageSender = ({ posts, setPosts, classId, user }) => {
             value={postContent.text}
             name='text'
           />
+          <input
+            style={{ display: 'none' }}
+            type='file'
+            ref={(fileInput) => (inputFileProp = fileInput)}
+            onChange={(e) => fileSelectedHandler(e)}
+          />
           <button onClick={submitHandler} type='submit'>
             Post
           </button>
         </form>
       </div>
-
+      <div>{postContent.image ? postContent.image.name : ''}</div>
       <div className='messageSender__bottom'>
-        <div className='messageSender__option'>
+        <div
+          className='messageSender__option'
+          onClick={() => inputFileProp.click()}
+          style={{ cursor: 'pointer' }}
+        >
           <PhotoLibraryIcon style={{ color: 'green' }} />
-          <h3>Photo/Video</h3>
+          <h3>Ảnh</h3>
         </div>
 
         <div className='messageSender__option'>

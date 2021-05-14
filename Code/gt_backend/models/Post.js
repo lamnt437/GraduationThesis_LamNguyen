@@ -38,6 +38,10 @@ const PostSchema = new Schema({
     },
   ],
 
+  image: {
+    type: String,
+  },
+
   created_at: {
     type: Date,
     default: Date.now,

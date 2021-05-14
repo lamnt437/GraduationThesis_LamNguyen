@@ -1,4 +1,5 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import './Post.css';
 import { Avatar } from '@material-ui/core';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
@@ -9,6 +10,21 @@ import { ExpandMoreOutlined } from '@material-ui/icons';
 // import { dateFormat } from 'dateformat';
 
 const Post = ({ profilePic, image, username, timestamp, message }) => {
+  const [imageStream, setImageStream] = useState({ content: '' });
+
+  useEffect(async () => {
+    const url = `http://localhost:3001/api/sandbox/images/${image}`;
+    setImageStream({ content: url });
+
+    // try {
+    //   const response = await axios.get(url);
+    //   console.log({ imageStream: response.body });
+    //   setImageStream({ content: response.body });
+    // } catch (err) {
+    //   console.log(err);
+    // }
+  }, []);
+
   const created_at = new Date(timestamp);
 
   return (
@@ -25,8 +41,10 @@ const Post = ({ profilePic, image, username, timestamp, message }) => {
         <p>{message}</p>
       </div>
 
+      {/* TODO test image display on frontend */}
       <div className='post__image'>
-        <img src={image} alt='' />
+        {/* <img src={`http://localhost:3001/api/sandbox/images/${image}`} alt='' /> */}
+        {image ? <img src={imageStream.content} /> : ''}
       </div>
 
       <div className='post__options'>

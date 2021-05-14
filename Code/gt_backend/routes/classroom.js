@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const upload = multer({ dest: 'public/images' });
+const s3 = require('../config/s3');
 
 // models
 const ClassRoom = require('../models/ClassRoom');
@@ -549,56 +552,60 @@ router.get('/:id/meetings', auth, async (req, res) => {
 // @route   PUT /api/classroom/:id/posts
 // @desc    add post to a classroom
 // @access  Private: admin, supervisors, members
-router.put(
-  '/:id/posts',
-  auth,
-  body('text', 'Post content is required').exists(),
-  async (req, res) => {
-    // validate post
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    // get class
-    let classroom = null;
-    try {
-      classroom = await ClassRoom.findById(req.params.id);
-      if (!classroom) {
-        return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
-      }
-    } catch (err) {
-      if (err.kind === 'ObjectId') {
-        return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
-      }
-      console.log(err);
-      return res.status(500).json({ msg: 'Server error' });
-    }
-
-    // check access permission
-    const user = req.user;
-    if (!isRelated(classroom, user)) {
-      return res.status(403).json({ msg: 'Unauthorized' });
-    }
-
-    // add post
-    try {
-      const post = new Post({
-        user: user.id,
-        text: req.body.text,
-      });
-
-      post.save();
-      classroom.posts.push(post._id);
-      classroom.save();
-
-      res.json({ post });
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ msg: 'Server error' });
-    }
+// TODO add image in post
+router.put('/:id/posts', auth, upload.single('image'), async (req, res) => {
+  // TODO validate post
+  if (req.body.text.trim().length === 0) {
+    return res.status(400).json({ msg: 'Text is required' });
   }
-);
+  // get class
+  let classroom = null;
+  try {
+    classroom = await ClassRoom.findById(req.params.id);
+    if (!classroom) {
+      return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
+    }
+  } catch (err) {
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
+    }
+    console.log(err);
+    return res.status(500).json({ msg: 'Server error' });
+  }
+
+  // check access permission
+  const user = req.user;
+  if (!isRelated(classroom, user)) {
+    return res.status(403).json({ msg: 'Unauthorized' });
+  }
+
+  // add post
+  try {
+    const image = req.file;
+    const text = req.body.text.trim();
+
+    const post = new Post({
+      user: user.id,
+      text,
+      image: req.file?.filename,
+    });
+
+    if (req.file) {
+      const response = await s3.uploadFile(image);
+    }
+
+    post.save();
+    console.log({ post });
+
+    classroom.posts.push(post._id);
+    classroom.save();
+
+    res.json({ post });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
 
 router.get('/:id/posts', auth, async (req, res) => {
   // get class

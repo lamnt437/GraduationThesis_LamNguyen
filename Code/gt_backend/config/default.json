@@ -4,5 +4,9 @@
   "zoomApiKey": "kN4OOc2FSseBnEOXYS35pg",
   "zoomApiSecret": "F3K0ZPViCHg8MHB3Yc8OG5YXGLm556QLxkGd",
   "zoomClientId": "pjqdk2rYRYC13CVvVXT7ag",
-  "zoomClientSecret": "H5Ek2lKZSDroxSbmYMFHeODPcmygrzQa"
+  "zoomClientSecret": "H5Ek2lKZSDroxSbmYMFHeODPcmygrzQa",
+  "awsAccessKey": "AKIAUKHFTR7KFDZVNUPU",
+  "awsSecretKey": "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",
+  "awsRegion": "ap-southeast-1",
+  "awsBucketName": "classzoom"
 }
