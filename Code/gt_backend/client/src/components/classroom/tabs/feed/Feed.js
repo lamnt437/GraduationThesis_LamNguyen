@@ -83,7 +83,7 @@ const MessageSender = ({ posts, setPosts, classId, user }) => {
       newPost.avatar = user.avatar;
 
       setPosts([newPost, ...posts]);
-      setPostContent({ ...postContent, text: '' });
+      setPostContent({ text: '', image: null });
     } catch (err) {
       console.error(err.message);
     }

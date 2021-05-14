@@ -3,6 +3,9 @@ const router = express.Router();
 const multer = require('multer');
 const upload = multer({ dest: 'public/images' });
 const s3 = require('../config/s3');
+const fs = require('fs');
+const util = require('util');
+const unlinkFile = util.promisify(fs.unlink);
 
 // models
 const ClassRoom = require('../models/ClassRoom');
@@ -552,12 +555,11 @@ router.get('/:id/meetings', auth, async (req, res) => {
 // @route   PUT /api/classroom/:id/posts
 // @desc    add post to a classroom
 // @access  Private: admin, supervisors, members
-// TODO add image in post
 router.put('/:id/posts', auth, upload.single('image'), async (req, res) => {
-  // TODO validate post
   if (req.body.text.trim().length === 0) {
     return res.status(400).json({ msg: 'Text is required' });
   }
+
   // get class
   let classroom = null;
   try {
@@ -591,11 +593,16 @@ router.put('/:id/posts', auth, upload.single('image'), async (req, res) => {
     });
 
     if (req.file) {
-      const response = await s3.uploadFile(image);
+      try {
+        const response = await s3.uploadFile(image);
+        await unlinkFile(image.path);
+      } catch (err) {
+        console.log(err);
+        return res.status(500).json({ msg: 'Error while uploading file' });
+      }
     }
 
     post.save();
-    console.log({ post });
 
     classroom.posts.push(post._id);
     classroom.save();
