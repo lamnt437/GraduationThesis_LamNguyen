@@ -1,11 +1,36 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const upload = multer({ dest: 'public/images' });
+
 const s3 = require('../config/s3');
 const fs = require('fs');
 const util = require('util');
 const unlinkFile = util.promisify(fs.unlink);
+
+// multer file upload
+const DIR = 'public/images';
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, DIR);
+  },
+});
+
+const uploadImage = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype == 'image/png' ||
+      file.mimetype == 'image/jpg' ||
+      file.mimetype == 'image/jpeg'
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return cb(new Error('only png, jpg, jpeg format is allowed'));
+    }
+  },
+}).single('image');
 
 // models
 const ClassRoom = require('../models/ClassRoom');
@@ -555,63 +580,71 @@ router.get('/:id/meetings', auth, async (req, res) => {
 // @route   PUT /api/classroom/:id/posts
 // @desc    add post to a classroom
 // @access  Private: admin, supervisors, members
-router.put('/:id/posts', auth, upload.single('image'), async (req, res) => {
-  if (req.body.text.trim().length === 0) {
-    return res.status(400).json({ msg: 'Text is required' });
-  }
-
-  // get class
-  let classroom = null;
-  try {
-    classroom = await ClassRoom.findById(req.params.id);
-    if (!classroom) {
-      return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
+router.put('/:id/posts', auth, async (req, res) => {
+  uploadImage(req, res, async (err) => {
+    if (err instanceof multer.MulterError) {
+      console.error(err.message);
+      return res.status(500).json({ err: message });
+    } else if (err) {
+      return res.status(400).json({ err: err.message });
     }
-  } catch (err) {
-    if (err.kind === 'ObjectId') {
-      return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
+
+    // next things
+    if (req.body.text.trim().length === 0) {
+      return res.status(400).json({ msg: 'Text is required' });
     }
-    console.log(err);
-    return res.status(500).json({ msg: 'Server error' });
-  }
-
-  // check access permission
-  const user = req.user;
-  if (!isRelated(classroom, user)) {
-    return res.status(403).json({ msg: 'Unauthorized' });
-  }
-
-  // add post
-  try {
-    const image = req.file;
-    const text = req.body.text.trim();
-
-    const post = new Post({
-      user: user.id,
-      text,
-      image: req.file?.filename,
-    });
-
-    if (req.file) {
-      try {
-        const response = await s3.uploadFile(image);
-        await unlinkFile(image.path);
-      } catch (err) {
-        console.log(err);
-        return res.status(500).json({ msg: 'Error while uploading file' });
+    // get class
+    let classroom = null;
+    try {
+      classroom = await ClassRoom.findById(req.params.id);
+      if (!classroom) {
+        return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
       }
+    } catch (err) {
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ errors: [{ msg: 'Class not found' }] });
+      }
+      console.log(err);
+      return res.status(500).json({ msg: 'Server error' });
     }
 
-    post.save();
+    // check access permission
+    const user = req.user;
+    if (!isRelated(classroom, user)) {
+      return res.status(403).json({ msg: 'Unauthorized' });
+    }
 
-    classroom.posts.push(post._id);
-    classroom.save();
+    try {
+      const image = req.file;
+      const text = req.body.text.trim();
 
-    res.json({ post });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ msg: 'Server error' });
-  }
+      const post = new Post({
+        user: user.id,
+        text,
+        image: req.file?.filename,
+      });
+
+      if (req.file) {
+        try {
+          const response = await s3.uploadFile(image);
+          await unlinkFile(image.path);
+        } catch (err) {
+          console.log(err);
+          return res.status(500).json({ msg: 'Error while uploading file' });
+        }
+      }
+
+      post.save();
+
+      classroom.posts.push(post._id);
+      classroom.save();
+
+      res.json({ post });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ msg: 'Server error' });
+    }
+  });
 });
 
 router.get('/:id/posts', auth, async (req, res) => {

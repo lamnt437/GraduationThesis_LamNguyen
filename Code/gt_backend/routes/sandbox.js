@@ -2,8 +2,32 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 var multer = require('multer');
-var upload = multer({ dest: 'public/images' });
+// var upload = multer({ dest: 'public/images' });
 const s3 = require('../config/s3');
+
+const DIR = 'public/images';
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, DIR);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype == 'image/png' ||
+      file.mimetype == 'image/jpg' ||
+      file.mimetype == 'image/jpeg'
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return cb(new Error('only png, jpg, jpeg format is allowed'));
+    }
+  },
+}).single('image');
 
 router.get('/isExpired/:token', (req, res) => {
   try {
@@ -19,11 +43,22 @@ router.get('/isExpired/:token', (req, res) => {
   }
 });
 
-router.post('/images', upload.single('image'), async (req, res) => {
-  const file = req.file;
-  const result = await s3.uploadFile(file);
-  console.log(result);
-  res.send('okay');
+router.post('/images', (req, res) => {
+  upload(req, res, async function (err) {
+    if (err instanceof multer.MulterError) {
+      console.error(err.message);
+      return res.status(500).json({ err: err.message });
+    } else if (err) {
+      console.error(err.message);
+      return res.status(400).json({ err: err.message });
+    }
+
+    let file = req.file;
+
+    const result = await s3.uploadFile(file);
+    console.log(result);
+    res.send('okay');
+  });
 });
 
 router.get('/images/:key', (req, res) => {
