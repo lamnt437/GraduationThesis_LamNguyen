@@ -23,6 +23,7 @@
     "crypto": "^1.0.1",
     "dateformat": "^4.5.1",
     "debug": "~2.6.9",
+    "dotenv": "^9.0.2",
     "express": "~4.16.1",
     "express-validator": "^6.10.0",
     "gravatar": "^1.8.1",

@@ -18,6 +18,7 @@ import PrivateRoute from './components/routing/PrivateRoute';
 import AllClassrooms from './pages/AllClassrooms';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
+import Testing from './components/testing/Testing';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -51,6 +52,7 @@ const App = () => {
 
               <PrivateRoute exact path='/profile' component={Profile} />
               {/* TODO build not found page*/}
+              <Route exact path='/test' component={Testing} />
               <Route path='*'>
                 <NotFound />
               </Route>

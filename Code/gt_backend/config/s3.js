@@ -1,31 +1,42 @@
 const AWS = require('aws-sdk');
 const config = require('config');
 const fs = require('fs');
+require('dotenv').config();
+
+const bucketName = process.env.AWS_BUCKET_NAME;
+const region = process.env.AWS_BUCKET_REGION;
+const accessKeyId = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_KEY;
 
 // create AWS instance
 const s3 = new AWS.S3({
-  accessKeyId: config.get('awsAccessKey'),
-  secretAccessKey: config.get('awsSecretKey'),
-  region: config.get('awsRegion'),
+  accessKeyId,
+  secretAccessKey,
+  region,
 });
 
 const uploadFile = (file) => {
   const fileStream = fs.createReadStream(file.path);
 
   const uploadParams = {
-    Bucket: config.get('awsBucketName'),
+    Bucket: bucketName,
     Body: fileStream,
     Key: file.filename,
   };
 
-  const res = s3.upload(uploadParams).promise();
-  return res;
+  try {
+    const res = s3.upload(uploadParams).promise();
+    return res;
+  } catch (err) {
+    console.error(err.message);
+    return err;
+  }
 };
 
 const getFileStream = (fileKey) => {
   const downloadParams = {
     Key: fileKey,
-    Bucket: config.get('awsBucketName'),
+    Bucket: bucketName,
   };
 
   // TODO handle error
@@ -45,7 +56,14 @@ const getFileStream = (fileKey) => {
   //     console.log(err);
   //     return 'err';
   //   }
-  return s3.getObject(downloadParams).createReadStream();
+
+  try {
+    const s3Object = s3.getObject(downloadParams);
+    return s3Object.createReadStream();
+  } catch (error) {
+    console.error(error.message);
+    return error;
+  }
 };
 
 module.exports.uploadFile = uploadFile;

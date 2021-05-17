@@ -1,0 +1,8 @@
+{
+  "mongoURI": "mongodb+srv://lamnt:lam151098@devconnector.m0cdq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+  "jwtSecret": "hellworld",
+  "zoomApiKey": "kN4OOc2FSseBnEOXYS35pg",
+  "zoomApiSecret": "F3K0ZPViCHg8MHB3Yc8OG5YXGLm556QLxkGd",
+  "zoomClientId": "pjqdk2rYRYC13CVvVXT7ag",
+  "zoomClientSecret": "H5Ek2lKZSDroxSbmYMFHeODPcmygrzQa"
+}
