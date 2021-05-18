@@ -181,7 +181,7 @@ const MeetingScheduler = ({ classId }) => {
       <h1 className='large text-primary'>Schedule a Meeting now!</h1>
       <form className='form' onSubmit={(e) => onSubmit(e)}>
         <div className='form-group'>
-          <label for='topic'>Tiêu đề</label>
+          <label htmlFor='topic'>Tiêu đề</label>
           <input
             type='text'
             placeholder='Tiêu đề'
@@ -192,7 +192,7 @@ const MeetingScheduler = ({ classId }) => {
           />
         </div>
         <div className='form-group'>
-          <label for='description'>Mô tả (không bắt buộc)</label>
+          <label htmlFor='description'>Mô tả (không bắt buộc)</label>
           <input
             type='text'
             placeholder='Mô tả (không bắt buộc)'
@@ -203,7 +203,7 @@ const MeetingScheduler = ({ classId }) => {
           />
         </div>
         <div className='form-group'>
-          <label for='start_time'>Thời điểm bắt đầu</label>
+          <label htmlFor='start_time'>Thời điểm bắt đầu</label>
           <input
             type='datetime-local'
             name='start_time'
@@ -215,7 +215,7 @@ const MeetingScheduler = ({ classId }) => {
         </div>
 
         <div className='form-group'>
-          <label for='duration'>Thời lượng</label>
+          <label htmlFor='duration'>Thời lượng</label>
           <input
             type='number'
             name='duration'
@@ -227,7 +227,7 @@ const MeetingScheduler = ({ classId }) => {
           />
         </div>
         <div className='form-group'>
-          <label for='password'>Mật khẩu</label>
+          <label htmlFor='password'>Mật khẩu</label>
           <input
             type='text'
             placeholder='Mật khẩu'
@@ -240,7 +240,7 @@ const MeetingScheduler = ({ classId }) => {
 
         {/* recurring or not */}
         <div className='form-group'>
-          <label for='is_recurring'>Đây là meeting lặp đi lặp lại?</label>
+          <label htmlFor='is_recurring'>Đây là meeting lặp đi lặp lại?</label>
           <input
             type='checkbox'
             name='is_recurring'
@@ -260,7 +260,7 @@ const MeetingScheduler = ({ classId }) => {
               checked={recurrenceType == RECURRENCE_MEETING_TYPE_DAILY}
               id='daily'
             />
-            <label for='daily'>Hằng ngày</label>
+            <label htmlFor='daily'>Hằng ngày</label>
 
             <input
               type='radio'
@@ -271,14 +271,14 @@ const MeetingScheduler = ({ classId }) => {
               checked={recurrenceType == RECURRENCE_MEETING_TYPE_WEEKLY}
               disabled={!isRecurring}
             />
-            <label for='weekly'>Hằng tuần</label>
+            <label htmlFor='weekly'>Hằng tuần</label>
 
             <div>
               {/* TODO */}
               {recurrenceType == RECURRENCE_MEETING_TYPE_DAILY ? (
                 <div>
                   <div className='form-group'>
-                    <label for='repeat_interval'>
+                    <label htmlFor='repeat_interval'>
                       Khoảng thời gian giữa mỗi buổi học
                     </label>
                     <input
@@ -293,7 +293,7 @@ const MeetingScheduler = ({ classId }) => {
                   </div>
 
                   <div className='form-group'>
-                    <label for='end_times'>Số buổi</label>
+                    <label htmlFor='end_times'>Số buổi</label>
                     <input
                       type='number'
                       name='end_times'
@@ -311,7 +311,7 @@ const MeetingScheduler = ({ classId }) => {
               {recurrenceType == RECURRENCE_MEETING_TYPE_WEEKLY ? (
                 <div>
                   <div className='form-group'>
-                    <label for='repeat_interval'>
+                    <label htmlFor='repeat_interval'>
                       Diễn ra vào các ngày trong tuần
                     </label>
                     <div>
@@ -375,7 +375,7 @@ const MeetingScheduler = ({ classId }) => {
                   </div>
 
                   <div className='form-group'>
-                    <label for='repeat_interval'>
+                    <label htmlFor='repeat_interval'>
                       Khoảng thời gian giữa mỗi tuần học
                     </label>
                     <input
@@ -390,7 +390,7 @@ const MeetingScheduler = ({ classId }) => {
                   </div>
 
                   <div className='form-group'>
-                    <label for='end_times'>Số buổi</label>
+                    <label htmlFor='end_times'>Số buổi</label>
                     <input
                       type='number'
                       name='end_times'

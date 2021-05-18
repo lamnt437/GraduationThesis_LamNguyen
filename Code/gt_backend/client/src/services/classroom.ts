@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:3001/api/classroom';
+const url = '/api/classroom';
 
 export const fetchClassRooms = async () => {
   try {
@@ -22,7 +22,7 @@ export const findClassroom = async (id: String) => {
 };
 
 export const requestClassroom = async (classId: String) => {
-  const url = `http://localhost:3001/api/classroom/${classId}/request`;
+  const url = `/api/classroom/${classId}/request`;
 
   const config = {
     headers: {
@@ -39,7 +39,7 @@ export const requestClassroom = async (classId: String) => {
 // desc   approve request to join
 // access Private supervisors
 export const approveRequest = async (classId: String, requestId: String) => {
-  const url = `http://localhost:3001/api/classroom/${classId}/request/${requestId}`;
+  const url = `/api/classroom/${classId}/request/${requestId}`;
 
   const res = axios.put(url);
   return res;
@@ -70,14 +70,7 @@ export const fetchPosts = async (id: String) => {
 };
 
 export const addPost = async (fd: FormData, classId: String) => {
-  // const config = {
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  // };
-
-  // TODO validate input
-  const url = `http://localhost:3001/api/classroom/${classId}/posts`;
+  const url = `/api/classroom/${classId}/posts`;
 
   const response = await axios.put(url, fd);
 
@@ -94,7 +87,7 @@ export const addMeeting = async (
   type: Number,
   recurrence: any
 ) => {
-  const url = `http://localhost:3001/api/classroom/${classId}/meetings`;
+  const url = `/api/classroom/${classId}/meetings`;
 
   const meeting = {
     topic,
@@ -117,4 +110,8 @@ export const addMeeting = async (
 
   const response = await axios.put(url, body, reqConfig);
   return response;
+};
+
+export const fetchPostImageUrl = (image: String) => {
+  return `/api/sandbox/images/${image}`;
 };
