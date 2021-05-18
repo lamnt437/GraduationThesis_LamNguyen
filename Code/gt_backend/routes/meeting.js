@@ -10,6 +10,7 @@ const meetingService = require('../services/meeting');
 const auth = require('../middleware/auth');
 const zoomService = require('../services/meetingOAuth');
 const { ERROR_NO_OAUTH } = require('../config/errorCodes');
+const classroomDataAccess = require('../data_access/classroom');
 
 const router = express.Router();
 // const meetingController = require('../controllers/meeting_controller');
@@ -35,20 +36,37 @@ function generateSignature(apiKey, apiSecret, meetingNumber, role) {
 }
 
 // @route GET /api/meeting
+// @desc  Fetch all related meetings to account
 // @access Private
 router.get('/', auth, async (req, res) => {
   const user = req.user;
 
   // find all related classroom
-  // get all meetings
-
-  // find all personal meetings (user is the creator)
+  var relatedClasses;
   try {
-    const meetings = await Meeting.find();
+    relatedClasses = await classroomDataAccess.getRelatedClasses(user.id);
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ msg: 'Server error when fetching related classes' });
+  }
+
+  // get all class meetings
+  var meeting_ids = [];
+  relatedClasses.forEach((classroom) => {
+    meeting_ids = meeting_ids.concat(classroom.meeting_ids);
+  });
+
+  // TODO find all personal meetings (user is the creator)
+  try {
+    const meetings = await Meeting.find({ _id: { $in: meeting_ids } });
     res.json({ meetings });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: 'Server error' });
+    res
+      .status(500)
+      .json({ msg: 'Server error when fetching related meetings' });
   }
 });
 

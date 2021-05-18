@@ -6,7 +6,7 @@ const getRelatedClasses = async (id) => {
     {
       $or: [{ supervisor_ids: id }, { member_ids: id }],
     },
-    { name: 1, description: 1, _id: 1 }
+    { name: 1, description: 1, _id: 1, meeting_ids: 1 }
   );
 
   return classrooms;
