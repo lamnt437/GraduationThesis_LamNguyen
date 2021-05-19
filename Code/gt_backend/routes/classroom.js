@@ -6,6 +6,10 @@ const s3 = require('../config/s3');
 const fs = require('fs');
 const util = require('util');
 const unlinkFile = util.promisify(fs.unlink);
+const {
+  CLASS_POST_TYPE_NORMAL,
+  CLASS_POST_TYPE_MEETING,
+} = require('../config/constants');
 
 // multer file upload
 const DIR = 'public/images';
@@ -618,11 +622,33 @@ router.put('/:id/posts', auth, async (req, res) => {
       const image = req.file;
       const text = req.body.text.trim();
 
-      const post = new Post({
-        user: user.id,
-        text,
-        image: req.file?.filename,
-      });
+      var post;
+      if (req.body.type == CLASS_POST_TYPE_MEETING) {
+        const { zoom_id, password, topic, start_url, start_time, classroom } =
+          req.body;
+        const meeting = {
+          zoom_id,
+          password,
+          topic,
+          start_url,
+          start_time,
+          classroom,
+        };
+        post = new Post({
+          user: user.id,
+          text,
+          image: req.file?.filename,
+          type: CLASS_POST_TYPE_MEETING,
+          meeting,
+        });
+      } else {
+        post = new Post({
+          user: user.id,
+          text,
+          image: req.file?.filename,
+          type: CLASS_POST_TYPE_NORMAL,
+        });
+      }
 
       if (req.file) {
         try {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './Feed.css';
 import Post from './post/Post';
+import PostMeeting from './post/PostMeeting';
 import { fetchPosts, addPost } from '../../../../services/classroom';
 
 import './message_sender/MessageSender.css';
@@ -10,6 +11,10 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Loading from '../../../layout/Loading';
+import {
+  CLASS_POST_TYPE_NORMAL,
+  CLASS_POST_TYPE_MEETING,
+} from '../../../../constants/constants';
 
 export const Feed = ({ classId, user }) => {
   // TODO change sorting by query params (React course 284)
@@ -44,16 +49,33 @@ export const Feed = ({ classId, user }) => {
         <Loading />
       ) : (
         Array.isArray(posts) &&
-        posts.map((post) => (
-          <Post
-            username={post.username}
-            timestamp={post.created_at}
-            message={post.text}
-            key={post._id}
-            avatar={post.avatar}
-            image={post.image}
-          />
-        ))
+        posts.map((post) => {
+          if (post.type == CLASS_POST_TYPE_MEETING) {
+            return (
+              <PostMeeting
+                username={post.username}
+                timestamp={post.created_at}
+                message={post.text}
+                key={post._id}
+                avatar={post.avatar}
+                image={post.image}
+                meeting={post.meeting}
+                user={user}
+              />
+            );
+          } else if (post.type == CLASS_POST_TYPE_NORMAL) {
+            return (
+              <Post
+                username={post.username}
+                timestamp={post.created_at}
+                message={post.text}
+                key={post._id}
+                avatar={post.avatar}
+                image={post.image}
+              />
+            );
+          }
+        })
       )}
     </div>
   );
@@ -75,6 +97,7 @@ const MessageSender = ({ posts, setPosts, classId, user }) => {
       const fd = new FormData();
       fd.append('text', postContent.text);
       fd.append('image', postContent.image);
+      fd.append('type', CLASS_POST_TYPE_NORMAL);
 
       const response = await addPost(fd, classId);
 

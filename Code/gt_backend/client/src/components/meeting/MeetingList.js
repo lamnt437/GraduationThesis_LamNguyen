@@ -26,6 +26,7 @@ class MeetingList extends Component {
           meeting_id={meeting.meeting_id}
           password={meeting.password}
           start_time={meeting.start_time}
+          user={this.props.user}
         />
       );
     });

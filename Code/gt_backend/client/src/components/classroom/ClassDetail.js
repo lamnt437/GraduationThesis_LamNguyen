@@ -50,6 +50,7 @@ export const ClassDetail = (props) => {
           <MeetingList
             className={classes.center__comp}
             classId={props.classId}
+            user={props.user}
           />
         </Route>
 

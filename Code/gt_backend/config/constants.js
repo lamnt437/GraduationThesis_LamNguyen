@@ -9,3 +9,5 @@ module.exports.MEETING_TYPE_RECURRING = 8;
 module.exports.RECURRENCE_MEETING_TYPE_DAILY = 1;
 module.exports.RECURRENCE_MEETING_TYPE_WEEKLY = 2;
 module.exports.RECURRENCE_MEETING_TYPE_MONTHLY = 3;
+module.exports.CLASS_POST_TYPE_NORMAL = 1;
+module.exports.CLASS_POST_TYPE_MEETING = 2;

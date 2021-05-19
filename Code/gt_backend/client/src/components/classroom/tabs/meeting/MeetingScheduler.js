@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { addMeeting } from '../../../../services/classroom';
+import { addMeeting, addPost } from '../../../../services/classroom';
+import { CLASS_POST_TYPE_MEETING } from '../../../../constants/constants';
 import {
   MEETING_TYPE_INSTANT,
   MEETING_TYPE_SCHEDULED,
@@ -156,8 +157,6 @@ const MeetingScheduler = ({ classId }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    console.log({ meetingInfo });
-
     try {
       const response = await addMeeting(
         classId,
@@ -169,8 +168,27 @@ const MeetingScheduler = ({ classId }) => {
         type,
         meetingInfo.recurrence
       );
+
+      const createdMeeting = response.data.meeting;
+
+      // console.log({ response: response.data });
+
+      // TODO if return 403 you don't have permission to create meeting
+
       // TODO redirect or something
-      // TODO schedule recurrent meeting
+
+      // TODO post to newsfeed
+      const fd = new FormData();
+      fd.append('text', `Meeting ${createdMeeting.topic} đã được lên lịch!`);
+      fd.append('zoom_id', createdMeeting.zoom_id);
+      fd.append('topic', createdMeeting.topic);
+      fd.append('start_time', createdMeeting.start_time);
+      fd.append('start_url', createdMeeting.start_url);
+      fd.append('password', createdMeeting.password);
+      fd.append('classroom', classId);
+      fd.append('type', CLASS_POST_TYPE_MEETING);
+
+      const posting = await addPost(fd, classId);
     } catch (err) {
       console.log(err);
     }

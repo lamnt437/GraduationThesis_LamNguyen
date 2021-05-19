@@ -5,7 +5,7 @@ import MeetingScheduler from './MeetingScheduler';
 import Loading from '../../../layout/Loading';
 import { fetchMeetingFromClassroom } from '../../../../services/meeting.ts';
 
-const MeetingList = ({ classId }) => {
+const MeetingList = ({ classId, user }) => {
   const [meetingList, setMeetingList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -51,7 +51,11 @@ const MeetingList = ({ classId }) => {
               </button>
               {Array.isArray(meetingList) &&
                 meetingList.map((meeting) => (
-                  <MeetingItem meeting={meeting} key={meeting._id} />
+                  <MeetingItem
+                    meeting={meeting}
+                    key={meeting._id}
+                    user={user}
+                  />
                 ))}
             </div>
           </Route>
