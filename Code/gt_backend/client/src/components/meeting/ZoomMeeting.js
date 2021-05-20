@@ -21,7 +21,7 @@ export function ZoomMeeting(props) {
       var userEmail = props.email;
       var passWord = props.password;
       var role = props.role;
-      var signatureEndpoint = 'http://localhost:3001/api/meeting/signature';
+      var signatureEndpoint = '/api/meeting/signature';
 
       const meetingInfo = {
         meetingNumber,

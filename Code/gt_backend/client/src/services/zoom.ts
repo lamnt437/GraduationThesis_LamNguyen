@@ -3,7 +3,7 @@ import axios from 'axios';
 // send code to server to get token from zoom
 // save code to user profile
 export const zoomfunc = async (code: String) => {
-  const url = 'http://localhost:3001/api/profile/zoom';
+  const url = '/api/profile/zoom';
 
   const config = {
     headers: {

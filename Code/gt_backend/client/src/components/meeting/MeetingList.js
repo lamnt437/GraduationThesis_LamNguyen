@@ -8,7 +8,7 @@ class MeetingList extends Component {
   };
 
   async componentDidMount() {
-    const url = 'http://localhost:3001/api/meeting';
+    const url = '/api/meeting';
     try {
       const response = await axios.get(url);
       //   console.log(response);

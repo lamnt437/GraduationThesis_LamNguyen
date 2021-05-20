@@ -40,7 +40,7 @@ export const login = (email, password) => async (dispatch) => {
   };
 
   const body = JSON.stringify({ email, password });
-  const url = 'http://localhost:3001/api/auth';
+  const url = '/api/auth';
 
   try {
     const res = await axios.post(url, body, config);
@@ -77,7 +77,7 @@ export const register = (name, email, password) => async (dispatch) => {
   // send request in a try catch
 
   const body = JSON.stringify({ name, password, email });
-  const url = 'http://localhost:3001/api/users';
+  const url = '/api/users';
 
   // things go oke then dispatch the register success action
   try {

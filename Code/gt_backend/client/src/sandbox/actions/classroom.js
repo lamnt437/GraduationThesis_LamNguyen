@@ -7,7 +7,7 @@ import {
 } from './types';
 
 export const getClassDetail = (id) => async (dispatch) => {
-  const url = `http://localhost:3001/api/classroom/${id}`;
+  const url = `/api/classroom/${id}`;
 
   const config = {
     headers: {
@@ -42,7 +42,7 @@ export const getClassDetail = (id) => async (dispatch) => {
 };
 
 export const createClass = (name, description) => async (dispatch) => {
-  const url = 'http://localhost:3001/api/classroom';
+  const url = '/api/classroom';
 
   const options = {
     headers: {

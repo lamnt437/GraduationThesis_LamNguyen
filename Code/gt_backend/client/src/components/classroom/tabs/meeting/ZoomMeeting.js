@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 import { ZoomMtg } from '@zoomus/websdk';
 import axios from 'axios';
 import configData from '../../../../config.json';
@@ -9,6 +10,7 @@ export function ZoomMeeting(props) {
   // use effect to load all zoom module right after the module is mounted
   //   const { username } = props;
   //   console.log(username);
+  var match = useRouteMatch();
 
   useEffect(() => {
     async function initMeeting(props) {
@@ -16,12 +18,12 @@ export function ZoomMeeting(props) {
       console.log(username);
       // meeting info
       var meetingNumber = props.meetingNumber;
-      var leaveUrl = 'http://localhost:3000';
+      var leaveUrl = match.url;
       var userName = props.username;
       var userEmail = props.email;
       var passWord = props.password;
       var role = props.role;
-      var signatureEndpoint = 'http://localhost:3001/api/meeting/signature';
+      var signatureEndpoint = '/api/meeting/signature';
 
       const meetingInfo = {
         meetingNumber,
