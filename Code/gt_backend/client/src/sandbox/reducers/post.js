@@ -1,12 +1,12 @@
 import {
-  CREATE_CLASS_SUCCESS,
-  CREATE_CLASS_ERROR,
-  GET_CLASSROOMS,
-  CLASSROOMS_ERROR,
+  GET_POSTS,
+  GET_POSTS_SUCCESS,
+  POST_ERROR,
+  RESET_POSTS,
 } from '../actions/types';
 
 const initialState = {
-  classrooms: [],
+  posts: [],
   loading: true,
   error: {},
 };
@@ -15,33 +15,28 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case GET_CLASSROOMS:
+    case GET_POSTS:
       return {
         ...state,
-        classrooms: payload,
+        loading: true,
+      };
+
+    case GET_POSTS_SUCCESS:
+      return {
+        ...state,
+        posts: payload,
         loading: false,
       };
 
-    case CLASSROOMS_ERROR:
+    case POST_ERROR:
       return {
         ...state,
         error: payload,
         loading: false,
       };
 
-    case CREATE_CLASS_SUCCESS:
-      return {
-        ...state,
-        classrooms: [payload, ...state.classrooms],
-        loading: false,
-      };
-
-    case CREATE_CLASS_ERROR:
-      return {
-        ...state,
-        error: payload,
-        loading: false,
-      };
+    case RESET_POSTS:
+      return initialState;
 
     default:
       return state;

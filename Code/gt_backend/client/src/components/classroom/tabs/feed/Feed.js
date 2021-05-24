@@ -11,41 +11,31 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Loading from '../../../layout/Loading';
+import { getPosts, resetPosts } from '../../../../sandbox/actions/post';
+
 import {
   CLASS_POST_TYPE_NORMAL,
   CLASS_POST_TYPE_MEETING,
 } from '../../../../constants/constants';
 
-export const Feed = ({ classId, user }) => {
-  // TODO change sorting by query params (React course 284)
-  // fetch post
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(async () => {
-    // fetch posts
-    try {
-      const res = await fetchPosts(classId);
-      console.log(res);
-      setPosts(res.data.posts);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error.message);
-      console.log(error.response);
-      setIsLoading(false);
-    }
+export const Feed = ({
+  classId,
+  user,
+  getPosts,
+  classroomName,
+  post: { posts, loading },
+}) => {
+  useEffect(() => {
+    getPosts(classId);
   }, []);
 
   return (
     <div className='feed'>
-      <MessageSender
-        classId={classId}
-        posts={posts}
-        setPosts={setPosts}
-        user={user}
-      />
+      <MessageSender classId={classId} posts={posts} user={user} />
 
-      {isLoading ? (
+      <Post username={classroomName} />
+
+      {loading ? (
         <Loading />
       ) : (
         Array.isArray(posts) &&
@@ -81,7 +71,7 @@ export const Feed = ({ classId, user }) => {
   );
 };
 
-const MessageSender = ({ posts, setPosts, classId, user }) => {
+const MessageSender = ({ posts, classId, user }) => {
   const [postContent, setPostContent] = useState({
     text: '',
     image: null,
@@ -105,7 +95,7 @@ const MessageSender = ({ posts, setPosts, classId, user }) => {
       newPost.username = user.name;
       newPost.avatar = user.avatar;
 
-      setPosts([newPost, ...posts]);
+      // setPosts([newPost, ...posts]);
       setPostContent({ text: '', image: null });
     } catch (err) {
       console.error(err.message);
@@ -165,11 +155,15 @@ const MessageSender = ({ posts, setPosts, classId, user }) => {
 };
 
 Feed.propTypes = {
-  user: PropTypes.object,
+  user: PropTypes.object.isRequired,
+  getPosts: PropTypes.func.isRequired,
+  resetPosts: PropTypes.func.isRequired,
+  post: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
+  post: state.post,
 });
 
-export default connect(mapStateToProps)(Feed);
+export default connect(mapStateToProps, { getPosts, resetPosts })(Feed);

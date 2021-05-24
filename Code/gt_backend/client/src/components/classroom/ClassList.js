@@ -1,10 +1,7 @@
-import React, { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import ClassItem from './ClassItem';
 
 const ClassList = (props) => {
-  useEffect(() => {
-    console.log(props.classrooms);
-  }, []);
   return (
     <Fragment>
       <ul>

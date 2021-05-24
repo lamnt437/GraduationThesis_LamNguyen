@@ -23,7 +23,6 @@ const PostMeeting = ({
   useEffect(async () => {
     const url = fetchPostImageUrl(image);
     setImageStream({ content: url });
-    console.log({ meeting });
   }, []);
 
   const created_at = new Date(timestamp);

@@ -6,11 +6,11 @@ import ChatIcon from '@material-ui/icons/Chat';
 import VideoLibraryIcon from '@material-ui/icons/VideoLibrary';
 import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 
-const Sidebar = () => {
+const Sidebar = ({ classroomName }) => {
   return (
     // TODO add class name + info
     <div className='sidebar'>
-      {/* <SidebarRow src={avatar} title={username} /> */}
+      <SidebarRow title={classroomName} />
       <SidebarRow Icon={EmojiFlagsIcon} title='Nhiệm vụ' name='tasks' />
       <SidebarRow Icon={PeopleIcon} title='Thành viên' name='members' />
       <SidebarRow Icon={ChatIcon} title='Trao đổi' name='discuss' />

@@ -1,68 +1,60 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchClassroom } from '../services/classroom';
 import ClassDetailComponent from '../components/classroom/ClassDetail';
-// import classes from './css/ClassDetail.module.css';
-// import Header from '../components/classroom/header/Header';
-// import Sidebar from '../components/classroom/sidebar/Sidebar';
-// import Feed from '../components/classroom/tabs/feed/Feed';
-// import Widget from '../components/classroom/widget/Widget';
 import ClassRequest from '../components/classroom/ClassRequest';
 import ClassItem from '../components/classroom/ClassItem';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { getClassDetail } from '../sandbox/actions/classDetail';
+import _ from 'lodash';
+import Loading from '../components/layout/Loading';
+import NotFound from '../components/layout/NotFound';
 
-const ClassDetail = () => {
-  const params = useParams();
-
-  const [classDetail, setClassDetail] = useState({});
-  const [isRelated, setIsRelated] = useState(false);
-  const [isFound, setIsFound] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(async () => {
-    try {
-      const res = await fetchClassroom(params.id);
-      console.log(res);
-      setClassDetail(res.data.classroom);
-      setIsRelated(true);
-      setIsFound(true);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error.message);
-      console.log(error.response);
-      setIsLoading(false);
-      if (error.response?.status === 401) {
-        // redirect to ClassRequest
-        setIsFound(true);
-        console.log('redirect to classrequest');
-      }
-    }
+const ClassDetail = ({
+  getClassDetail,
+  classDetail: { classDetail, error, loading },
+  match,
+}) => {
+  useEffect(() => {
+    console.log('render');
+    getClassDetail(match.params.id);
   }, []);
 
-  let renderedComp = <div>Not Found</div>;
-  if (!isLoading) {
-    if (isFound) {
-      if (isRelated) {
-        renderedComp = (
-          <ClassDetailComponent
-            name={classDetail.name}
-            description={classDetail.description}
-            classId={classDetail._id}
-          />
-        );
-      } else {
-        renderedComp = (
-          <div>
-            <ClassItem />
-            <ClassRequest classId={params.id} />
-          </div>
-        );
-      }
+  var renderedComp = <Loading />;
+
+  if (!loading) {
+    if (!_.isEmpty(error) && error.status == 401) {
+      renderedComp = (
+        <div>
+          <ClassItem />
+          <ClassRequest classId={match.params.id} />
+        </div>
+      );
+    } else if (!_.isEmpty(error) && error.status == 404) {
+      renderedComp = <NotFound />;
+    } else if (!_.isEmpty(error) && error.status == 500) {
+      renderedComp = <div>Server error</div>;
     } else {
-      renderedComp = <div>Not Found</div>;
+      renderedComp = (
+        <ClassDetailComponent
+          name={classDetail.name}
+          description={classDetail.description}
+          classId={classDetail._id}
+        />
+      );
     }
   }
+
   return renderedComp;
 };
 
-export default ClassDetail;
+ClassDetail.propTypes = {
+  classDetail: PropTypes.object.isRequired,
+  getClassDetail: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  classDetail: state.classDetail,
+});
+
+export default connect(mapStateToProps, { getClassDetail })(ClassDetail);

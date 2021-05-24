@@ -15,20 +15,19 @@ import { connect } from 'react-redux';
 
 export const ClassDetail = (props) => {
   const match = useRouteMatch();
-  console.log(match);
   return (
     <Fragment>
       <Header username={props.user?.name} />
 
       <div className={classes.app__body}>
-        <Sidebar username={props.user?.name} avatar={props.user?.avatar} />
+        <Sidebar classroomName={props.name} avatar={props.user?.avatar} />
 
         <Route path={[`${match.path}`, `${match.path}/home`]} exact>
           <Feed
-            name={props.name}
             description={props.description}
             classId={props.classId}
             className={classes.center__comp}
+            classroomName={props.name}
           />
         </Route>
 

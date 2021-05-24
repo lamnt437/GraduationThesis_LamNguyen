@@ -161,16 +161,17 @@ router.post(
     }
 
     // create classroom object
-    const classRoom = new ClassRoom({
+    const classroom = new ClassRoom({
       supervisor_ids: [user.id],
       name,
       description,
     });
     // save to database
+    console.log({ classroom });
 
     try {
-      await classRoom.save();
-      res.json({ classRoom });
+      await classroom.save();
+      res.json({ classroom });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ msg: 'Server error' });

@@ -1,43 +1,28 @@
 import axios from 'axios';
+import { fetchClassRooms } from '../../services/classroom';
 import {
-  LOAD_CLASS_FAIL,
-  LOAD_CLASS_SUCCESS,
   CREATE_CLASS_SUCCESS,
-  CREATE_CLASS_FAIL,
+  CREATE_CLASS_ERROR,
+  GET_CLASSROOMS,
+  CLASSROOMS_ERROR,
 } from './types';
 
-export const getClassDetail = (id) => async (dispatch) => {
-  const url = `/api/classroom/${id}`;
-
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-
+export const getClassrooms = () => async (dispatch) => {
   try {
-    const response = await axios.get(url, {}, config);
-    const { name, description, _id, posts } = response.data.classroom;
-    const meetings = response.data.classroom.meeting_ids;
-    const members = response.data.classroom.member_ids;
-    const supervisors = response.data.classroom.supervisor_ids;
+    const res = await fetchClassRooms();
 
     dispatch({
-      type: LOAD_CLASS_SUCCESS,
-      payload: {
-        name,
-        description,
-        _id,
-        posts: response.data.classro,
-        meetings,
-        members,
-        supervisors,
-        created_at: null,
-      },
+      type: GET_CLASSROOMS,
+      payload: res.data.classrooms,
     });
   } catch (err) {
-    console.log(err);
-    dispatch({ type: LOAD_CLASS_FAIL });
+    dispatch({
+      type: CLASSROOMS_ERROR,
+      payload: {
+        msg: err.response?.statusText,
+        status: err.response?.status,
+      },
+    });
   }
 };
 
@@ -50,28 +35,26 @@ export const createClass = (name, description) => async (dispatch) => {
     },
   };
 
-  console.log({
-    createClass: {
-      name,
-      description,
-    },
-  });
-
   const payload = {
     name,
     description,
   };
 
   const body = JSON.stringify(payload);
-  console.log({ body });
 
   try {
     const response = await axios.post(url, body, options);
-    console.log(response);
+    console.log({ response });
 
-    dispatch({ type: CREATE_CLASS_SUCCESS });
+    dispatch({ type: CREATE_CLASS_SUCCESS, payload: response.data.classroom });
   } catch (error) {
     console.log(error.message);
-    dispatch({ type: CREATE_CLASS_FAIL });
+    dispatch({
+      type: CREATE_CLASS_ERROR,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
   }
 };
