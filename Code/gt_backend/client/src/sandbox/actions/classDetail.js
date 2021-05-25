@@ -3,6 +3,7 @@ import {
   GET_CLASS_DETAIL,
   CLASS_DETAIL_ERROR,
   GET_CLASS_DETAIL_SUCCESS,
+  RESET_CLASS_DETAIL,
 } from './types';
 
 export const getClassDetail = (id) => async (dispatch) => {
@@ -27,4 +28,10 @@ export const getClassDetail = (id) => async (dispatch) => {
       },
     });
   }
+};
+
+export const resetClassDetail = () => (dispatch) => {
+  dispatch({
+    type: RESET_CLASS_DETAIL,
+  });
 };

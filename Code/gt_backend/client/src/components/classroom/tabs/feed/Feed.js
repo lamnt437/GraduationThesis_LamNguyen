@@ -26,6 +26,7 @@ export const Feed = ({
   post: { posts, loading },
 }) => {
   useEffect(() => {
+    console.log('render feed');
     getPosts(classId);
   }, []);
 
