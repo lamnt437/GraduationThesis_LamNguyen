@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 var multer = require('multer');
-// var upload = multer({ dest: 'public/images' });
 const s3 = require('../config/s3');
 
 const DIR = 'public/images';

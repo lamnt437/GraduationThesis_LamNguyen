@@ -1,7 +1,13 @@
+const imagemin = require('imagemin');
+// import imagemin from 'imagemin';
+const mozjpeg = require('imagemin-mozjpeg');
+// import mozjpeg from 'imagemin-mozjpeg';
+
 const AWS = require('aws-sdk');
-const config = require('config');
 const fs = require('fs');
 require('dotenv').config();
+const sharp = require('sharp');
+const isJpg = require('is-jpg');
 
 const bucketName = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_BUCKET_REGION;
@@ -15,12 +21,25 @@ const s3 = new AWS.S3({
   region,
 });
 
-const uploadFile = (file) => {
-  const fileStream = fs.createReadStream(file.path);
+const convertToJpg = async (input) => {
+  if (isJpg(input)) {
+    return input;
+  }
+
+  return sharp(input).jpeg().toBuffer();
+};
+
+const uploadFile = async (file) => {
+  // const fileStream = fs.createReadStream(file.path);
+
+  const miniFile = await imagemin([file.path], {
+    destination: 'public/images',
+    plugins: [convertToJpg, mozjpeg({ quality: 85 })],
+  });
 
   const uploadParams = {
     Bucket: bucketName,
-    Body: fileStream,
+    Body: miniFile[0].data,
     Key: file.filename,
   };
 
