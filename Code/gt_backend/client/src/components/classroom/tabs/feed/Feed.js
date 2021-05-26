@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import './Feed.css';
 import Post from './post/Post';
 import PostMeeting from './post/PostMeeting';
-import { fetchPosts, addPost } from '../../../../services/classroom';
 
 import './message_sender/MessageSender.css';
 import { Avatar } from '@material-ui/core';
@@ -11,7 +10,11 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Loading from '../../../layout/Loading';
-import { getPosts, resetPosts } from '../../../../sandbox/actions/post';
+import {
+  getPosts,
+  resetPosts,
+  addPost,
+} from '../../../../sandbox/actions/post';
 
 import {
   CLASS_POST_TYPE_NORMAL,
@@ -22,17 +25,28 @@ export const Feed = ({
   classId,
   user,
   getPosts,
+  addPost,
   classroomName,
   post: { posts, loading },
 }) => {
   useEffect(() => {
     console.log('render feed');
     getPosts(classId);
+
+    return () => {
+      console.log('Unmount Feed');
+      resetPosts();
+    };
   }, []);
 
   return (
     <div className='feed'>
-      <MessageSender classId={classId} posts={posts} user={user} />
+      <MessageSender
+        classId={classId}
+        posts={posts}
+        user={user}
+        addPost={addPost}
+      />
 
       <Post username={classroomName} />
 
@@ -72,7 +86,7 @@ export const Feed = ({
   );
 };
 
-const MessageSender = ({ posts, classId, user }) => {
+const MessageSender = ({ posts, classId, user, addPost }) => {
   const [postContent, setPostContent] = useState({
     text: '',
     image: null,
@@ -81,29 +95,18 @@ const MessageSender = ({ posts, classId, user }) => {
   let inputFileProp = null;
 
   const submitHandler = async (e) => {
-    // TODO prevent unwanted transition to other page
     e.preventDefault();
 
-    try {
-      const fd = new FormData();
-      fd.append('text', postContent.text);
-      fd.append('image', postContent.image);
-      fd.append('type', CLASS_POST_TYPE_NORMAL);
+    const fd = new FormData();
+    fd.append('text', postContent.text);
+    fd.append('image', postContent.image);
+    fd.append('type', CLASS_POST_TYPE_NORMAL);
 
-      const response = await addPost(fd, classId);
+    addPost(fd, classId);
 
-      let newPost = response.data.post;
-      newPost.username = user.name;
-      newPost.avatar = user.avatar;
-
-      // setPosts([newPost, ...posts]);
-      setPostContent({ text: '', image: null });
-    } catch (err) {
-      console.error(err.message);
-    }
+    setPostContent({ text: '', image: null });
   };
 
-  // 2 way binding
   const onChange = (e) => {
     setPostContent({ ...postContent, [e.target.name]: e.target.value });
   };
@@ -159,6 +162,7 @@ Feed.propTypes = {
   user: PropTypes.object.isRequired,
   getPosts: PropTypes.func.isRequired,
   resetPosts: PropTypes.func.isRequired,
+  addPost: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
 };
 
@@ -167,4 +171,6 @@ const mapStateToProps = (state) => ({
   post: state.post,
 });
 
-export default connect(mapStateToProps, { getPosts, resetPosts })(Feed);
+export default connect(mapStateToProps, { getPosts, resetPosts, addPost })(
+  Feed
+);

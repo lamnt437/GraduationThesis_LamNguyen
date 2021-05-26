@@ -3,6 +3,8 @@ import {
   GET_POSTS_SUCCESS,
   POST_ERROR,
   RESET_POSTS,
+  ADD_POST_ERROR,
+  ADD_POST_SUCCESS,
 } from '../actions/types';
 
 const initialState = {
@@ -29,9 +31,17 @@ export default function (state = initialState, action) {
       };
 
     case POST_ERROR:
+    case ADD_POST_ERROR:
       return {
         ...state,
         error: payload,
+        loading: false,
+      };
+
+    case ADD_POST_SUCCESS:
+      return {
+        ...state,
+        posts: [payload, ...state.posts],
         loading: false,
       };
 

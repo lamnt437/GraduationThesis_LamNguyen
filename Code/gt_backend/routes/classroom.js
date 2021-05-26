@@ -589,15 +589,22 @@ router.put('/:id/posts', auth, async (req, res) => {
   uploadImage(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
       console.error(err.message);
-      return res.status(500).json({ err: message });
+      return res.status(500).json({ err: err.message });
     } else if (err) {
-      return res.status(400).json({ err: err.message });
+      console.log(err.message);
+      return res.status(400).json({ statusText: err.message });
     }
 
-    // next things
-    if (req.body.text.trim().length === 0) {
-      return res.status(400).json({ msg: 'Text is required' });
+    // validate text input
+    const reqBody = JSON.parse(JSON.stringify(req.body));
+    if (reqBody.hasOwnProperty('text')) {
+      if (reqBody.text.trim().length === 0) {
+        return res.status(400).json({ statusText: 'Text is required' });
+      }
+    } else {
+      return res.status(400).json({ statusText: 'Text is required' });
     }
+
     // get class
     let classroom = null;
     try {
