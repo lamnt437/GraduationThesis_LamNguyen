@@ -791,7 +791,7 @@ router.get('/:id/request', auth, async (req, res) => {
     }
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      res.status(404).json({ errors: [{ msg: 'Classroom not found' }] });
+      return res.status(404).json({ errors: [{ msg: 'Classroom not found' }] });
     }
   }
 

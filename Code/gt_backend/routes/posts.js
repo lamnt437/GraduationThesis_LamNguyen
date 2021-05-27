@@ -4,6 +4,8 @@ const auth = require('../middleware/auth');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const Post = require('../models/Post');
+const ClassRoom = require('../models/ClassRoom');
+const mongoose = require('mongoose');
 
 // @route   POST /api/posts
 // @desc    create new post
@@ -99,5 +101,65 @@ router.delete('/:id', auth, async (req, res) => {
     res.status(500).json({ msg: 'Server error' });
   }
 });
+
+// route  PUT /api/posts/:postId/like
+// desc   like post
+// access Private related
+// TODO
+
+// route  PUT /api/posts/:postId/comment
+// desc   comment on post
+// access Private related
+// TODO only user from classroom can like post
+router.put(
+  '/:postId/comment',
+  auth,
+  [
+    body('text', 'Comment must have at least 3 characters').isLength({
+      min: 3,
+    }),
+  ],
+  async (req, res) => {
+    // check if post exists
+    const postId = req.params.postId;
+    if (!mongoose.isValidObjectId(postId)) {
+      return res.status(404).json({ statusText: 'Post not found' });
+    }
+
+    var post = null;
+
+    try {
+      // find post
+      post = await Post.findById(postId);
+      if (!post) {
+        return res.status(404).json({ statusText: 'Post not found' });
+      }
+    } catch (err) {
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ statusText: 'Post not found' });
+      }
+    }
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const user = req.user;
+    const newComment = {
+      user: user.id,
+      text: req.body.text,
+    };
+
+    try {
+      post.comments.push(newComment);
+      post.save();
+      return res.json({ comment: newComment });
+    } catch (err) {
+      console.error(err.message);
+      return res.status(500).json({ statusText: err.message });
+    }
+  }
+);
 
 module.exports = router;
