@@ -36,6 +36,9 @@ const PostSchema = new Schema({
         type: Date,
         default: Date.now,
       },
+      username: {
+        type: String,
+      },
     },
   ],
 
@@ -60,6 +63,10 @@ const PostSchema = new Schema({
     start_url: String,
     start_time: Date,
     classroom: String,
+  },
+
+  username: {
+    type: String,
   },
 });
 

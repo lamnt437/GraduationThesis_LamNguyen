@@ -5,6 +5,8 @@ import {
   RESET_POSTS,
   ADD_POST_ERROR,
   ADD_POST_SUCCESS,
+  ADD_COMMENT_SUCCESS,
+  ADD_COMMENT_ERROR,
 } from '../actions/types';
 
 const initialState = {
@@ -32,6 +34,7 @@ export default function (state = initialState, action) {
 
     case POST_ERROR:
     case ADD_POST_ERROR:
+    case ADD_COMMENT_ERROR:
       return {
         ...state,
         error: payload,
@@ -47,6 +50,18 @@ export default function (state = initialState, action) {
 
     case RESET_POSTS:
       return initialState;
+
+    case ADD_COMMENT_SUCCESS:
+      return {
+        ...state,
+        posts: state.posts.map((post) => {
+          if (post._id == payload.id) {
+            post.comments.push(payload.comment);
+          }
+          return post;
+        }),
+        loading: false,
+      };
 
     default:
       return state;

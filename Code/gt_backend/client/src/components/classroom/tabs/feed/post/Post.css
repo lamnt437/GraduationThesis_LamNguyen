@@ -63,3 +63,59 @@
   background-color: #eff2f5;
   border-radius: 10px;
 }
+
+.post__comment_show {
+}
+
+.post__comment_input {
+  /* use style from message sender */
+}
+
+.post__comment {
+  display: flex;
+  flex-direction: column;
+  /* background-color: white;
+  border-radius: 15px;
+  box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.75); */
+  width: 100%;
+}
+
+.post__comment__top {
+  display: flex;
+  padding-bottom: 15px;
+  padding: 15px;
+  align-items: center;
+}
+
+.post__comment__top > form {
+  display: flex;
+  flex: 1;
+}
+
+.post__comment__top > form > input {
+  outline-width: 0;
+  border: none;
+  padding: 15px 20px;
+  margin-right: 10px;
+  border-radius: 999px;
+  background-color: #eff2f5;
+  flex: 1;
+}
+
+.post__comment__top > form > button {
+  background-color: gray;
+  border-radius: 15px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.post__comment__top > form > button:hover {
+  background-color: gray;
+  border-radius: 15px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.post__comment__input {
+  flex: 1;
+}

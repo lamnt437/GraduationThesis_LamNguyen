@@ -145,10 +145,20 @@ router.put(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const user = req.user;
+    var user = req.user;
+    var userObj = null;
+    try {
+      userObj = await User.findById(user.id);
+    } catch (error) {
+      console.error(error.message);
+      return res.status(500).json({ textStatus: 'Error fetching user' });
+    }
+
     const newComment = {
       user: user.id,
       text: req.body.text,
+      username: userObj.name,
+      _id: mongoose.Types.ObjectId(),
     };
 
     try {

@@ -1,22 +1,56 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import './Post.css';
+import { Fragment, useEffect, useState } from 'react';
 import { Avatar } from '@material-ui/core';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import NearMeIcon from '@material-ui/icons/NearMe';
 import { ExpandMoreOutlined } from '@material-ui/icons';
 import { fetchPostImageUrl } from '../../../../../services/classroom';
-// import { dateFormat } from 'dateformat';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { addComment } from '../../../../../sandbox/actions/post';
+import './Post.css';
 
-const Post = ({ profilePic, image, username, timestamp, message }) => {
+const Post = ({
+  postId,
+  profilePic,
+  image,
+  username,
+  timestamp,
+  message,
+  addComment,
+  comments,
+  user,
+}) => {
   const [imageStream, setImageStream] = useState({ content: '' });
+  const [commentText, setCommentText] = useState('');
+  const [commentList, setCommentList] = useState([...comments]);
+  const [showCommentList, setShowCommentList] = useState(false);
 
   useEffect(async () => {
     const url = fetchPostImageUrl(image);
     setImageStream({ content: url });
   }, []);
+
+  const onChangeComment = (e) => {
+    setCommentText(e.target.value);
+  };
+
+  const onSubmitComment = (e) => {
+    e.preventDefault();
+    // use redux
+    addComment(postId, commentText);
+    setCommentList([
+      ...commentList,
+      {
+        username: user.name,
+        text: commentText,
+        created_at: Date.now(),
+      },
+    ]);
+    setCommentText('');
+  };
+
+  const toggleShowCommentList = (e) => {
+    e.preventDefault();
+    setShowCommentList(!showCommentList);
+  };
 
   const created_at = new Date(timestamp);
 
@@ -40,28 +74,68 @@ const Post = ({ profilePic, image, username, timestamp, message }) => {
       </div>
 
       <div className='post__options'>
-        <div className='post__option'>
-          <ThumbUpIcon />
-          <p>Like</p>
-        </div>
+        {/* comment input */}
+        <div className='post__comment'>
+          <div>
+            <p>
+              {Array.isArray(commentList) ? commentList.length : 0} bình luận
+            </p>
+            <button onClick={(e) => toggleShowCommentList(e)}>
+              {showCommentList ? 'Ẩn bình luận' : 'Hiện bình luận'}
+            </button>
+          </div>
 
-        <div className='post__option'>
-          <ChatBubbleOutlineIcon />
-          <p>Comment</p>
-        </div>
+          {showCommentList ? (
+            <div>
+              <CommentList comments={commentList} />
+            </div>
+          ) : null}
 
-        <div className='post__option'>
-          <NearMeIcon />
-          <p>Share</p>
-        </div>
-
-        <div className='post__option'>
-          <AccountCircleIcon />
-          <ExpandMoreOutlined />
+          <div className='post__comment__top'>
+            <form onSubmit={(e) => onSubmitComment(e)}>
+              <input
+                className='post__comment__input'
+                onChange={(e) => onChangeComment(e)}
+                value={commentText}
+                placeholder='Bình luận'
+                name='text'
+              />
+              <button type='submit'>Post</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Post;
+const CommentList = ({ comments }) => {
+  return (
+    <Fragment>
+      {Array.isArray(comments) &&
+        comments.map((comment) => <CommentItem comment={comment} />)}
+    </Fragment>
+  );
+};
+
+const CommentItem = ({ comment }) => {
+  console.log({ comment });
+  return (
+    <div>
+      <p>{comment.username}</p>
+      <p>{comment.text}</p>
+      <p>{Date(comment.created_at).toString()}</p>
+    </div>
+  );
+};
+
+Post.propTypes = {
+  addComment: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+});
+
+export default connect(mapStateToProps, { addComment })(Post);

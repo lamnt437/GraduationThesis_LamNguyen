@@ -48,8 +48,6 @@ export const Feed = ({
         addPost={addPost}
       />
 
-      <Post username={classroomName} />
-
       {loading ? (
         <Loading />
       ) : (
@@ -58,6 +56,7 @@ export const Feed = ({
           if (post.type == CLASS_POST_TYPE_MEETING) {
             return (
               <PostMeeting
+                postId={post._id}
                 username={post.username}
                 timestamp={post.created_at}
                 message={post.text}
@@ -66,17 +65,20 @@ export const Feed = ({
                 image={post.image}
                 meeting={post.meeting}
                 user={user}
+                comments={post.comments}
               />
             );
           } else if (post.type == CLASS_POST_TYPE_NORMAL) {
             return (
               <Post
+                postId={post._id}
                 username={post.username}
                 timestamp={post.created_at}
                 message={post.text}
                 key={post._id}
                 avatar={post.avatar}
                 image={post.image}
+                comments={post.comments}
               />
             );
           }
