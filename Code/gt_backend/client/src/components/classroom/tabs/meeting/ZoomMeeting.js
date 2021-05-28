@@ -74,7 +74,7 @@ export function ZoomMeeting(props) {
     }
 
     showMeeting();
-    ZoomMtg.setZoomJSLib('https://source.zoom.us/1.9.1/lib', '/av');
+    ZoomMtg.setZoomJSLib('https://source.zoom.us/1.9.5/lib', '/av');
     // ZoomMtg.setZoomJSLib('node_modules/@zoomus/websdk/dist/lib', '/av');
     ZoomMtg.preLoadWasm();
     ZoomMtg.prepareJssdk();

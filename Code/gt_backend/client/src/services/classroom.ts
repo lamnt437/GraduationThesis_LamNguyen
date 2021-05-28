@@ -70,7 +70,7 @@ export const fetchPosts = async (id: String) => {
 };
 
 export const addPost = async (fd: FormData, classId: String) => {
-  const url = `/api/classroom/${classId}/docs`;
+  const url = `/api/classroom/${classId}/posts`;
 
   const response = await axios.put(url, fd);
 

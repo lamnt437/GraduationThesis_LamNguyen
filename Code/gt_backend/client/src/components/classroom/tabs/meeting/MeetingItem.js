@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ZoomMeeting from './ZoomMeeting';
+import Modal from '../../../layout/Modal';
 import { addPost } from '../../../../services/classroom';
 const { CLASS_POST_TYPE_MEETING } = require('../../../../constants/constants');
 const dateFormat = require('dateformat');
@@ -14,10 +15,12 @@ export const MeetingItem = ({ meeting, user }) => {
     inMeeting: false,
   });
 
+  const [showModal, setShowModal] = useState(false);
+
   const joinMeetingHandler = (e) => {
     e.preventDefault();
     setMeetingInfo({ ...meetingInfo, inMeeting: true });
-    // console.log(meetingInfo);
+    setShowModal(true);
   };
 
   const startMeetingHandler = async (e) => {
@@ -49,6 +52,9 @@ export const MeetingItem = ({ meeting, user }) => {
   };
   return (
     <div>
+      {/* <Modal setShowModal={setShowModal} showModal={showModal}>
+        <div id='zmmtg-root'></div>
+      </Modal> */}
       <h1>{meeting.topic}</h1>
       <p>Time: {dateFormat(meeting.start_time, "yyyy-mm-dd'T'HH:MM:ssZ")}</p>
       <p>Password: {meeting.password}</p>
