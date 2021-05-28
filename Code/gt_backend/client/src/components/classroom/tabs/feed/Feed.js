@@ -39,6 +39,40 @@ export const Feed = ({
     };
   }, []);
 
+  const [pageInfo, setPageInfo] = useState({
+    numberOfPages: 1,
+    currentPage: 1,
+    limit: 10,
+  });
+
+  const { currentPage, limit } = pageInfo;
+
+  useEffect(() => {
+    let numberOfPosts = 0;
+    if (Array.isArray(posts)) {
+      numberOfPosts = posts.length;
+    }
+
+    let numberOfPages = Math.floor(numberOfPosts / pageInfo.limit) + 1;
+    setPageInfo({ ...pageInfo, numberOfPages });
+  }, [posts]);
+
+  const prevPageHandler = (e) => {
+    e.preventDefault();
+    // limit, so that currentPage >= 1
+    if (currentPage > 1) {
+      setPageInfo({ ...pageInfo, currentPage: currentPage - 1 });
+    }
+  };
+
+  const nextPageHandler = (e) => {
+    e.preventDefault();
+    // limit, so that currentPage <= numberOfPages
+    if (currentPage < pageInfo.numberOfPages) {
+      setPageInfo({ ...pageInfo, currentPage: currentPage + 1 });
+    }
+  };
+
   return (
     <div className='feed'>
       <MessageSender
@@ -48,42 +82,57 @@ export const Feed = ({
         addPost={addPost}
       />
 
+      <div style={{ display: 'flex' }}>
+        <button onClick={(e) => prevPageHandler(e)}>Prev</button>\
+        <button onClick={(e) => nextPageHandler(e)}>Next</button>
+      </div>
+
       {loading ? (
         <Loading />
       ) : (
         Array.isArray(posts) &&
-        posts.map((post) => {
-          if (post.type == CLASS_POST_TYPE_MEETING) {
-            return (
-              <PostMeeting
-                postId={post._id}
-                username={post.username}
-                timestamp={post.created_at}
-                message={post.text}
-                key={post._id}
-                avatar={post.avatar}
-                image={post.image}
-                meeting={post.meeting}
-                user={user}
-                comments={post.comments}
-              />
-            );
-          } else if (post.type == CLASS_POST_TYPE_NORMAL) {
-            return (
-              <Post
-                postId={post._id}
-                username={post.username}
-                timestamp={post.created_at}
-                message={post.text}
-                key={post._id}
-                avatar={post.avatar}
-                image={post.image}
-                comments={post.comments}
-              />
-            );
+        posts.map((post, index) => {
+          if (
+            index >= (currentPage - 1) * limit &&
+            index <= currentPage * limit - 1
+          ) {
+            if (post.type == CLASS_POST_TYPE_MEETING) {
+              return (
+                <PostMeeting
+                  postId={post._id}
+                  username={post.username}
+                  timestamp={post.created_at}
+                  message={post.text}
+                  key={post._id}
+                  avatar={post.avatar}
+                  image={post.image}
+                  meeting={post.meeting}
+                  user={user}
+                  comments={post.comments}
+                />
+              );
+            } else if (post.type == CLASS_POST_TYPE_NORMAL) {
+              return (
+                <Post
+                  postId={post._id}
+                  username={post.username}
+                  timestamp={post.created_at}
+                  message={post.text}
+                  key={post._id}
+                  avatar={post.avatar}
+                  image={post.image}
+                  comments={post.comments}
+                />
+              );
+            }
           }
         })
       )}
+
+      <div style={{ display: 'flex' }}>
+        <button onClick={(e) => prevPageHandler(e)}>Prev</button>\
+        <button onClick={(e) => nextPageHandler(e)}>Next</button>
+      </div>
     </div>
   );
 };
