@@ -52,6 +52,25 @@ const uploadFile = async (file) => {
   }
 };
 
+const uploadDoc = (file, classId) => {
+  const fileStream = fs.createReadStream(file.path);
+
+  const uploadParams = {
+    Bucket: bucketName,
+    Body: fileStream,
+    // Key: file.filename,
+    Key: `${classId}/${file.filename}`,
+  };
+
+  try {
+    const res = s3.upload(uploadParams).promise();
+    return res;
+  } catch (err) {
+    console.error(err.message);
+    return err;
+  }
+};
+
 const getFileStream = (fileKey) => {
   const downloadParams = {
     Key: fileKey,
@@ -87,3 +106,4 @@ const getFileStream = (fileKey) => {
 
 module.exports.uploadFile = uploadFile;
 module.exports.getFileStream = getFileStream;
+module.exports.uploadDoc = uploadDoc;

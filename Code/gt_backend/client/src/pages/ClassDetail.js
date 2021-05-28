@@ -49,6 +49,7 @@ const ClassDetail = ({
           name={classDetail.name}
           description={classDetail.description}
           classId={classDetail._id}
+          docs={classDetail.docs}
         />
       );
     }

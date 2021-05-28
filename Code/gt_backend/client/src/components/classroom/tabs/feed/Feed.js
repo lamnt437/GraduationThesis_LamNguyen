@@ -62,6 +62,7 @@ export const Feed = ({
     // limit, so that currentPage >= 1
     if (currentPage > 1) {
       setPageInfo({ ...pageInfo, currentPage: currentPage - 1 });
+      window.scrollTo(0, 0);
     }
   };
 
@@ -70,6 +71,7 @@ export const Feed = ({
     // limit, so that currentPage <= numberOfPages
     if (currentPage < pageInfo.numberOfPages) {
       setPageInfo({ ...pageInfo, currentPage: currentPage + 1 });
+      window.scrollTo(0, 0);
     }
   };
 

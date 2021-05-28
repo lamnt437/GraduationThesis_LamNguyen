@@ -4,5 +4,6 @@
   "zoomApiKey": "kN4OOc2FSseBnEOXYS35pg",
   "zoomApiSecret": "F3K0ZPViCHg8MHB3Yc8OG5YXGLm556QLxkGd",
   "zoomClientId": "pjqdk2rYRYC13CVvVXT7ag",
-  "zoomClientSecret": "H5Ek2lKZSDroxSbmYMFHeODPcmygrzQa"
+  "zoomClientSecret": "H5Ek2lKZSDroxSbmYMFHeODPcmygrzQa",
+  "cloudfront": "https://d1bgoergy4goga.cloudfront.net"
 }

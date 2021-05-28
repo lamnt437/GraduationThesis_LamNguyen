@@ -35,6 +35,20 @@ const ClassSchema = new mongoose.Schema({
     type: [Schema.Types.ObjectId],
     ref: 'posts',
   },
+
+  docs: {
+    type: [
+      {
+        filename: String,
+        link: String,
+        created_at: Date,
+        uploader: {
+          type: Schema.Types.ObjectId,
+          ref: 'users',
+        },
+      },
+    ],
+  },
 });
 
 module.exports = ClassRoom = mongoose.model('classrooms', ClassSchema);

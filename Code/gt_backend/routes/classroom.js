@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-
+const config = require('config');
 const s3 = require('../config/s3');
 const fs = require('fs');
 const util = require('util');
@@ -13,6 +13,7 @@ const {
 
 // multer file upload
 const DIR = 'public/images';
+const DOC_DIR = 'public/docs';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -35,6 +36,17 @@ const uploadImage = multer({
     }
   },
 }).single('image');
+
+const docStorage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, DOC_DIR);
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.originalname.replace(/\s/g, '_'));
+  },
+});
+
+const uploadDoc = multer({ storage: docStorage });
 
 // models
 const ClassRoom = require('../models/ClassRoom');
@@ -681,6 +693,9 @@ router.put('/:id/posts', auth, async (req, res) => {
   });
 });
 
+// @route   GET /api/classroom/:id/posts
+// @desc    fetch class posts
+// @access  Private related
 router.get('/:id/posts', auth, async (req, res) => {
   // get class
   let classroom = null;
@@ -702,6 +717,10 @@ router.get('/:id/posts', auth, async (req, res) => {
   if (!isRelated(classroom, user)) {
     return res.status(403).json({ msg: 'Unauthorized' });
   }
+
+  // get query
+  const page = req.query.page;
+  const limit = req.query.limit;
 
   // get posts
   const post_ids = classroom.posts;
@@ -880,6 +899,114 @@ router.put('/:id/request/:reqId', auth, async (req, res) => {
     }
     console.error(error.message);
     res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+// @route   GET /api/classroom/:id/docs
+// @desc    GET documents from classroom
+// @access  private related
+router.get('/:id/docs', auth, async (req, res) => {
+  // validation
+  const classId = req.params.id;
+  if (!mongoose.isValidObjectId(classId)) {
+    return res.status(404).json({ statusText: 'Classroom not found' });
+  }
+
+  var classroom = null;
+
+  try {
+    // find class
+    classroom = await ClassRoom.findById(req.params.id);
+    if (!classroom) {
+      return res.status(404).json({ statusText: 'Class not found' });
+    }
+  } catch (err) {
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ statusText: 'Classroom not found' });
+    }
+  }
+
+  // check if user is supervisor
+  const user = req.user;
+  if (!isRelated(classroom, user)) {
+    return res.status(403).json({ statusText: 'Unauthorized' });
+  }
+
+  return res.json({ docs: classroom.docs });
+});
+
+// @route   PUT /api/classroom/:id/docs
+// @desc    upload document to classroom
+// @access  private related
+router.put('/:id/docs', auth, uploadDoc.single('doc'), async (req, res) => {
+  // validation
+  const classId = req.params.id;
+  if (!mongoose.isValidObjectId(classId)) {
+    return res.status(404).json({ statusText: 'Classroom not found' });
+  }
+
+  var classroom = null;
+
+  try {
+    // find class
+    classroom = await ClassRoom.findById(req.params.id);
+    if (!classroom) {
+      return res.status(404).json({ statusText: 'Class not found' });
+    }
+  } catch (err) {
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ statusText: 'Classroom not found' });
+    }
+  }
+
+  // check if user is supervisor
+  const user = req.user;
+  if (!isSupervisorOrAdmin(classroom, user)) {
+    return res.status(401).json({ statusText: 'Unauthorized' });
+  }
+
+  const file = req.file;
+  console.log({ file });
+  // get file_dir from classroom
+  // if not exist then generate one and save to db
+  // no save it directly using classId
+  try {
+    const response = await s3.uploadDoc(file, classId);
+    await unlinkFile(file.path);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ statusText: 'Error while uploading file' });
+  }
+
+  try {
+    const filename = file.filename.replace(/\s/g, '_');
+    const fileInfo = {
+      _id: mongoose.Types.ObjectId(),
+      filename,
+      link: `${config.get('cloudfront')}/${classId}/${filename}`,
+      created_at: Date.now(),
+      uploader: user.id,
+    };
+
+    if (Array.isArray(classroom.docs)) {
+      classroom.docs.unshift(fileInfo);
+      console.log('has docs');
+    } else {
+      classroom.docs = [fileInfo];
+      console.log('not docs');
+    }
+
+    console.log({ classroom });
+
+    classroom.save();
+    return res.json({
+      doc: fileInfo,
+    });
+  } catch (err) {
+    console.error(err.message);
+    return res
+      .status(500)
+      .json({ statusText: 'Error while saving file info into database' });
   }
 });
 

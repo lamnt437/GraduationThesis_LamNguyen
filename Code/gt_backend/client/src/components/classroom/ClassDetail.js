@@ -65,6 +65,7 @@ export const ClassDetail = (props) => {
           <DocumentList
             classId={props.classId}
             className={classes.center__comp}
+            docs={props.docs}
           />
         </Route>
         <Widget />
