@@ -64,7 +64,7 @@ export const login = (email, password) => async (dispatch) => {
   }
 };
 
-export const register = (name, email, password) => async (dispatch) => {
+export const register = (name, email, password, role) => async (dispatch) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export const register = (name, email, password) => async (dispatch) => {
   // config
   // send request in a try catch
 
-  const body = JSON.stringify({ name, password, email });
+  const body = JSON.stringify({ name, password, email, role });
   const url = '/api/users';
 
   // things go oke then dispatch the register success action

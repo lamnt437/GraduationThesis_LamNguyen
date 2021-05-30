@@ -3,7 +3,9 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setAlert } from '../../sandbox/actions/alert';
 import { register } from '../../sandbox/actions/auth';
+import { ROLE_TEACHER, ROLE_STUDENT } from '../../constants/constants';
 import PropTypes from 'prop-types';
+import { FormatIndentDecreaseTwoTone } from '@material-ui/icons';
 
 export const Register = (props) => {
   // TODO add teacher role
@@ -12,19 +14,40 @@ export const Register = (props) => {
     email: '',
     password: '',
     password2: '',
+    role: ROLE_STUDENT,
   });
 
-  const { name, email, password, password2 } = formData;
+  const { name, email, password, password2, role } = formData;
+
+  const [isTeacher, setIsTeacher] = useState(false);
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onChangeRole = (e) => {
+    const newIsTeacher = !isTeacher;
+    // console.log({ meetingInfo });
+    if (newIsTeacher) {
+      setFormData({
+        ...formData,
+        role: ROLE_TEACHER,
+      });
+      setIsTeacher(true);
+    } else {
+      setFormData({
+        ...formData,
+        role: ROLE_STUDENT,
+      });
+      setIsTeacher(false);
+    }
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
       props.setAlert('password not match', 'danger');
     } else {
-      props.register(name, email, password);
+      props.register(name, email, password, role);
     }
   };
 
@@ -79,6 +102,15 @@ export const Register = (props) => {
             minLength='6'
             value={password2}
             onChange={(e) => onChange(e)}
+          />
+        </div>
+        <div className='form-group'>
+          <label htmlFor='role'>Bạn là giáo viên?</label>
+          <input
+            type='checkbox'
+            name='role'
+            defaultChecked={isTeacher}
+            onChange={(e) => onChangeRole(e)}
           />
         </div>
         <input type='submit' className='btn btn-primary' value='Register' />
