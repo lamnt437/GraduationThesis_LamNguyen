@@ -29,6 +29,7 @@
     "express-validator": "^6.10.0",
     "gravatar": "^1.8.1",
     "helmet": "^4.4.1",
+    "helmet-csp": "^3.4.0",
     "http-errors": "~1.6.3",
     "imagemin": "^7.0.1",
     "imagemin-mozjpeg": "^9.0.0",

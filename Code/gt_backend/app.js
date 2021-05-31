@@ -16,12 +16,24 @@ const profileRouter = require('./routes/profile');
 const sandboxRouter = require('./routes/sandbox');
 
 const app = express();
+// app.use((req, res, next) => {
+//   res.setHeader(
+//     'Content-Security-Policy',
+//     "script-src 'self' https://zoom.us https://source.zoom.us; style-src: 'self';"
+//   );
+//   return next();
+// });
+// app.use(
+//   csp({
+//     directives: {
+//       defaultSrc: ["'self'"],
+//       scriptSrc: ["'self", 'https://zoom.us', 'https://source.zoom.us'],
+//       styleSrc: ["'self'"],
+//     },
+//   })
+// );
 
 require('./startup/prod')(app);
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 
 app.use(cors());
 app.use(logger('dev'));

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "ClassZoom",
+  "name": "Next-gen LMS",
   "icons": [
     {
       "src": "favicon.ico",
@@ -28,5 +28,5 @@
       "matches": ["http://*/*", "https://*/*"]
     }
   ],
-  "content_security_policy": "script-src 'self' 'sha256-1GmWPsWox8Ukww9IiG1dlfCSk+NhYm4M+AgOsSm9csg='; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'https://zoom.us/*' 'https://source.zoom.us/*'; script-src-elem 'https://zoom.us/*' 'https://source.zoom.us/*'; object-src 'self'; default-src 'none'; img-src 'self'; style-src: 'self'; font-src 'self';"
 }
