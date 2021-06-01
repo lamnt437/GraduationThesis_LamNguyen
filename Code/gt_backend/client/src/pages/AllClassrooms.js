@@ -12,6 +12,7 @@ import { ROLE_TEACHER } from '../constants/constants';
 import { makeStyles, Paper } from '@material-ui/core';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import ClassCreateForm from '../components/classroom/ClassCreateForm';
+import ClassFindForm from '../components/classroom/ClassFindForm';
 import Loading from '../components/layout/Loading';
 import { getClassrooms } from '../sandbox/actions/classroom';
 
@@ -33,6 +34,7 @@ const AllClassrooms = ({
   getClassrooms,
 }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showFindModal, setShowFindModal] = useState(false);
   const history = useHistory();
   const match = useRouteMatch();
   const componentClasses = useStyles();
@@ -41,9 +43,9 @@ const AllClassrooms = ({
     setShowModal((prev) => !prev);
   };
 
-  const onFindHandler = (e) => {
-    e.preventDefault();
-    history.push(`${match.url}/find`);
+  const toggleShowFindModal = () => {
+    console.log('show find');
+    setShowFindModal((prev) => !prev);
   };
 
   useEffect(() => {
@@ -63,6 +65,17 @@ const AllClassrooms = ({
         </Paper>
       </Modal>
 
+      <Modal showModal={showFindModal} setShowModal={setShowFindModal}>
+        <PageHeader
+          title='Tìm lớp học'
+          subTitle='Thầy cô và bạn bè đang chờ bạn đấy!'
+          icon={<SupervisedUserCircleIcon fontSize='large' />}
+        />
+        <Paper className={componentClasses.pageContent}>
+          <ClassFindForm setShowModal={setShowModal} />
+        </Paper>
+      </Modal>
+
       <Switch>
         <Route path={match.url} exact>
           <div className={classes.allclassrooms_container}>
@@ -72,17 +85,13 @@ const AllClassrooms = ({
                 Tạo lớp mới
               </button>
             ) : (
-              <button onClick={(e) => onFindHandler(e)} type='submit'>
+              <button onClick={(e) => toggleShowFindModal(e)} type='submit'>
                 Tìm lớp học
               </button>
             )}
 
             {loading ? <Loading /> : <ClassList classrooms={classrooms} />}
           </div>
-        </Route>
-
-        <Route path={`${match.url}/find`} exact>
-          <ClassFind />
         </Route>
 
         <Route path={`${match.url}/:id`} component={ClassDetail} />
