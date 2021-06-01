@@ -3,7 +3,10 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import { login } from '../../sandbox/actions/auth';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure();
 export const Login = ({ login, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     email: '',
@@ -22,6 +25,7 @@ export const Login = ({ login, isAuthenticated }) => {
   };
 
   if (isAuthenticated) {
+    toast.success('Đăng nhập thành công!', { autoClose: 3000 });
     return <Redirect to='/dashboard' />;
   }
   return (

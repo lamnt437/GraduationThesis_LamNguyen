@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { fetchClassRooms } from '../../services/classroom';
 import {
   CREATE_CLASS_SUCCESS,
@@ -7,6 +9,7 @@ import {
   CLASSROOMS_ERROR,
 } from './types';
 
+toast.configure();
 export const getClassrooms = () => async (dispatch) => {
   try {
     const res = await fetchClassRooms();
@@ -44,11 +47,11 @@ export const createClass = (name, description) => async (dispatch) => {
 
   try {
     const response = await axios.post(url, body, options);
-    console.log({ response });
-
+    toast.success('Tạo lớp thành công!', { autoClose: 3000 });
     dispatch({ type: CREATE_CLASS_SUCCESS, payload: response.data.classroom });
   } catch (error) {
     console.log(error.message);
+    toast.error('Tạo lớp thất bại!', { autoClose: 3000 });
     dispatch({
       type: CREATE_CLASS_ERROR,
       payload: {

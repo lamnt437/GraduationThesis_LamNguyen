@@ -26,7 +26,6 @@ export const Feed = ({
   user,
   getPosts,
   addPost,
-  classroomName,
   post: { posts, loading },
 }) => {
   useEffect(() => {
@@ -37,7 +36,7 @@ export const Feed = ({
       console.log('Unmount Feed');
       resetPosts();
     };
-  }, []);
+  }, [getPosts]);
 
   const [pageInfo, setPageInfo] = useState({
     numberOfPages: 1,

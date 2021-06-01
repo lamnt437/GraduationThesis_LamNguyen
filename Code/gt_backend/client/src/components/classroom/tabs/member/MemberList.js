@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { fetchMembers, fetchSupervisors } from '../../../../services/classroom';
 import MemberItem from './MemberItem';
+import Loading from '../../../layout/Loading';
 
 const MemberList = ({ classId, className }) => {
   const [members, setMembers] = useState([]);
@@ -24,7 +25,7 @@ const MemberList = ({ classId, className }) => {
     }
   }, []);
 
-  let render = <div>Loading....</div>;
+  let render = <Loading />;
   if (!isLoading) {
     if (hasError) {
       render = <div>Error loading members</div>;

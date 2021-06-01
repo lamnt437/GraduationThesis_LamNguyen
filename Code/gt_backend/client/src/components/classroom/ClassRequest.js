@@ -6,7 +6,7 @@ const ClassRequest = ({ name, description, classId }) => {
     e.preventDefault();
 
     try {
-      const response = await requestClassroom(classId);
+      await requestClassroom(classId);
     } catch (err) {
       console.log(err);
     }

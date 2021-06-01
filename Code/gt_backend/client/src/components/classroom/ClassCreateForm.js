@@ -5,7 +5,6 @@ import {
   TextField,
   Button as MuiButton,
 } from '@material-ui/core';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createClass } from '../../sandbox/actions/classroom';
 
@@ -35,8 +34,6 @@ const ClassCreateForm = ({ createClass, setShowModal }) => {
   });
   const { name, description } = classInfo;
 
-  const [doneCreation, setDoneCreation] = useState(false);
-
   const onChange = (e) => {
     setClassInfo({ ...classInfo, [e.target.name]: e.target.value });
   };
@@ -48,7 +45,6 @@ const ClassCreateForm = ({ createClass, setShowModal }) => {
       classInfo: { name, description },
     });
     createClass(name, description);
-    // TODO create redux flow like register new account
     setShowModal(false);
   };
 

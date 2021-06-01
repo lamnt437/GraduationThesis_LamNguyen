@@ -1,49 +1,17 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
-// const Background = styled.div`
-//   width: 100%;
-//   height: 100%;
-//   background: rgba(0, 0, 0, 0.8);
-//   position: fixed;
-//   left: 0;
-//   top: 0;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// `;
-
-const AlertWrapper = styled.div`
-  width: 100%;
-  height: 30px;
-  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
-  background: #f00;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 10;
-  border-radius: 10px;
-`;
+import Toast from './Toast';
 
 // check current state of alert first, multiple alert showed, check whether content is pushed down by alert
 
-export const Alert = (props) => {
-  const { alerts } = props;
-
+export const Alert = ({ alerts }) => {
   return (
     alerts !== null &&
     alerts.length > 0 &&
-    alerts.map((alert) => (
-      <div key={alert.id} className={`alert alert-${alert.alertType}`}>
-        {alert.msg}
-      </div>
-    ))
+    alerts.map((alert) => {
+      console.log('hello error');
+      return <Toast key={alert.id} type='error' content={alert.msg} />;
+    })
   );
 };
 

@@ -48,7 +48,7 @@ class ClassCalendar extends Component {
           eventSettings={{ dataSource: source.dataSource }}
           currentView='Agenda'
         >
-          <Inject services={[Day, Week, Month, Agenda]} />
+          <Inject services={[Day, Week, Month, Agenda, WorkWeek]} />
         </ScheduleComponent>
       </Fragment>
     );

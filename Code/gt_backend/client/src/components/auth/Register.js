@@ -5,8 +5,10 @@ import { setAlert } from '../../sandbox/actions/alert';
 import { register } from '../../sandbox/actions/auth';
 import { ROLE_TEACHER, ROLE_STUDENT } from '../../constants/constants';
 import PropTypes from 'prop-types';
-import { FormatIndentDecreaseTwoTone } from '@material-ui/icons';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure();
 export const Register = (props) => {
   // TODO add teacher role
   const [formData, setFormData] = useState({
@@ -52,6 +54,7 @@ export const Register = (props) => {
   };
 
   if (props.isAuthenticated) {
+    toast.success('Đăng ký thành công!', { autoClose: 3000 });
     return <Redirect to='/dashboard' />;
   }
 

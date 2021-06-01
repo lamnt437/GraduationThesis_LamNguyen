@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   GET_POSTS,
   GET_POSTS_SUCCESS,
@@ -11,6 +13,8 @@ import {
 } from '../actions/types';
 import { fetchPosts } from '../../services/classroom';
 
+toast.configure();
+
 export const getPosts = (classId) => async (dispatch) => {
   console.log(`fetching ${classId}`);
 
@@ -21,7 +25,6 @@ export const getPosts = (classId) => async (dispatch) => {
   try {
     const res = await fetchPosts(classId);
     const posts = res.data.posts;
-    console.log({ posts });
 
     dispatch({
       type: GET_POSTS_SUCCESS,
@@ -29,6 +32,7 @@ export const getPosts = (classId) => async (dispatch) => {
     });
   } catch (err) {
     console.log({ error: err.response });
+
     dispatch({
       type: POST_ERROR,
 
@@ -45,11 +49,13 @@ export const addPost = (fd, classId) => async (dispatch) => {
 
   try {
     const response = await axios.put(url, fd);
+    toast.success('Đăng bài thành công!', { autoClose: 3000 });
     dispatch({
       type: ADD_POST_SUCCESS,
       payload: response.data?.post,
     });
   } catch (err) {
+    toast.error(err.response?.data?.statusText, { autoClose: 3000 });
     dispatch({
       type: ADD_POST_ERROR,
       payload: {
@@ -81,6 +87,7 @@ export const addComment = (postId, comment) => async (dispatch) => {
 
   try {
     const response = await axios.put(url, body, options);
+    toast.success('Bình luận thành công!', { autoClose: 3000 });
     dispatch({
       type: ADD_COMMENT_SUCCESS,
       payload: {
@@ -89,6 +96,9 @@ export const addComment = (postId, comment) => async (dispatch) => {
       },
     });
   } catch (err) {
+    console.log('show toast');
+    console.log(err.response);
+    toast.error(err.response?.data?.errors[0].msg, { autoClose: 3000 });
     dispatch({
       type: ADD_COMMENT_ERROR,
       payload: {

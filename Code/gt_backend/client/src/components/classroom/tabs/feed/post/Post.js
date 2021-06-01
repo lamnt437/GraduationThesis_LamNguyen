@@ -36,14 +36,16 @@ const Post = ({
     e.preventDefault();
     // use redux
     addComment(postId, commentText);
-    setCommentList([
-      ...commentList,
-      {
-        username: user.name,
-        text: commentText,
-        created_at: Date.now(),
-      },
-    ]);
+    if (commentText.length > 0) {
+      setCommentList([
+        ...commentList,
+        {
+          username: user.name,
+          text: commentText,
+          created_at: Date.now(),
+        },
+      ]);
+    }
     setCommentText('');
   };
 
@@ -113,7 +115,9 @@ const CommentList = ({ comments }) => {
   return (
     <Fragment>
       {Array.isArray(comments) &&
-        comments.map((comment) => <CommentItem comment={comment} />)}
+        comments.map((comment) => (
+          <CommentItem key={comment._id} comment={comment} />
+        ))}
     </Fragment>
   );
 };
