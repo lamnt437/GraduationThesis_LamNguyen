@@ -9,10 +9,10 @@ const NavBar = ({ auth: { isAuthenticated, loading }, logout }) => {
     <Fragment>
       <ul>
         <li>
-          <Link to='/register'>Register</Link>
+          <Link to='/register'>Đăng ký</Link>
         </li>
         <li>
-          <Link to='/login'>Login</Link>
+          <Link to='/login'>Đăng nhập</Link>
         </li>
       </ul>
     </Fragment>
@@ -25,17 +25,17 @@ const NavBar = ({ auth: { isAuthenticated, loading }, logout }) => {
           <Link to='/dashboard'>Dashboard</Link>
         </li>
         <li>
-          <Link to='/classroom'>Classroom</Link>
+          <Link to='/classroom'>Lớp học</Link>
         </li>
         <li>
           <Link to='/meeting'>Meeting</Link>
         </li>
         <li>
-          <Link to='/profile'>Profile</Link>
+          <Link to='/profile'>Hồ sơ cá nhân</Link>
         </li>
         <li>
           <a href='#!' onClick={logout}>
-            Logout
+            Đăng xuất
           </a>
         </li>
       </ul>

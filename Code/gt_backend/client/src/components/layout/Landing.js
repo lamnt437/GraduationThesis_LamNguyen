@@ -12,14 +12,14 @@ const Landing = ({ isAuthenticated }) => {
       <section className='landing'>
         <div className='dark-overlay'>
           <div className='landing-inner'>
-            <h1 className='x-large'>Zoom Class</h1>
-            <p className='lead'>Create a class and start teaching now!</p>
+            <h1 className='x-large'>ClassZoom</h1>
+            <p className='lead'>Học online chưa bao giờ thú vị đến vậy!</p>
             <div className='buttons'>
               <Link to='/register' className='btn btn-primary'>
-                Sign Up
+                Đăng ký
               </Link>
               <Link to='/login' className='btn btn-light'>
-                Login
+                Đăng nhập
               </Link>
             </div>
           </div>

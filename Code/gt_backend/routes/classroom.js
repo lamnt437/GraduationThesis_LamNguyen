@@ -32,7 +32,9 @@ const uploadImage = multer({
       cb(null, true);
     } else {
       cb(null, false);
-      return cb(new Error('only png, jpg, jpeg format is allowed'));
+      return cb(
+        new Error('Chỉ chấp nhận đăng ảnh có định dạng only png, jpg, jpeg!')
+      );
     }
   },
 }).single('image');
@@ -191,89 +193,6 @@ router.post(
   }
 );
 
-// @route PUT /api/classroom/:id/posts
-// @desc create a new post in classroom
-// @access TODO Private to class member
-
-// const { topic, start_time, password, duration, type } = req.body;
-//   const time = dateFormat(start_time, "yyyy-mm-dd'T'HH:MM:ssZ");
-
-//   let recurrence = {};
-//   if (type == 8) {
-//     recurrence = req.body.recurrence;
-//   }
-
-//   console.log({ recurrence });
-
-//   // get token
-//   // check if user connected to zoom service
-//   console.log(req.user);
-//   const profile = await User.findById(req.user.id);
-
-//   var accessToken = profile.access_token;
-//   if (!accessToken) {
-//     return res.status(403).json({
-//       msg: "Account hasn't connected to zoom service",
-//       error_code: ERROR_NO_OAUTH,
-//     });
-//   }
-
-//   // validate token
-//   const isValid = zoomService.isValidToken(accessToken);
-
-//   if (!isValid) {
-//     try {
-//       // need refresh
-//       console.log('Refreshing.............................');
-//       // get refresh token from profile
-//       const refreshToken = profile.refresh_token;
-//       console.log({ refreshToken });
-
-//       // run refreshAccessToken service
-//       const zoomRes = await zoomService.refreshAccessToken(refreshToken);
-//       accessToken = zoomRes.data.access_token;
-
-//       // save token to account
-//       profile.access_token = accessToken;
-//       profile.refresh_token = zoomRes.data.refresh_token;
-//       profile.save();
-
-//       console.log({ newAccessToken: accessToken });
-//     } catch (err) {
-//       console.log(err);
-//       return res.status(500).json({ msg: 'Error while refresh access token' });
-//     }
-//   }
-
-//   // send request
-//   try {
-//     const zoomRes = await zoomService.createMeeting(
-//       topic,
-//       time,
-//       duration,
-//       password,
-//       type,
-//       recurrence,
-//       accessToken
-//     );
-
-//     let meeting = new Meeting({ ...zoomRes.data });
-//     console.log({ zoomRes: zoomRes.data });
-//     // meeting = { ...zoomRes.data };
-//     meeting.zoom_id = zoomRes.data.id;
-//     console.log({ meeting });
-//     if (meeting.type == 8) {
-//       meeting.duration = zoomRes.data.occurrences[0].duration;
-//       meeting.start_time = zoomRes.data.occurrences[0].start_time;
-//     }
-//     meeting.creator = req.user.id;
-//     meeting.save();
-//     res.json({ meeting });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json({ msg: 'Error when creating meeting' });
-//   }
-
 // route  PUT /api/classroom/:id/meetings
 // desc   schedule a meeting in classroom
 // access Private members
@@ -290,21 +209,24 @@ router.put(
     body('password', 'Please enter password with 6 characters').isLength(6),
   ],
   async (req, res) => {
-    // TODO check is supervisor
     // validate classroom
     var classroom;
 
     try {
       classroom = await ClassRoom.findById(req.params.id);
       if (!classroom) {
-        return res.status(404).json({ msg: 'Classroom not found' });
+        return res
+          .status(404)
+          .json({ errors: [{ msg: 'Classroom not found' }] });
       }
     } catch (err) {
       if (err.kind === 'ObjectId') {
-        return res.status(404).json({ msg: 'Classroom not found' });
+        return res
+          .status(404)
+          .json({ errors: [{ msg: 'Classroom not found' }] });
       }
       console.log(err);
-      return res.status(500).json({ msg: 'Server error' });
+      return res.status(500).json({ errors: [{ msg: 'Server error' }] });
     }
 
     console.log({ classroom });
@@ -313,7 +235,11 @@ router.put(
     const user = req.user;
     if (!isSupervisor(classroom, user)) {
       return res.status(403).json({
-        msg: 'Unauthorized request. Only supervisor can schedule meetings',
+        errors: [
+          {
+            msg: 'Chỉ giáo viên mới có quyền thêm meeting!',
+          },
+        ],
       });
     }
 
@@ -340,7 +266,9 @@ router.put(
       start_time = dateFormat(req.body.start_time, "yyyy-mm-dd'T'HH:MM:ssZ");
     } catch (err) {
       console.log(err);
-      res.status(400).json({ errors: [{ msg: 'Invalid start_time' }] });
+      res
+        .status(400)
+        .json({ errors: [{ msg: 'Thời gian bắt đầu không hợp lệ!' }] });
     }
 
     // get Zoom access token
@@ -348,8 +276,12 @@ router.put(
     var accessToken = profile.access_token;
     if (!accessToken) {
       return res.status(403).json({
-        msg: "Account hasn't connected to zoom service",
-        error_code: ERROR_NO_OAUTH,
+        errors: [
+          {
+            msg: 'Tài khoản chưa được kết nối với Zoom, xin vui lòng truy cập Hồ sơ cá nhân và nhấn kết nối',
+            error_code: ERROR_NO_OAUTH,
+          },
+        ],
       });
     }
 
@@ -377,7 +309,7 @@ router.put(
         console.log(err);
         return res
           .status(500)
-          .json({ msg: 'Error while refresh access token' });
+          .json({ errors: [{ msg: 'Error while refreshing access token' }] });
       }
     }
 
@@ -408,7 +340,9 @@ router.put(
       meeting.classroom = classroom._id;
     } catch (err) {
       console.log(err);
-      return res.status(500).json({ msg: 'Error when create meeting' });
+      return res
+        .status(500)
+        .json({ errors: [{ msg: 'Error while adding meeting' }] });
     }
 
     // save new meeting
@@ -418,7 +352,9 @@ router.put(
       classroom.save();
     } catch (err) {
       console.log(err);
-      return res.status(500).json({ msg: 'Error when save new meeting' });
+      return res
+        .status(500)
+        .json({ errors: [{ msg: 'Error while saving meeting' }] });
     }
 
     res.json({ meeting });
@@ -607,14 +543,27 @@ router.put('/:id/posts', auth, async (req, res) => {
       return res.status(400).json({ statusText: err.message });
     }
 
+    let textFlag = false;
+    let imgFlag = false;
+
     // validate text input
     const reqBody = JSON.parse(JSON.stringify(req.body));
     if (reqBody.hasOwnProperty('text')) {
-      if (reqBody.text.trim().length === 0) {
-        return res.status(400).json({ statusText: 'Text is required' });
+      if (reqBody.text.trim().length !== 0) {
+        // return res.status(400).json({ statusText: 'Text is required' });
+        textFlag = true;
       }
-    } else {
-      return res.status(400).json({ statusText: 'Text is required' });
+    }
+
+    if (req.file) {
+      imgFlag = true;
+    }
+
+    if (!textFlag && !imgFlag) {
+      console.log('nope');
+      return res
+        .status(400)
+        .json({ statusText: 'Bài đăng cần có nội dung hoặc ảnh!' });
     }
 
     // get class
@@ -636,6 +585,17 @@ router.put('/:id/posts', auth, async (req, res) => {
     const user = req.user;
     if (!isRelated(classroom, user)) {
       return res.status(403).json({ msg: 'Unauthorized' });
+    }
+
+    // get user info
+    var userInfo;
+    try {
+      userInfo = await User.findById(user.id);
+    } catch (err) {
+      console.error(err.message);
+      return res
+        .status(500)
+        .json({ statusText: 'Error when retrieving user info' });
     }
 
     try {
@@ -685,7 +645,13 @@ router.put('/:id/posts', auth, async (req, res) => {
       classroom.posts.push(post._id);
       classroom.save();
 
-      res.json({ post });
+      res.json({
+        post: {
+          ...post._doc,
+          username: userInfo.name,
+          avatar: userInfo.avatar,
+        },
+      });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ msg: 'Server error' });

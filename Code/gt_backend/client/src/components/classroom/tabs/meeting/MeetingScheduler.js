@@ -1,18 +1,19 @@
 import { useState } from 'react';
-import { addMeeting, addPost } from '../../../../services/classroom';
+import { addMeeting } from '../../../../services/classroom';
 import { CLASS_POST_TYPE_MEETING } from '../../../../constants/constants';
 import {
-  MEETING_TYPE_INSTANT,
-  MEETING_TYPE_SCHEDULED,
-  MEETING_TYPE_RECURRING_NOFIX,
-  MEETING_TYPE_RECURRING,
   RECURRENCE_MEETING_TYPE_DAILY,
   RECURRENCE_MEETING_TYPE_WEEKLY,
-  RECURRENCE_MEETING_TYPE_MONTHLY,
 } from '../../../../constants/constants';
-import { weekdays } from 'moment';
+import { addPost } from '../../../../sandbox/actions/post';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-const MeetingScheduler = ({ classId }) => {
+toast.configure();
+
+const MeetingScheduler = ({ classId, addPost }) => {
   // TODO formal create meeting form from zoom
   const [meetingInfo, setMeetingInfo] = useState({
     topic: '',
@@ -188,9 +189,11 @@ const MeetingScheduler = ({ classId }) => {
       fd.append('classroom', classId);
       fd.append('type', CLASS_POST_TYPE_MEETING);
 
-      const posting = await addPost(fd, classId);
+      await addPost(fd, classId);
+      toast.success('Thêm meeting thành công', { autoClose: 3000 });
     } catch (err) {
       console.log(err);
+      toast.error(err.response?.data?.errors[0].msg, { autoClose: 3000 });
     }
   };
 
@@ -216,7 +219,6 @@ const MeetingScheduler = ({ classId }) => {
             placeholder='Mô tả (không bắt buộc)'
             name='description'
             value={description}
-            required
             onChange={(e) => onChange(e)}
           />
         </div>
@@ -435,4 +437,8 @@ const MeetingScheduler = ({ classId }) => {
   );
 };
 
-export default MeetingScheduler;
+MeetingScheduler.propTypes = {
+  addPost: PropTypes.func.isRequired,
+};
+
+export default connect(null, { addPost })(MeetingScheduler);

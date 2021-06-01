@@ -16,23 +16,7 @@ const profileRouter = require('./routes/profile');
 const sandboxRouter = require('./routes/sandbox');
 
 const app = express();
-// app.use((req, res, next) => {
-//   res.setHeader(
-//     'Content-Security-Policy',
-//     "script-src 'self' https://zoom.us https://source.zoom.us; style-src: 'self';"
-//   );
-//   return next();
-// });
-// app.use(
-//   csp({
-//     directives: {
-//       defaultSrc: ["'self'"],
-//       scriptSrc: ["'self", 'https://zoom.us', 'https://source.zoom.us'],
-//       styleSrc: ["'self'"],
-//     },
-//   })
-// );
-
+app.set('view engine', 'pug');
 require('./startup/prod')(app);
 
 app.use(cors());

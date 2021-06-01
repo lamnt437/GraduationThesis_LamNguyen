@@ -102,11 +102,6 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
-// route  PUT /api/posts/:postId/like
-// desc   like post
-// access Private related
-// TODO
-
 // route  PUT /api/posts/:postId/comment
 // desc   comment on post
 // access Private related
@@ -115,8 +110,8 @@ router.put(
   '/:postId/comment',
   auth,
   [
-    body('text', 'Comment must have at least 3 characters').isLength({
-      min: 3,
+    body('text', 'Bình luận phải có ít nhất 1 ký tự').isLength({
+      min: 1,
     }),
   ],
   async (req, res) => {
