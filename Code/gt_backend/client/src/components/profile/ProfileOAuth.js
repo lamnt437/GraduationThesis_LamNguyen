@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { zoomfunc } from '../../services/zoom';
+import Loading from '../layout/Loading';
 
 const ProfileOAuth = ({ code }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -15,7 +16,7 @@ const ProfileOAuth = ({ code }) => {
       console.error(error.message);
     }
   }, []);
-  return isLoading ? <div>Loading...</div> : <Redirect to='/profile' />;
+  return isLoading ? <Loading /> : <Redirect to='/profile' />;
 };
 
 export default ProfileOAuth;

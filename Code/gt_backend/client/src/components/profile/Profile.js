@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchMyProfile } from '../../services/profile.ts';
 import { Avatar } from '@material-ui/core';
 import OAuth from '../meeting/OAuth';
+import Loading from '../layout/Loading';
 
 const Profile = () => {
   const [profile, setProfile] = useState({});
@@ -21,7 +22,7 @@ const Profile = () => {
   }, []);
 
   // copy template from mern stack
-  let render = <div>Loading....</div>;
+  let render = <Loading />;
   if (!isLoading) {
     if (hasError) {
       render = <div>Profile loading error</div>;

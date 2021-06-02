@@ -6,7 +6,7 @@ export const OAuth = () => {
       {/* get button from Zoom sample from Create app */}
       {/* link: https://zoom.us/oauth/authorize?response_type=code&client_id=pjqdk2rYRYC13CVvVXT7ag&redirect_uri=http%3A%2F%2Flocalhost%3A3000 */}
       <a
-        href='https://zoom.us/oauth/authorize?response_type=code&client_id=pjqdk2rYRYC13CVvVXT7ag&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fprofile'
+        href='https://zoom.us/oauth/authorize?response_type=code&client_id=pjqdk2rYRYC13CVvVXT7ag&redirect_uri=https%3A%2F%2Fzoomclass2021.herokuapp.com%2Fprofile'
         target='_blank'
         rel='noopener noreferrer'
       >
