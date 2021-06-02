@@ -4,6 +4,7 @@ import auth from './auth';
 import classroom from './classroom';
 import classDetail from './classDetail';
 import post from './post';
+import meeting from './meeting';
 
 export default combineReducers({
   alert,
@@ -11,4 +12,5 @@ export default combineReducers({
   classroom,
   classDetail,
   post,
+  meeting,
 });

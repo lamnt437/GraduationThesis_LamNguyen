@@ -61,5 +61,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://zoomclass2021.herokuapp.com"
+  "proxy": "http://localhost:3001"
 }

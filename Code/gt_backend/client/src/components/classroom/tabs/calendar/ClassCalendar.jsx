@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import {
   Inject,
   ScheduleComponent,
@@ -8,32 +8,27 @@ import {
   Month,
   Agenda,
 } from '@syncfusion/ej2-react-schedule';
-import { fetchMeetingFromClassroom } from '../../../../services/meeting';
 import { meetingAdapter } from '../../../../utils/meetingadapter';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { getMeetings } from '../../../../sandbox/actions/meeting';
+import Loading from '../../../layout/Loading';
 
-class ClassCalendar extends Component {
-  state = {
-    meetings: [],
-    isLoading: true,
-  };
+const ClassCalendar = ({
+  classId,
+  meeting: { meetings, loading },
+  getMeetings,
+}) => {
+  useEffect(() => {
+    getMeetings(classId);
+  }, [getMeetings]);
 
-  async componentDidMount() {
-    const classId = this.props.classId;
-    try {
-      const response = await fetchMeetingFromClassroom(classId);
-      this.setState({ meetings: response.data.meetings, isLoading: false });
-      console.log({ state: this.state });
-    } catch (err) {
-      console.log(err);
-      this.setState({ isLoading: false });
-    }
-  }
-
-  render() {
+  var renderedComp = <Loading />;
+  if (!loading) {
     let eventData = [];
 
-    for (let i = 0; i < this.state.meetings.length; i++) {
-      const parsedMeeting = meetingAdapter(this.state.meetings[i]);
+    for (let i = 0; i < meetings.length; i++) {
+      const parsedMeeting = meetingAdapter(meetings[i]);
       eventData.push(parsedMeeting);
     }
 
@@ -41,7 +36,7 @@ class ClassCalendar extends Component {
       dataSource: eventData,
     };
 
-    return (
+    renderedComp = (
       <Fragment>
         <ScheduleComponent
           height='550px'
@@ -53,6 +48,17 @@ class ClassCalendar extends Component {
       </Fragment>
     );
   }
-}
 
-export default ClassCalendar;
+  return renderedComp;
+};
+
+ClassCalendar.propTypes = {
+  meeting: PropTypes.object.isRequired,
+  getMeetings: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  meeting: state.meeting,
+});
+
+export default connect(mapStateToProps, { getMeetings })(ClassCalendar);

@@ -1,19 +1,22 @@
 import { useState } from 'react';
-import { addMeeting } from '../../../../services/classroom';
+// import { addMeeting } from '../../../../services/classroom';
 import { CLASS_POST_TYPE_MEETING } from '../../../../constants/constants';
 import {
   RECURRENCE_MEETING_TYPE_DAILY,
   RECURRENCE_MEETING_TYPE_WEEKLY,
 } from '../../../../constants/constants';
 import { addPost } from '../../../../sandbox/actions/post';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { addMeeting } from '../../../../sandbox/actions/meeting';
+import Loading from '../../../layout/Loading';
 
-toast.configure();
-
-const MeetingScheduler = ({ classId, addPost }) => {
+const MeetingScheduler = ({
+  classId,
+  addPost,
+  addMeeting,
+  meeting: { meetings, loading },
+}) => {
   // TODO formal create meeting form from zoom
   const [meetingInfo, setMeetingInfo] = useState({
     topic: '',
@@ -159,7 +162,7 @@ const MeetingScheduler = ({ classId, addPost }) => {
     e.preventDefault();
 
     try {
-      const response = await addMeeting(
+      addMeeting(
         classId,
         topic,
         description,
@@ -169,36 +172,14 @@ const MeetingScheduler = ({ classId, addPost }) => {
         type,
         meetingInfo.recurrence
       );
-
-      const createdMeeting = response.data.meeting;
-
-      // console.log({ response: response.data });
-
-      // TODO if return 403 you don't have permission to create meeting
-
-      // TODO redirect or something
-
-      // TODO post to newsfeed
-      const fd = new FormData();
-      fd.append('text', `Meeting ${createdMeeting.topic} đã được lên lịch!`);
-      fd.append('zoom_id', createdMeeting.zoom_id);
-      fd.append('topic', createdMeeting.topic);
-      fd.append('start_time', createdMeeting.start_time);
-      fd.append('start_url', createdMeeting.start_url);
-      fd.append('password', createdMeeting.password);
-      fd.append('classroom', classId);
-      fd.append('type', CLASS_POST_TYPE_MEETING);
-
-      await addPost(fd, classId);
-      toast.success('Thêm meeting thành công', { autoClose: 3000 });
     } catch (err) {
       console.log(err);
-      toast.error(err.response?.data?.errors[0].msg, { autoClose: 3000 });
     }
   };
 
   return (
     <div>
+      {loading ? <Loading /> : ''}
       <h1 className='large text-primary'>Schedule a Meeting now!</h1>
       <form className='form' onSubmit={(e) => onSubmit(e)}>
         <div className='form-group'>
@@ -439,6 +420,14 @@ const MeetingScheduler = ({ classId, addPost }) => {
 
 MeetingScheduler.propTypes = {
   addPost: PropTypes.func.isRequired,
+  addMeeting: PropTypes.func.isRequired,
+  meeting: PropTypes.object.isRequired,
 };
 
-export default connect(null, { addPost })(MeetingScheduler);
+const mapStateToProps = (state) => ({
+  meeting: state.meeting,
+});
+
+export default connect(mapStateToProps, { addPost, addMeeting })(
+  MeetingScheduler
+);

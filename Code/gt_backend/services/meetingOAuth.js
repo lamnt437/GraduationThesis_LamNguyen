@@ -108,7 +108,8 @@ const getAccessToken = async (code) => {
   // const authString = btoa(decodedString);
   const authString = Buffer.from(decodedString).toString('base64');
   // console.log({ authString });
-  const url = `https://zoom.us/oauth/token?grant_type=authorization_code&code=${code}&redirect_uri=http://localhost:3000/profile`;
+  // const url = `https://zoom.us/oauth/token?grant_type=authorization_code&code=${code}&redirect_uri=http://localhost:3000/profile`;
+  const url = `https://zoom.us/oauth/token?grant_type=authorization_code&code=${code}&redirect_uri=https://zoomclass2021.herokuapp.com/profile`;
   const reqConfig = {
     headers: {
       Authorization: `Basic ${authString}`,

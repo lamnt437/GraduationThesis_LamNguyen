@@ -10,6 +10,7 @@ const {
   CLASS_POST_TYPE_NORMAL,
   CLASS_POST_TYPE_MEETING,
 } = require('../config/constants');
+const { ERROR_NO_OAUTH } = require('../config/errorCodes');
 
 // multer file upload
 const DIR = 'public/images';
@@ -119,8 +120,6 @@ router.get('/find', async (req, res) => {
     console.log(err);
     return res.status(500).json({ msg: 'Server error' });
   }
-  const foundClass = await ClassRoom.findById(findId);
-  // return
 });
 
 // @route GET /api/classroom/:id
@@ -307,9 +306,13 @@ router.put(
         console.log({ newAccessToken: accessToken });
       } catch (err) {
         console.log(err);
-        return res
-          .status(500)
-          .json({ errors: [{ msg: 'Error while refreshing access token' }] });
+        return res.status(403).json({
+          errors: [
+            {
+              msg: 'Có lỗi xảy ra khi kết nối với Zoom, làm ơn truy cập Hồ sơ và thực hiện kết nối lại!',
+            },
+          ],
+        });
       }
     }
 
