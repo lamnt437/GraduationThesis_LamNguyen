@@ -344,8 +344,14 @@ router.put(
     } catch (err) {
       console.log(err);
       return res
-        .status(500)
-        .json({ errors: [{ msg: 'Error while adding meeting' }] });
+        .status(401)
+        .json({
+          errors: [
+            {
+              msg: 'Có lỗi xảy ra khi kết nối với Zoom, làm ơn truy cập Hồ sơ và thực hiện kết nối lại!',
+            },
+          ],
+        });
     }
 
     // save new meeting
