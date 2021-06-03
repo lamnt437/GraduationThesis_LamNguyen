@@ -6,11 +6,18 @@ const jwt = require('jsonwebtoken');
 const dateFormat = require('dateformat');
 const Meeting = require('../models/Meeting');
 const User = require('../models/User');
+const ClassRoom = require('../models/ClassRoom');
 const meetingService = require('../services/meeting');
 const auth = require('../middleware/auth');
 const zoomService = require('../services/meetingOAuth');
 const { ERROR_NO_OAUTH } = require('../config/errorCodes');
 const classroomDataAccess = require('../data_access/classroom');
+const {
+  ROLE_ADMIN,
+  ROLE_STUDENT,
+  ROLE_TEACHER,
+} = require('../config/constants');
+const mongoose = require('mongoose');
 
 const router = express.Router();
 // const meetingController = require('../controllers/meeting_controller');
@@ -184,5 +191,72 @@ router.post('/schedule', auth, async (req, res) => {
     res.status(500).json({ msg: 'Error when creating meeting' });
   }
 });
+
+// @route DELETE /api/meeting/:id
+router.delete('/:id', auth, async (req, res) => {
+  const meetingId = req.params.id;
+
+  // parseinto mongodb objectid
+  if (!mongoose.isValidObjectId(meetingId)) {
+    return res.status(404).json({ textStatus: 'Không tìm thấy meeting' });
+  }
+
+  var meeting;
+  try {
+    meeting = await Meeting.findById(meetingId);
+    if (!meeting) {
+      return res.status(404).json({ textStatus: 'Không tìm thấy meeting' });
+    }
+  } catch (err) {
+    if (err.kind === 'ObjectId')
+      return res.status(404).json({ textStatus: 'Không tìm thấy meeting' });
+    console.error(err.message);
+    return res.status(500).json({ textStatus: 'Lối khi load meeting' });
+  }
+
+  const user = req.user;
+  const classId = meeting.classroom;
+
+  const isAuthorized = await isSupervisorOrAdmin(classId, user.id);
+  if (!isAuthorized) {
+    console.log('should out here');
+    return res.status(403).json({ textStatus: 'Không có quyền xóa meeting' });
+  }
+
+  try {
+    // delete meeting from classroom
+    const classroom = await ClassRoom.findById(classId);
+    const index = classroom.meeting_ids.indexOf(meetingId);
+    if (index > -1) {
+      classroom.meeting_ids.splice(index, 1);
+      classroom.save();
+      meeting.remove();
+    }
+    return res.json({ meeting });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ textStatus: 'Lỗi khi xóa meeting' });
+  }
+});
+
+const isSupervisorOrAdmin = async (classId, userId) => {
+  var user;
+  var classroom;
+  try {
+    user = await User.findById(userId);
+    classroom = await ClassRoom.findById(classId);
+  } catch {
+    return false;
+  }
+
+  if (user.role === ROLE_STUDENT) return false;
+
+  if (user.role === ROLE_TEACHER && classroom.supervisor_ids.includes(userId))
+    return true;
+
+  if (user.role === ROLE_ADMIN) return true;
+
+  return false;
+};
 
 module.exports = router;

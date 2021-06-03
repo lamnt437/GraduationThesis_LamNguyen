@@ -343,15 +343,13 @@ router.put(
       meeting.classroom = classroom._id;
     } catch (err) {
       console.log(err);
-      return res
-        .status(401)
-        .json({
-          errors: [
-            {
-              msg: 'Có lỗi xảy ra khi kết nối với Zoom, làm ơn truy cập Hồ sơ và thực hiện kết nối lại!',
-            },
-          ],
-        });
+      return res.status(401).json({
+        errors: [
+          {
+            msg: 'Có lỗi xảy ra khi kết nối với Zoom, làm ơn truy cập Hồ sơ và thực hiện kết nối lại!',
+          },
+        ],
+      });
     }
 
     // save new meeting
@@ -448,21 +446,7 @@ router.get('/:id/members', auth, async (req, res) => {
 
   // get member by look up
   try {
-    // const classWithMembers = await ClassRoom.aggregate([
-    //   {
-    //     $lookup: {
-    //       from: 'users',
-    //       localField: 'member_ids',
-    //       foreignField: '_id',
-    //       as: 'members',
-    //     },
-    //   },
-    // ]).findById(req.params.id);
-    // const members = classWithMembers.members;
-    // console.log(members);
-    // res.status.json({ members });
     const member_ids = classroom.member_ids;
-    // console.log(member_ids);
 
     const members = await User.find(
       { _id: { $in: member_ids } },
