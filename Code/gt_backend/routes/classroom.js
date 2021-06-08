@@ -58,6 +58,7 @@ const User = require('../models/User');
 const Post = require('../models/Post');
 // middlewares
 const auth = require('../middleware/auth');
+const isSupervisorOrAdminMiddleware = require('../middleware/isSupervisorOrAdmin');
 // utils
 const { body, validationResult } = require('express-validator');
 const dateFormat = require('dateformat');
@@ -420,6 +421,36 @@ router.put(
       }
       console.error(error.message);
       res.status(500).json({ msg: 'Server error' });
+    }
+  }
+);
+
+// TODO
+router.delete(
+  '/:classId/members/:memberId',
+  auth,
+  isSupervisorOrAdminMiddleware,
+  async (req, res) => {
+    // get class
+    const classId = req.params.classId;
+
+    var classroom;
+    try {
+      classroom = await ClassRoom.findById(classId);
+    } catch (err) {
+      console.error(err.message);
+      return res.json({ statusText: 'Server error' });
+    }
+    // remove member from class list
+
+    const memberId = req.params.memberId;
+    const index = classroom.member_ids.indexOf(memberId);
+    if (index > -1) {
+      classroom.member_ids.splice(index, 1);
+      classroom.save();
+      return res.json({ memberId });
+    } else {
+      return res.status(400).json({ statusText: 'Thành viên không tồn tại' });
     }
   }
 );
