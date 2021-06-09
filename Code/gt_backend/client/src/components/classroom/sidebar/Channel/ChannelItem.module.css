@@ -1,0 +1,15 @@
+.channelItem {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.channelItem:hover {
+  background-color: lightgray;
+  border-radius: 10px;
+}
+
+.channelItem > h4 {
+  font-weight: 600;
+}
