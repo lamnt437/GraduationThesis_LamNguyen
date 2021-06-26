@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import ZoomMeeting from './ZoomMeeting';
 import Modal from '../../../layout/Modal';
 import { addPost } from '../../../../services/classroom';
-const { CLASS_POST_TYPE_MEETING } = require('../../../../constants/constants');
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+const {
+  CLASS_POST_TYPE_MEETING,
+  ROLE_TEACHER,
+} = require('../../../../constants/constants');
 const dateFormat = require('dateformat');
 
-export const MeetingItem = ({ meeting, user }) => {
+export const MeetingItem = ({ meeting, user, loggedUser }) => {
   const [meetingInfo, setMeetingInfo] = useState({
     meeting_id: meeting.zoom_id,
     password: meeting.password,
@@ -60,7 +65,11 @@ export const MeetingItem = ({ meeting, user }) => {
       <p>Password: {meeting.password}</p>
       <button onClick={(e) => joinMeetingHandler(e)}>Tham gia</button>
       {/* <a href={`${meeting.start_url}`}>Start</a> */}{' '}
-      <button onClick={(e) => startMeetingHandler(e)}>Bắt đầu</button>
+      {loggedUser.role == ROLE_TEACHER ? (
+        <button onClick={(e) => startMeetingHandler(e)}>Bắt đầu</button>
+      ) : (
+        ''
+      )}
       {meetingInfo.inMeeting ? (
         <div>
           <ZoomMeeting
@@ -77,4 +86,12 @@ export const MeetingItem = ({ meeting, user }) => {
   );
 };
 
-export default MeetingItem;
+MeetingItem.propTypes = {
+  loggedUser: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  loggedUser: state.auth.user,
+});
+
+export default connect(mapStateToProps)(MeetingItem);

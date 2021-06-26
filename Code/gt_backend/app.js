@@ -14,6 +14,7 @@ const authRouter = require('./routes/auth');
 const classRouter = require('./routes/classroom');
 const profileRouter = require('./routes/profile');
 const sandboxRouter = require('./routes/sandbox');
+const notificationRouter = require('./routes/notification');
 
 const app = express();
 app.set('view engine', 'pug');
@@ -35,6 +36,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/classroom', classRouter);
 app.use('/api/profile', profileRouter);
 app.use('/api/sandbox', sandboxRouter);
+app.use('/api/notification', notificationRouter);
 
 // serve static assets in production
 if (process.env.NODE_ENV === 'production') {

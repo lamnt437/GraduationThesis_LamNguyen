@@ -31,9 +31,14 @@ module.exports = async (req, res, next) => {
   if (user.role === ROLE_STUDENT)
     return res.status(403).json({ statusText: 'Unauthorized' });
 
-  if (user.role === ROLE_TEACHER && classroom.supervisor_ids.includes(userId))
+  if (user.role === ROLE_TEACHER && classroom.supervisor_ids.includes(userId)) {
+    req.username = user.name;
+    req.classname = classroom.name;
     return next();
+  }
 
+  req.username = user.name;
+  req.classname = classroom.name;
   if (user.role === ROLE_ADMIN) return next();
 
   return res.status(403).json({ statusText: 'Unauthorized' });

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 // @module  User model
 // connect to db
@@ -34,6 +35,20 @@ const UserSchema = new mongoose.Schema({
   },
   refresh_token: {
     type: String,
+  },
+  read_notifications: {
+    type: [
+      {
+        class_id: {
+          type: Schema.Types.ObjectId,
+          ref: 'classrooms',
+        },
+        notification_id: {
+          type: Schema.Types.ObjectId,
+          ref: 'notifications',
+        },
+      },
+    ],
   },
 });
 

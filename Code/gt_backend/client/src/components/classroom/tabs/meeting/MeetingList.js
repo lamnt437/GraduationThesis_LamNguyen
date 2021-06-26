@@ -3,9 +3,13 @@ import { Route, useHistory, useRouteMatch } from 'react-router-dom';
 import MeetingItem from './MeetingItem';
 import MeetingScheduler from './MeetingScheduler';
 import Loading from '../../../layout/Loading';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { fetchMeetingFromClassroom } from '../../../../services/meeting.ts';
+import { ROLE_TEACHER } from '../../../../constants/constants';
+import '../Tab.css';
 
-const MeetingList = ({ classId, user }) => {
+const MeetingList = ({ classId, user, loggedUser }) => {
   const [meetingList, setMeetingList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -42,13 +46,17 @@ const MeetingList = ({ classId, user }) => {
       renderedComp = <div>Can't load meeting</div>;
     } else {
       renderedComp = (
-        <Fragment>
+        <div className='tab'>
           <Route path={match.path} exact>
             <div>
-              {/* TODO only display "Create meeting" button to teacher */}
-              <button onClick={(e) => onCreateHandler(e)}>
-                Tạo meeting mới
-              </button>
+              {loggedUser.role == ROLE_TEACHER ? (
+                <button onClick={(e) => onCreateHandler(e)}>
+                  Tạo meeting mới
+                </button>
+              ) : (
+                ''
+              )}
+
               {Array.isArray(meetingList) &&
                 meetingList.map((meeting) => (
                   <MeetingItem
@@ -64,7 +72,7 @@ const MeetingList = ({ classId, user }) => {
             {/* TODO display create meeting form */}
             <MeetingScheduler classId={classId} />
           </Route>
-        </Fragment>
+        </div>
       );
     }
   }
@@ -72,4 +80,12 @@ const MeetingList = ({ classId, user }) => {
   return renderedComp;
 };
 
-export default MeetingList;
+MeetingItem.propTypes = {
+  loggedUser: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  loggedUser: state.auth.user,
+});
+
+export default connect(mapStateToProps)(MeetingList);

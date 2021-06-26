@@ -9,6 +9,7 @@ const unlinkFile = util.promisify(fs.unlink);
 const {
   CLASS_POST_TYPE_NORMAL,
   CLASS_POST_TYPE_MEETING,
+  ROLE_STUDENT,
 } = require('../config/constants');
 const { ERROR_NO_OAUTH } = require('../config/errorCodes');
 
@@ -56,6 +57,7 @@ const ClassRoom = require('../models/ClassRoom');
 const Meeting = require('../models/Meeting');
 const User = require('../models/User');
 const Post = require('../models/Post');
+const Notification = require('../models/Notification');
 // middlewares
 const auth = require('../middleware/auth');
 const isSupervisorOrAdminMiddleware = require('../middleware/isSupervisorOrAdmin');
@@ -138,6 +140,57 @@ router.get('/:id', auth, async (req, res) => {
 
     if (!isRelated(classroom, user)) {
       return res.status(401).json({ msg: 'Access denied' });
+    }
+
+    // if is member then update read_notifications
+    if (user.role === ROLE_STUDENT) {
+      try {
+        const member = await User.findById(user.id);
+
+        // get the newest notification from this class
+        const classId = req.params.id;
+
+        console.log({ classId });
+        const newestNotification = await Notification.findOne(
+          {
+            classroom: classId,
+          },
+          {},
+          { sort: { created_at: -1 } }
+        );
+
+        if (newestNotification) {
+          console.log({ newestNotification });
+          // update
+          if (Array.isArray(member.read_notifications)) {
+            let updatedFlag = false;
+            member.read_notifications.map((pointer) => {
+              if (pointer.class_id == classId) {
+                pointer.notification_id = newestNotification._id;
+                updatedFlag = true;
+              }
+            });
+
+            if (!updatedFlag) {
+              member.read_notifications.push({
+                class_id: classId,
+                notification_id: newestNotification._id,
+              });
+            }
+          } else {
+            member.read_notifications = [
+              {
+                class_id: classId,
+                notification_id: newestNotification._id,
+              },
+            ];
+          }
+          member.save();
+        }
+      } catch (error) {
+        console.log('Error while updating read notifications');
+        console.error(error.message);
+      }
     }
 
     res.json({ classroom });
@@ -425,7 +478,6 @@ router.put(
   }
 );
 
-// TODO
 router.delete(
   '/:classId/members/:memberId',
   auth,
@@ -1000,6 +1052,39 @@ router.put('/:id/docs', auth, uploadDoc.single('doc'), async (req, res) => {
   }
 });
 
+// @route   PUT /api/classroom/:id/notifications
+// @desc    post new notification to classroom
+// @access  private isSupervisorOrAdmin
+router.put(
+  '/:classId/notifications',
+  auth,
+  isSupervisorOrAdminMiddleware,
+  body('text', 'Thông báo cần có nội dung!').isLength({ min: 1 }),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const notification = new Notification({
+      user: req.user.id,
+      classroom: req.params.classId,
+      username: req.username,
+      classname: req.classname,
+      text: req.body.text,
+    });
+
+    try {
+      notification.save();
+      return res.json({ notification });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ errors: [{ msg: 'Error when saving notification' }] });
+    }
+  }
+);
+
 const removeElement = (array, value) => {
   var index = array.indexOf(value);
   if (index > -1) {
@@ -1036,4 +1121,3 @@ const isRelated = (classroom, user) => {
 };
 
 module.exports = router;
-// TODO handle route not found

@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getMeetings } from '../../../../sandbox/actions/meeting';
 import Loading from '../../../layout/Loading';
+import '../Tab.css';
 
 const ClassCalendar = ({
   classId,
@@ -37,7 +38,7 @@ const ClassCalendar = ({
     };
 
     renderedComp = (
-      <Fragment>
+      <div className='tab'>
         <ScheduleComponent
           height='550px'
           eventSettings={{ dataSource: source.dataSource }}
@@ -45,7 +46,7 @@ const ClassCalendar = ({
         >
           <Inject services={[Day, Week, Month, Agenda, WorkWeek]} />
         </ScheduleComponent>
-      </Fragment>
+      </div>
     );
   }
 

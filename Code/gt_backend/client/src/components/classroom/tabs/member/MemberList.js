@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchMembers, fetchSupervisors } from '../../../../services/classroom';
 import MemberItem from './MemberItem';
+import '../Tab.css';
 import Loading from '../../../layout/Loading';
 
 const MemberList = ({ classId, className }) => {
@@ -31,7 +32,7 @@ const MemberList = ({ classId, className }) => {
       render = <div>Error loading members</div>;
     } else {
       render = (
-        <div className={className}>
+        <div className={className + ' tab'}>
           {Array.isArray(members) &&
             members.map((member) => (
               <MemberItem member={member} key={member._id} />
