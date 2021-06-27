@@ -61,8 +61,11 @@ export const MeetingItem = ({ meeting, user, loggedUser }) => {
       {/* <Modal setShowModal={setShowModal} showModal={showModal}>
         <div id='zmmtg-root'></div>
       </Modal> */}
-      <h1>{meeting.topic}</h1>
-      <p>Time: {dateFormat(meeting.start_time, "yyyy-mm-dd'T'HH:MM:ssZ")}</p>
+      <h3>{meeting.topic}</h3>
+      <p>
+        Time:{' '}
+        {dateFormat(meeting.start_time, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}
+      </p>
       <p>Password: {meeting.password}</p>
       <div className={styles.meetingItem__options}>
         <button

@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addComment } from '../../../../../sandbox/actions/post';
 import './Post.css';
+import commentStyles from './Comment.module.css';
+const dateFormat = require('dateformat');
 
 const Post = ({
   postId,
@@ -62,7 +64,7 @@ const Post = ({
         <Avatar src={profilePic} className='post__avatar' />
         <div className='post__topInfo'>
           <h3>{username}</h3>
-          <p>{created_at.toString()}</p>
+          <p>{dateFormat(created_at, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}</p>
         </div>
       </div>
 
@@ -125,10 +127,16 @@ const CommentList = ({ comments }) => {
 const CommentItem = ({ comment }) => {
   console.log({ comment });
   return (
-    <div>
-      <p>{comment.username}</p>
-      <p>{comment.text}</p>
-      <p>{Date(comment.created_at).toString()}</p>
+    <div className={commentStyles.comment}>
+      <div className={commentStyles.comment__top}>
+        <h5>{comment.username}</h5>
+        <p>
+          {dateFormat(comment.created_at, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}
+        </p>
+      </div>
+      <div className={commentStyles.comment__bottom}>
+        <p>{comment.text}</p>
+      </div>
     </div>
   );
 };

@@ -39,10 +39,13 @@ const ClassCalendar = ({
 
     renderedComp = (
       <div className='tab'>
+        <div style={{ 'margin-bottom': '15px' }}>
+          <h1>Lịch lớp học</h1>
+        </div>
         <ScheduleComponent
           height='550px'
           eventSettings={{ dataSource: source.dataSource }}
-          currentView='Agenda'
+          currentView='Week'
         >
           <Inject services={[Day, Week, Month, Agenda, WorkWeek]} />
         </ScheduleComponent>

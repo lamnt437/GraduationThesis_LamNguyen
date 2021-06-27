@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import RequestItem from './RequestItem';
 import { fetchRequest } from '../../../../services/classroom';
+import '../Tab.css';
 
-const RequestList = ({ classId }) => {
+const RequestList = ({ classId, className }) => {
   const [requests, setRequests] = useState([]);
 
   useEffect(async () => {
@@ -22,8 +23,10 @@ const RequestList = ({ classId }) => {
   };
 
   return (
-    <div>
-      <h1>Requests</h1>
+    <div className={className}>
+      <div style={{ 'margin-bottom': '15px' }}>
+        <h1>Yêu cầu vào lớp</h1>
+      </div>
       {Array.isArray(requests)
         ? requests.map((request) => (
             <RequestItem

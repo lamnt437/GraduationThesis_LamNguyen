@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import Message from './Message';
 import Progress from './Progress';
 import axios from 'axios';
+import styles from './DocumentUpload.module.css';
 
 const DocumentUpload = ({ classId, docList, setDocList }) => {
   const [file, setFile] = useState('');
@@ -77,8 +78,8 @@ const DocumentUpload = ({ classId, docList, setDocList }) => {
 
         <input
           type='submit'
-          value='Upload'
-          className='btn btn-primary btn-block mt-4'
+          value='Tải lên tài liệu'
+          className={styles.uploadBtn}
         />
       </form>
       {uploadedFile ? (

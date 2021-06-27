@@ -32,7 +32,10 @@ const MemberList = ({ classId, className }) => {
       render = <div>Error loading members</div>;
     } else {
       render = (
-        <div className={className + ' tab'}>
+        <div className={className}>
+          <div style={{ 'margin-bottom': '15px' }}>
+            <h1>Danh sách lớp</h1>
+          </div>
           {Array.isArray(supervisors) &&
             supervisors.map((supervisor) => (
               <MemberItem member={supervisor} key={supervisor._id} />

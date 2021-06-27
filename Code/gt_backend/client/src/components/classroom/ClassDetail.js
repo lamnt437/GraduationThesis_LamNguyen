@@ -12,6 +12,7 @@ import DocumentList from './tabs/document/DocumentList';
 import ClassCalendar from './tabs/calendar/ClassCalendar.jsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { ROLE_TEACHER } from '../../constants/constants';
 
 export const ClassDetail = (props) => {
   const match = useRouteMatch();
@@ -54,11 +55,20 @@ export const ClassDetail = (props) => {
         </Route>
 
         <Route path={`${match.path}/members`} exact>
-          <MemberList
-            classId={props.classId}
-            className={classes.center__comp}
-          />
-          <RequestList classId={props.classId} />
+          <div className={classes.tab__member}>
+            <MemberList
+              classId={props.classId}
+              className={classes.memberList}
+            />
+            {props.user.role == ROLE_TEACHER ? (
+              <RequestList
+                classId={props.classId}
+                className={classes.requestList}
+              />
+            ) : (
+              ''
+            )}
+          </div>
         </Route>
 
         <Route path={`${match.path}/documents`} exact>

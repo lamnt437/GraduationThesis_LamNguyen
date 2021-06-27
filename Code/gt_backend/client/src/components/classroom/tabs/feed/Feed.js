@@ -174,7 +174,7 @@ const MessageSender = ({ posts, classId, user, addPost }) => {
         <form>
           <input
             className='messageSender__input'
-            placeholder='What is on your mind?'
+            placeholder='Bài đăng mới'
             onChange={(e) => onChange(e)}
             value={postContent.text}
             name='text'

@@ -48,6 +48,9 @@ const MeetingList = ({ classId, user, loggedUser }) => {
     } else {
       renderedComp = (
         <div className={styles.meetingList + ' tab'}>
+          <div style={{ 'margin-bottom': '15px' }}>
+            <h1>Danh sách meeting</h1>
+          </div>
           <Route path={match.path} exact>
             <div>
               {loggedUser.role == ROLE_TEACHER ? (
