@@ -1,4 +1,5 @@
 import { approveRequest } from '../../../../services/classroom';
+import styles from './RequestItem.module.css';
 
 const RequestItem = ({ classId, id, username, email, handleStateChange }) => {
   const approveRequestHandler = async (e) => {
@@ -15,10 +16,15 @@ const RequestItem = ({ classId, id, username, email, handleStateChange }) => {
   };
 
   return (
-    <div>
+    <div className={styles.requestItem}>
       <h3>{username}</h3>
       <p>{email}</p>
-      <button onClick={(e) => approveRequestHandler(e)}>Chấp nhận</button>
+      <button
+        className={styles.approveBtn}
+        onClick={(e) => approveRequestHandler(e)}
+      >
+        Chấp nhận
+      </button>
     </div>
   );
 };

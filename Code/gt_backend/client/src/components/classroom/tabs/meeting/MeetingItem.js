@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ZoomMeeting from './ZoomMeeting';
 import Modal from '../../../layout/Modal';
+import styles from './MeetingItem.module.css';
 import { addPost } from '../../../../services/classroom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -56,20 +57,32 @@ export const MeetingItem = ({ meeting, user, loggedUser }) => {
     setMeetingInfo({ ...meetingInfo, inMeeting: false });
   };
   return (
-    <div>
+    <div className={styles.meetingItem}>
       {/* <Modal setShowModal={setShowModal} showModal={showModal}>
         <div id='zmmtg-root'></div>
       </Modal> */}
       <h1>{meeting.topic}</h1>
       <p>Time: {dateFormat(meeting.start_time, "yyyy-mm-dd'T'HH:MM:ssZ")}</p>
       <p>Password: {meeting.password}</p>
-      <button onClick={(e) => joinMeetingHandler(e)}>Tham gia</button>
-      {/* <a href={`${meeting.start_url}`}>Start</a> */}{' '}
-      {loggedUser.role == ROLE_TEACHER ? (
-        <button onClick={(e) => startMeetingHandler(e)}>Bắt đầu</button>
-      ) : (
-        ''
-      )}
+      <div className={styles.meetingItem__options}>
+        <button
+          className={styles.meetingItem__joinBtn}
+          onClick={(e) => joinMeetingHandler(e)}
+        >
+          Tham gia
+        </button>
+        {/* <a href={`${meeting.start_url}`}>Start</a> */}{' '}
+        {loggedUser.role == ROLE_TEACHER ? (
+          <button
+            className={styles.meetingItem__startBtn}
+            onClick={(e) => startMeetingHandler(e)}
+          >
+            Bắt đầu
+          </button>
+        ) : (
+          ''
+        )}
+      </div>
       {meetingInfo.inMeeting ? (
         <div>
           <ZoomMeeting

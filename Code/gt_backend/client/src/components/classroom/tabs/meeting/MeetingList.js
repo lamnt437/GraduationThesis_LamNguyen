@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { fetchMeetingFromClassroom } from '../../../../services/meeting.ts';
 import { ROLE_TEACHER } from '../../../../constants/constants';
 import '../Tab.css';
+import styles from './MeetingList.module.css';
 
 const MeetingList = ({ classId, user, loggedUser }) => {
   const [meetingList, setMeetingList] = useState([]);
@@ -46,11 +47,14 @@ const MeetingList = ({ classId, user, loggedUser }) => {
       renderedComp = <div>Can't load meeting</div>;
     } else {
       renderedComp = (
-        <div className='tab'>
+        <div className={styles.meetingList + ' tab'}>
           <Route path={match.path} exact>
             <div>
               {loggedUser.role == ROLE_TEACHER ? (
-                <button onClick={(e) => onCreateHandler(e)}>
+                <button
+                  className={styles.meetingList__createBtn}
+                  onClick={(e) => onCreateHandler(e)}
+                >
                   Tạo meeting mới
                 </button>
               ) : (

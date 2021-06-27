@@ -305,7 +305,11 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.7rem 2rem;
+  /* padding: 0.7rem 2rem; */
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  padding-left: 170px;
+  padding-right: 180px;
   position: fixed;
   z-index: 1;
   width: 100%;

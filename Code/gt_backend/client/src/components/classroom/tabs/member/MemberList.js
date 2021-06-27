@@ -33,13 +33,13 @@ const MemberList = ({ classId, className }) => {
     } else {
       render = (
         <div className={className + ' tab'}>
-          {Array.isArray(members) &&
-            members.map((member) => (
-              <MemberItem member={member} key={member._id} />
-            ))}
           {Array.isArray(supervisors) &&
             supervisors.map((supervisor) => (
               <MemberItem member={supervisor} key={supervisor._id} />
+            ))}
+          {Array.isArray(members) &&
+            members.map((member) => (
+              <MemberItem member={member} key={member._id} />
             ))}
         </div>
       );

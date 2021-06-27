@@ -1,0 +1,42 @@
+.memberItem {
+  width: 100%;
+  margin-top: 15px;
+  padding: 20px 20px;
+  border-radius: 15px;
+  background-color: white;
+  box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.75);
+}
+
+.memberItem__top {
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.memberItem__top .avatar {
+  margin-right: 10px;
+}
+
+.memberItem__top > h3 {
+}
+
+.memberItem__bottom {
+}
+
+.role {
+  margin-top: 10px;
+}
+
+.role_student {
+  padding: 5px 15px;
+  color: #fff;
+  background-color: #2e81f4;
+}
+
+.role_teacher {
+  padding: 5px 15px;
+  color: #fff;
+  background-color: #28a745;
+}

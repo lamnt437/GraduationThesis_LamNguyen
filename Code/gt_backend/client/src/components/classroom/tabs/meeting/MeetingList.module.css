@@ -1,0 +1,13 @@
+.meetingList {
+}
+
+.meetingList__createBtn {
+  padding: 12px 15px;
+  color: #fff;
+  background-color: #2e81f4;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.75);
+  cursor: pointer;
+}
