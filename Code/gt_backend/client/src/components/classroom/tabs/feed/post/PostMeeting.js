@@ -6,6 +6,8 @@ import MeetingItem from '../../meeting/MeetingItem';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addComment } from '../../../../../sandbox/actions/post';
+import commentStyles from './Comment.module.css';
+const dateFormat = require('dateformat');
 
 const PostMeeting = ({
   postId,
@@ -108,12 +110,17 @@ const CommentList = ({ comments }) => {
 };
 
 const CommentItem = ({ comment }) => {
-  console.log({ comment });
   return (
-    <div>
-      <p>{comment.username}</p>
-      <p>{comment.text}</p>
-      <p>{Date(comment.created_at).toString()}</p>
+    <div className={commentStyles.comment}>
+      <div className={commentStyles.comment__top}>
+        <h5>{comment.username}</h5>
+        <p>
+          {dateFormat(comment.created_at, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}
+        </p>
+      </div>
+      <div className={commentStyles.comment__bottom}>
+        <p>{comment.text}</p>
+      </div>
     </div>
   );
 };

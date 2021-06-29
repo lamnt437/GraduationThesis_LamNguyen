@@ -1,6 +1,6 @@
 .tab {
   flex: 1;
-  padding: 25px 100px;
+  padding: 25px 30px;
   display: flex;
   flex-direction: column;
   /* justify-content: center; */

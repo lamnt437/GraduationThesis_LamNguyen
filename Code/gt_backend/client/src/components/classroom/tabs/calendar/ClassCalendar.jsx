@@ -45,7 +45,7 @@ const ClassCalendar = ({
         <ScheduleComponent
           height='550px'
           eventSettings={{ dataSource: source.dataSource }}
-          currentView='Week'
+          currentView='WorkWeek'
         >
           <Inject services={[Day, Week, Month, Agenda, WorkWeek]} />
         </ScheduleComponent>

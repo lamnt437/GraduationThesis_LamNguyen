@@ -61,6 +61,7 @@ const Notification = require('../models/Notification');
 // middlewares
 const auth = require('../middleware/auth');
 const isSupervisorOrAdminMiddleware = require('../middleware/isSupervisorOrAdmin');
+const isRelatedMiddleware = require('../middleware/isRelated');
 // utils
 const { body, validationResult } = require('express-validator');
 const dateFormat = require('dateformat');
@@ -1081,6 +1082,31 @@ router.put(
       return res
         .status(500)
         .json({ errors: [{ msg: 'Error when saving notification' }] });
+    }
+  }
+);
+
+// @route   GET /api/classroom/:id/notifications
+// @desc    get classroom notifications
+// @access  private isRelated
+router.get(
+  '/:classId/notifications',
+  auth,
+  isRelatedMiddleware,
+  async (req, res) => {
+    try {
+      const notifications = await Notification.find({
+        classroom: req.params.classId,
+      }).sort({
+        created_at: -1,
+      });
+
+      return res.json({ notifications });
+    } catch (error) {
+      console.error(error.message);
+      return res
+        .status(500)
+        .json({ errors: [{ msg: 'Error when loading notifications' }] });
     }
   }
 );

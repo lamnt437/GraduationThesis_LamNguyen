@@ -4,7 +4,7 @@ import classes from './css/ClassDetail.module.css';
 import Header from './header/Header';
 import Sidebar from './sidebar/Sidebar';
 import Feed from './tabs/feed/Feed';
-import Widget from './widget/Widget';
+import NotificationList from './widget/NotificationList';
 import MeetingList from './tabs/meeting/MeetingList';
 import MemberList from './tabs/member/MemberList';
 import RequestList from './tabs/member/RequestList';
@@ -78,7 +78,7 @@ export const ClassDetail = (props) => {
             docs={props.docs}
           />
         </Route>
-        <Widget />
+        <NotificationList classId={props.classId} />
       </div>
     </Fragment>
   );

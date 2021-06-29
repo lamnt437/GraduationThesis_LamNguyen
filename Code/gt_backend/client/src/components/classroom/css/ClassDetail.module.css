@@ -1,5 +1,6 @@
 .app__body {
   display: flex;
+  justify-content: space-between;
 }
 
 .app__body .center__comp {

@@ -38,9 +38,19 @@ router.get('/', auth, async (req, res) => {
   });
 
   const timelines = await Promise.all(timelinePromises);
-  console.log({ timelines });
+
+  // merge notification timeline
+  var notificationTimeline = [];
+  timelines.forEach((timeline) => {
+    console.log({ timeline });
+    notificationTimeline = notificationTimeline.concat(timeline.notifications);
+  });
+
+  console.log({ notificationTimeline });
   res.json({ timelines });
 });
+
+const sortTimeline = (timeline) => {};
 
 const pruneTimeline = (classId, timeline, pointers) => {
   console.log({ classId });

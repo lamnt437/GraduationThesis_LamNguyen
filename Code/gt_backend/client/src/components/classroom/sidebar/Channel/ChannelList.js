@@ -15,7 +15,7 @@ const AddButton = styled.div`
 
   h4 {
     font-weight: 600;
-    font-family: 'Open Sans';
+    font-family: 'Arial';
   }
 `;
 

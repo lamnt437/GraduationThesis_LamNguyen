@@ -125,7 +125,6 @@ const CommentList = ({ comments }) => {
 };
 
 const CommentItem = ({ comment }) => {
-  console.log({ comment });
   return (
     <div className={commentStyles.comment}>
       <div className={commentStyles.comment__top}>
