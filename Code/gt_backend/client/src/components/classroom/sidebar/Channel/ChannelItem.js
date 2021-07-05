@@ -1,11 +1,17 @@
+import { useHistory } from 'react-router-dom';
 import classes from './ChannelItem.module.css';
 
-const onClickHandler = (e) => {};
+const ChannelItem = ({ topic, classId }) => {
+  const history = useHistory();
 
-const ChannelItem = ({ title }) => {
+  const onClickHandler = (e) => {
+    e.preventDefault();
+    history.push(`/classroom/${classId}/feed?topic=${topic._id}`);
+  };
+
   return (
     <div className={classes.channelItem} onClick={(e) => onClickHandler(e)}>
-      <h4>{title}</h4>
+      <h4>{topic.text}</h4>
     </div>
   );
 };

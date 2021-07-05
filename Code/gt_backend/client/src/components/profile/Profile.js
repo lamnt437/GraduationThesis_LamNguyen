@@ -3,6 +3,7 @@ import { fetchMyProfile } from '../../services/profile.ts';
 import { Avatar } from '@material-ui/core';
 import OAuth from '../meeting/OAuth';
 import Loading from '../layout/Loading';
+import styles from './ProfileItem.module.css';
 
 const Profile = () => {
   const [profile, setProfile] = useState({});
@@ -28,12 +29,26 @@ const Profile = () => {
       render = <div>Profile loading error</div>;
     } else {
       render = (
-        <div>
-          <Avatar src={`http:${profile.avatar}`} />
-          <h1>{profile.name}</h1>
-          <p>{profile.email}</p>
-          <p>{profile.role == 2 ? 'Teacher' : 'Student'}</p>
-          <OAuth />
+        <div className={styles.profileItem}>
+          <div style={{ display: 'flex' }}>
+            <Avatar
+              src={`http:${profile.avatar}`}
+              style={{ 'margin-right': '10px' }}
+            />
+            <h3>{profile.name}</h3>
+          </div>
+          <div style={{ 'margin-top': '15px' }}>
+            <p>{profile.email}</p>
+            <p>{profile.role == 2 ? 'Giáo viên' : 'Học sinh'}</p>
+            <p style={{ 'font-family': 'Arial' }}>
+              {profile.access_token
+                ? 'Đã kết nối với Zoom Meeting'
+                : 'Chưa kết nối với Zoom Meeting'}
+            </p>
+          </div>
+          <div style={{ 'margin-top': '15px' }}>
+            <OAuth />
+          </div>
         </div>
       );
     }

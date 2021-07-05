@@ -180,7 +180,7 @@ const MeetingScheduler = ({
   return (
     <div>
       {loading ? <Loading /> : ''}
-      <h1 className='large text-primary'>Schedule a Meeting now!</h1>
+      <h1 className='large text-primary'>Lên lịch meeting</h1>
       <form className='form' onSubmit={(e) => onSubmit(e)}>
         <div className='form-group'>
           <label htmlFor='topic'>Tiêu đề</label>
@@ -205,27 +205,31 @@ const MeetingScheduler = ({
         </div>
         <div className='form-group'>
           <label htmlFor='start_time'>Thời điểm bắt đầu</label>
-          <input
-            type='datetime-local'
-            name='start_time'
-            value={start_time}
-            required
-            step='1'
-            onChange={(e) => onChange(e)}
-          />
+          <div>
+            <input
+              type='datetime-local'
+              name='start_time'
+              value={start_time}
+              required
+              step='1'
+              onChange={(e) => onChange(e)}
+            />
+          </div>
         </div>
 
         <div className='form-group'>
           <label htmlFor='duration'>Thời lượng</label>
-          <input
-            type='number'
-            name='duration'
-            placeholder='Kéo dài trong'
-            value={duration}
-            required
-            step='1'
-            onChange={(e) => onChange(e)}
-          />
+          <div>
+            <input
+              type='number'
+              name='duration'
+              placeholder='Kéo dài trong'
+              value={duration}
+              required
+              step='1'
+              onChange={(e) => onChange(e)}
+            />
+          </div>
         </div>
         <div className='form-group'>
           <label htmlFor='password'>Mật khẩu</label>

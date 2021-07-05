@@ -33,16 +33,21 @@
 
 .messageSender__top > form > button {
   background-color: gray;
-  border-radius: 15px;
-  padding: 5px 10px;
+  border-radius: 20px;
+  padding: 8px 15px;
   cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #fff;
+  box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.75);
+  width: fit-content;
 }
 
 .messageSender__top > form > button:hover {
   background-color: gray;
-  border-radius: 15px;
-  padding: 5px 10px;
+  border-radius: 20px;
+  padding: 8px 15px;
   cursor: pointer;
+  box-shadow: none;
 }
 
 .messgeSender__input {

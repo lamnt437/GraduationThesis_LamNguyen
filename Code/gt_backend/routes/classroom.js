@@ -58,6 +58,7 @@ const Meeting = require('../models/Meeting');
 const User = require('../models/User');
 const Post = require('../models/Post');
 const Notification = require('../models/Notification');
+const Topic = require('../models/Topic');
 // middlewares
 const auth = require('../middleware/auth');
 const isSupervisorOrAdminMiddleware = require('../middleware/isSupervisorOrAdmin');
@@ -777,11 +778,19 @@ router.get('/:id/posts', auth, async (req, res) => {
       const postPromises = posts.map(async (post) => {
         let owner = await User.findById(post.user);
 
-        const fullPost = {
+        var fullPost = {
           ...post._doc,
           username: owner.name,
           avatar: owner.avatar,
         };
+
+        if (post.topic) {
+          let topic = await Topic.findById(post.topic);
+          fullPost = {
+            ...fullPost,
+            topic: topic,
+          };
+        }
 
         return fullPost;
       });
@@ -1107,6 +1116,106 @@ router.get(
       return res
         .status(500)
         .json({ errors: [{ msg: 'Error when loading notifications' }] });
+    }
+  }
+);
+
+router.get('/:classId/topics', auth, isRelatedMiddleware, async (req, res) => {
+  try {
+    const topics = await Topic.find({ classId: req.params.classId });
+
+    return res.json({ topics });
+  } catch (err) {
+    console.error(err.message);
+    return res
+      .status(500)
+      .json({ errors: [{ msg: 'Error when loading topics' }] });
+  }
+});
+
+router.post(
+  '/:classId/topics',
+  auth,
+  isSupervisorOrAdminMiddleware,
+  body('text', 'Topic name is required').isLength({ min: 1 }),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const text = req.body.text;
+    const classId = req.params.classId;
+    try {
+      const topic = new Topic({
+        text,
+        classId,
+      });
+
+      topic.save();
+      return res.json({ topic });
+    } catch (err) {
+      console.error(err.message);
+      return res
+        .status(500)
+        .json({ errors: [{ msg: 'Error when saving topic' }] });
+    }
+  }
+);
+
+router.get(
+  '/:classId/feed/:topicId',
+  auth,
+  isRelatedMiddleware,
+  async (req, res) => {
+    var classroom;
+    try {
+      classroom = await ClassRoom.findById(req.params.classId);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ msg: 'Server error when fetching classroom' });
+    }
+    // get posts
+    const post_ids = classroom.posts;
+    const topicId = req.params.topicId;
+
+    try {
+      var posts = await Post.find({
+        _id: { $in: post_ids },
+        topic: topicId,
+      }).sort({
+        created_at: -1,
+      });
+
+      // solve await in loop
+      if (Array.isArray(posts)) {
+        const postPromises = posts.map(async (post) => {
+          let owner = await User.findById(post.user);
+
+          var fullPost = {
+            ...post._doc,
+            username: owner.name,
+            avatar: owner.avatar,
+          };
+
+          if (post.topic) {
+            let topic = await Topic.findById(post.topic);
+            fullPost = {
+              ...fullPost,
+              topic: topic,
+            };
+          }
+
+          return fullPost;
+        });
+
+        posts = await Promise.all(postPromises);
+      }
+
+      res.json({ posts });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ msg: 'Server error' });
     }
   }
 );

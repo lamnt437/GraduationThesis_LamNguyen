@@ -69,6 +69,18 @@ export const fetchPosts = async (id: String) => {
   return res;
 };
 
+export const fetchFilteredPosts = async (classId: String, topic: String) => {
+  var res;
+  if (!topic) {
+    res = await axios.get(url + `/${classId}/posts`);
+  } else {
+    console.log({ topicClassroomService: topic });
+    res = await axios.get(url + `/${classId}/feed/${topic}`);
+  }
+
+  return res;
+};
+
 export const addPost = async (fd: FormData, classId: String) => {
   const url = `/api/classroom/${classId}/posts`;
 
@@ -122,4 +134,18 @@ export const addMeeting = async (
 
 export const fetchPostImageUrl = (image: String) => {
   return `/api/sandbox/images/${image}`;
+};
+
+export const fetchTopicDetail = async (topicId: String) => {
+  // handle empty topic
+  var topic;
+  if (!topicId) {
+    topic = {
+      text: 'General',
+    };
+  } else {
+    topic = await axios.get(`/api/topic/${topicId}`);
+  }
+
+  return topic;
 };

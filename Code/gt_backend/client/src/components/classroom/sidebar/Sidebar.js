@@ -6,22 +6,22 @@ import PeopleIcon from '@material-ui/icons/People';
 import ChatIcon from '@material-ui/icons/Chat';
 import VideoLibraryIcon from '@material-ui/icons/VideoLibrary';
 import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
+import TodayIcon from '@material-ui/icons/Today';
 
-const Sidebar = ({ classroomName }) => {
+const Sidebar = ({ classroomName, classId }) => {
   return (
     // TODO add class name + info for sharing
     <div className='sidebar'>
-      <SidebarRow title={classroomName} />
-      <SidebarRow Icon={EmojiFlagsIcon} title='Nhiệm vụ' name='tasks' />
+      <SidebarRow title={'Lớp học: ' + classroomName} name='home' />
+      <SidebarRow Icon={TodayIcon} title='Lịch lớp học' name='calendar' />
       <SidebarRow Icon={PeopleIcon} title='Thành viên' name='members' />
-      <SidebarRow Icon={ChatIcon} title='Trao đổi' name='discuss' />
       <SidebarRow Icon={VideoLibraryIcon} title='Meeting' name='meetings' />
       <SidebarRow
         Icon={CollectionsBookmarkIcon}
         title='Học liệu'
         name='documents'
       />
-      <ChannelList />
+      <ChannelList classId={classId} />
     </div>
   );
 };

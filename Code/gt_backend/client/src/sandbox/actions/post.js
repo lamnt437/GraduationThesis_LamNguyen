@@ -11,19 +11,44 @@ import {
   ADD_COMMENT_ERROR,
   ADD_COMMENT_SUCCESS,
 } from '../actions/types';
-import { fetchPosts } from '../../services/classroom';
+import { fetchPosts, fetchFilteredPosts } from '../../services/classroom';
 
 toast.configure();
 
 export const getPosts = (classId) => async (dispatch) => {
-  console.log(`fetching ${classId}`);
-
   dispatch({
     type: GET_POSTS,
   });
 
   try {
     const res = await fetchPosts(classId);
+    const posts = res.data.posts;
+
+    dispatch({
+      type: GET_POSTS_SUCCESS,
+      payload: posts,
+    });
+  } catch (err) {
+    console.log({ error: err.response });
+
+    dispatch({
+      type: POST_ERROR,
+
+      payload: {
+        msg: err.response?.data?.statusText,
+        status: err.response?.status,
+      },
+    });
+  }
+};
+
+export const getFilteredPosts = (classId, topic) => async (dispatch) => {
+  dispatch({
+    type: GET_POSTS,
+  });
+
+  try {
+    const res = await fetchFilteredPosts(classId, topic);
     const posts = res.data.posts;
 
     dispatch({

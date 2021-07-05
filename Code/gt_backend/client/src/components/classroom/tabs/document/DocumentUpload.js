@@ -61,7 +61,7 @@ const DocumentUpload = ({ classId, docList, setDocList }) => {
   return (
     <Fragment>
       {message ? <Message msg={message} /> : null}
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className={styles.documentUpload}>
         <div className='custom-file mb-4'>
           <input
             type='file'

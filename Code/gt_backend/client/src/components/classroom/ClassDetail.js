@@ -13,6 +13,7 @@ import ClassCalendar from './tabs/calendar/ClassCalendar.jsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ROLE_TEACHER } from '../../constants/constants';
+import FilterFeed from './tabs/feed/FilterFeed';
 
 export const ClassDetail = (props) => {
   const match = useRouteMatch();
@@ -21,7 +22,11 @@ export const ClassDetail = (props) => {
       <Header username={props.user?.name} />
 
       <div className={classes.app__body}>
-        <Sidebar classroomName={props.name} avatar={props.user?.avatar} />
+        <Sidebar
+          classroomName={props.name}
+          avatar={props.user?.avatar}
+          classId={props.classId}
+        />
 
         <Route path={[`${match.path}`, `${match.path}/home`]} exact>
           <Feed
@@ -76,6 +81,15 @@ export const ClassDetail = (props) => {
             classId={props.classId}
             className={classes.center__comp}
             docs={props.docs}
+          />
+        </Route>
+
+        <Route path={`${match.path}/feed`}>
+          <FilterFeed
+            description={props.description}
+            classId={props.classId}
+            className={classes.center__comp}
+            classroomName={props.name}
           />
         </Route>
         <NotificationList classId={props.classId} />

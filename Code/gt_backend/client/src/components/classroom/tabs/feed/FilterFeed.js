@@ -2,41 +2,48 @@ import { useEffect, useState } from 'react';
 import './Feed.css';
 import Post from './post/Post';
 import PostMeeting from './post/PostMeeting';
-
-import './message_sender/MessageSender.css';
-import { Avatar } from '@material-ui/core';
-import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
-import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Loading from '../../../layout/Loading';
-import {
-  getPosts,
-  resetPosts,
-  addPost,
-} from '../../../../sandbox/actions/post';
-
+import { getFilteredPosts, resetPosts } from '../../../../sandbox/actions/post';
+import { fetchTopicDetail } from '../../../../services/classroom';
 import {
   CLASS_POST_TYPE_NORMAL,
   CLASS_POST_TYPE_MEETING,
 } from '../../../../constants/constants';
+import { useLocation } from 'react-router-dom';
+import styles from './FilterFeed.module.css';
 
-export const Feed = ({
+const FilterFeed = ({
   classId,
   user,
-  getPosts,
-  addPost,
+  getFilteredPosts,
   post: { posts, loading },
 }) => {
+  const search = useLocation().search;
+  const topic = new URLSearchParams(search).get('topic');
+  const [topicObj, setTopicObj] = useState({
+    topic: null,
+    loading: true,
+  });
+
   useEffect(() => {
-    console.log('render feed');
-    getPosts(classId);
+    getFilteredPosts(classId, topic);
 
     return () => {
-      console.log('Unmount Feed');
       resetPosts();
     };
-  }, [getPosts]);
+  }, [topic]);
+
+  useEffect(async () => {
+    try {
+      const response = await fetchTopicDetail(topic);
+      console.log({ response });
+      setTopicObj({ topic: response.data.topic, loading: false });
+    } catch (err) {
+      console.error(err.message);
+    }
+  }, [topic]);
 
   const [pageInfo, setPageInfo] = useState({
     numberOfPages: 1,
@@ -76,13 +83,15 @@ export const Feed = ({
 
   return (
     <div className='feed'>
-      <MessageSender
-        classId={classId}
-        posts={posts}
-        user={user}
-        addPost={addPost}
-      />
-
+      {topicObj.loading ? (
+        <div className={styles.filter_indicator}>
+          <h3>Chủ điểm: Chung</h3>
+        </div>
+      ) : (
+        <div className={styles.filter_indicator}>
+          <h3>Chủ điểm: {topicObj.topic.text}</h3>
+        </div>
+      )}
       <div style={{ display: 'flex', 'margin-top': '15px' }}>
         <button onClick={(e) => prevPageHandler(e)}>Prev</button>\
         <button onClick={(e) => nextPageHandler(e)}>Next</button>
@@ -140,78 +149,10 @@ export const Feed = ({
   );
 };
 
-const MessageSender = ({ posts, classId, user, addPost }) => {
-  const [postContent, setPostContent] = useState({
-    text: '',
-    image: null,
-  });
-
-  let inputFileProp = null;
-
-  const submitHandler = async (e) => {
-    e.preventDefault();
-
-    const fd = new FormData();
-    fd.append('text', postContent.text);
-    fd.append('image', postContent.image);
-    fd.append('type', CLASS_POST_TYPE_NORMAL);
-
-    addPost(fd, classId);
-
-    setPostContent({ text: '', image: null });
-  };
-
-  const onChange = (e) => {
-    setPostContent({ ...postContent, [e.target.name]: e.target.value });
-  };
-
-  const fileSelectedHandler = (e) => {
-    setPostContent({ ...postContent, image: e.target.files[0] });
-  };
-
-  return (
-    <div className='messageSender'>
-      <div className='messageSender__top'>
-        <Avatar />
-        <form>
-          <input
-            className='messageSender__input'
-            placeholder='Bài đăng mới'
-            onChange={(e) => onChange(e)}
-            value={postContent.text}
-            name='text'
-          />
-          <input
-            style={{ display: 'none' }}
-            type='file'
-            ref={(fileInput) => (inputFileProp = fileInput)}
-            onChange={(e) => fileSelectedHandler(e)}
-          />
-          <button onClick={submitHandler} type='submit'>
-            Đăng
-          </button>
-        </form>
-      </div>
-      <div>{postContent.image ? postContent.image.name : ''}</div>
-      <div className='messageSender__bottom'>
-        <div
-          className='messageSender__option'
-          onClick={() => inputFileProp.click()}
-          style={{ cursor: 'pointer' }}
-        >
-          <PhotoLibraryIcon style={{ color: 'green' }} />
-          <h3>Ảnh</h3>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-Feed.propTypes = {
+FilterFeed.propTypes = {
   user: PropTypes.object.isRequired,
-  getPosts: PropTypes.func.isRequired,
+  getFilteredPosts: PropTypes.func.isRequired,
   resetPosts: PropTypes.func.isRequired,
-  addPost: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
 };
 
@@ -220,6 +161,6 @@ const mapStateToProps = (state) => ({
   post: state.post,
 });
 
-export default connect(mapStateToProps, { getPosts, resetPosts, addPost })(
-  Feed
+export default connect(mapStateToProps, { getFilteredPosts, resetPosts })(
+  FilterFeed
 );

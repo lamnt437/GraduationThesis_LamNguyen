@@ -1,0 +1,27 @@
+.notificationItem {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.75);
+  background-color: #eff2f5;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.notificationItem .notificationItem__top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.notificationItem .notificationItem__top > h5 {
+  font-size: 18px;
+}
+
+.notificationItem .notificationItem__top > p {
+  font-size: 15px;
+}
+
+.notificationItem .notificationItem__bottom {
+  margin-top: 5px;
+}

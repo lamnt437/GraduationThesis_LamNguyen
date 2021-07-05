@@ -1,0 +1,19 @@
+.dashboard {
+  display: flex;
+}
+
+.dashboard .calendar {
+  /* flex-grow: 4; */
+  flex: 4;
+  padding: 20px 50px;
+}
+
+.dashboard .calendar .calendar__content {
+  margin-top: 30px;
+}
+
+.dashboard .notification {
+  /* flex-grow: 1; */
+  flex: 1;
+  padding: 20px 10px;
+}

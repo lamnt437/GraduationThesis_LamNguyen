@@ -26,7 +26,6 @@ export const Header = ({ username }) => {
       <div className='header__center'>
         <HeaderOption Icon={HomeIcon} title='home' />
         <HeaderOption Icon={TodayIcon} title='calendar' />
-        <HeaderOption Icon={FlagIcon} title='tasks' />
         <HeaderOption Icon={SubscriptionsOutlinedIcon} title='meetings' />
         <HeaderOption Icon={SupervisedUserCircleIcon} title='members' />
       </div>

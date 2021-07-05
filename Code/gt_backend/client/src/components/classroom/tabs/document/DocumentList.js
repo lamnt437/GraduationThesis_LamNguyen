@@ -10,7 +10,7 @@ const DocumentList = ({ classId, docs, user }) => {
   const [docList, setDocList] = useState([...docs]);
 
   return (
-    <div className='tab'>
+    <div className='tab' style={{ width: '50%' }}>
       <div style={{ 'margin-bottom': '15px' }}>
         <h1>Danh sách tài liệu</h1>
       </div>

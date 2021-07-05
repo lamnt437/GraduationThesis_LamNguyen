@@ -1,0 +1,10 @@
+.profile_container {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 40%;
+  padding: 30px;
+}
+
+.profile_container .profile_item {
+  margin-top: 20px;
+}

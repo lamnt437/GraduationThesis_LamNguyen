@@ -12,6 +12,8 @@ import {
 // import { extend } from "@syncfusion/ej2-base";
 import { meetingAdapter } from '../../utils/meetingadapter';
 import { fetchMeeting } from '../../services/meeting';
+import styles from './Calendar.module.css';
+import NotificationPanel from './NotificationPanel';
 
 class Calendar extends Component {
   state = {
@@ -63,11 +65,21 @@ class Calendar extends Component {
     console.log({ localData: this.localData.dataSource });
     console.log({ dynamicData: source.dataSource });
     return (
-      <Fragment>
-        <ScheduleComponent eventSettings={{ dataSource: source.dataSource }}>
-          <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
-        </ScheduleComponent>
-      </Fragment>
+      <div className={styles.dashboard}>
+        <div className={styles.calendar}>
+          <h3>Lịch cá nhân</h3>
+          <ScheduleComponent
+            className={styles.calendar__content}
+            eventSettings={{ dataSource: source.dataSource }}
+          >
+            <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
+          </ScheduleComponent>
+        </div>
+        <div className={styles.notification}>
+          <h3>Thông báo mới</h3>
+          <NotificationPanel />
+        </div>
+      </div>
     );
   }
 }

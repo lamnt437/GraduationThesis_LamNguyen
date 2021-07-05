@@ -23,18 +23,17 @@ router.get('/', auth, async (req, res) => {
   const timelinePromises = followedClasses.map(async (classObj) => {
     let timeline = await Notification.find({ classroom: classObj._id });
 
-    let prunedTimeline = timeline;
+    let prunedTimeline = {
+      classId: classObj._id,
+      notifications: timeline,
+    };
+
     console.log({ readPointers });
     if (readPointers) {
       prunedTimeline = pruneTimeline(classObj._id, timeline, readPointers);
     }
 
-    let keyPairTimeline = {
-      classId: classObj._id,
-      notifications: prunedTimeline,
-    };
-
-    return keyPairTimeline;
+    return prunedTimeline;
   });
 
   const timelines = await Promise.all(timelinePromises);
@@ -42,15 +41,16 @@ router.get('/', auth, async (req, res) => {
   // merge notification timeline
   var notificationTimeline = [];
   timelines.forEach((timeline) => {
-    console.log({ timeline });
     notificationTimeline = notificationTimeline.concat(timeline.notifications);
   });
 
-  console.log({ notificationTimeline });
-  res.json({ timelines });
-});
+  notificationTimeline.sort(function (a, b) {
+    return b.created_at - a.created_at;
+  });
 
-const sortTimeline = (timeline) => {};
+  console.log({ notificationTimeline });
+  res.json({ notificationTimeline });
+});
 
 const pruneTimeline = (classId, timeline, pointers) => {
   console.log({ classId });
@@ -62,6 +62,13 @@ const pruneTimeline = (classId, timeline, pointers) => {
   //
   console.log({ returned_pointer });
   //
+
+  if (!returned_pointer) {
+    return {
+      classId: classId,
+      notifications: timeline,
+    };
+  }
 
   const latestNotiId = returned_pointer.notification_id;
 

@@ -6,6 +6,8 @@ const User = require('../models/User');
 const Post = require('../models/Post');
 const ClassRoom = require('../models/ClassRoom');
 const mongoose = require('mongoose');
+const Topic = require('../models/Topic');
+const isSupervisorOrOwnerMiddleware = require('../middleware/isSupervisorOrOwner');
 
 // @route   POST /api/posts
 // @desc    create new post
@@ -163,6 +165,58 @@ router.put(
     } catch (err) {
       console.error(err.message);
       return res.status(500).json({ statusText: err.message });
+    }
+  }
+);
+
+// route     PUT /api/posts/:postId
+// desc      edit post (topic)
+// access    private supervisor, owner
+router.put(
+  '/:postId',
+  auth,
+  isSupervisorOrOwnerMiddleware,
+  body('topicId', 'Topic is required').exists(),
+  async (req, res) => {
+    // body receive topic id
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    // validate if this topic exists?
+    const topicId = req.body.topicId;
+    if (!mongoose.isValidObjectId(topicId)) {
+      return res.status(400).json({ errors: [{ msg: 'Invalid topic id' }] });
+    }
+
+    var topic = null;
+    try {
+      topic = await Topic.findById(topicId);
+      if (!topic) {
+        return res.status(400).json({ errors: [{ msg: 'Invalid topic id' }] });
+      }
+    } catch (err) {
+      if (err.kind !== 'ObjectId') {
+        return res.status(400).json({ errors: [{ msg: 'Invalid topic id' }] });
+      }
+      console.error(err.message);
+      return res
+        .status(500)
+        .json({ errors: [{ msg: 'Error when loading topic' }] });
+    }
+
+    // save topic to post
+    try {
+      const post = req.post;
+      post.topic = topicId;
+      post.save();
+      return res.json({ post });
+    } catch (err) {
+      console.error(err.message);
+      return res
+        .status(500)
+        .json({ errors: [{ msg: 'Error when saving topic to post' }] });
     }
   }
 );

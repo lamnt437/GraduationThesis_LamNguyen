@@ -15,6 +15,7 @@ const classRouter = require('./routes/classroom');
 const profileRouter = require('./routes/profile');
 const sandboxRouter = require('./routes/sandbox');
 const notificationRouter = require('./routes/notification');
+const topicRouter = require('./routes/topic');
 
 const app = express();
 app.set('view engine', 'pug');
@@ -37,6 +38,7 @@ app.use('/api/classroom', classRouter);
 app.use('/api/profile', profileRouter);
 app.use('/api/sandbox', sandboxRouter);
 app.use('/api/notification', notificationRouter);
+app.use('/api/topic', topicRouter);
 
 // serve static assets in production
 if (process.env.NODE_ENV === 'production') {

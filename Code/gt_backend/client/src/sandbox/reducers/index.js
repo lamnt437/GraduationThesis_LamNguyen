@@ -6,6 +6,7 @@ import classDetail from './classDetail';
 import post from './post';
 import meeting from './meeting';
 import notification from './notification';
+import topic from './topic';
 
 export default combineReducers({
   alert,
@@ -15,4 +16,5 @@ export default combineReducers({
   post,
   meeting,
   notification,
+  topic,
 });

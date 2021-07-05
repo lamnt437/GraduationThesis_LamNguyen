@@ -7,7 +7,15 @@ import PropTypes from 'prop-types';
 import { addComment } from '../../../../../sandbox/actions/post';
 import './Post.css';
 import commentStyles from './Comment.module.css';
+// import topic from '../../../../../sandbox/reducers/topic';
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+
 const dateFormat = require('dateformat');
+
+toast.configure();
 
 const Post = ({
   postId,
@@ -19,11 +27,14 @@ const Post = ({
   addComment,
   comments,
   user,
+  currentTopic,
+  topics,
 }) => {
   const [imageStream, setImageStream] = useState({ content: '' });
   const [commentText, setCommentText] = useState('');
   const [commentList, setCommentList] = useState([...comments]);
   const [showCommentList, setShowCommentList] = useState(false);
+  const [currentTopicState, setCurrentTopicState] = useState(currentTopic);
 
   useEffect(async () => {
     const url = fetchPostImageUrl(image);
@@ -56,6 +67,33 @@ const Post = ({
     setShowCommentList(!showCommentList);
   };
 
+  const changeTopicHandler = async (e) => {
+    console.log(e.target.value);
+    const topicId = e.target.value;
+    topics.forEach((topic) => {
+      if (topic._id.toString() === topicId) {
+        setCurrentTopicState(topic);
+      }
+    });
+
+    // send axios request
+    const body = JSON.stringify({
+      topicId,
+    });
+    const options = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      const response = await axios.put(`/api/posts/${postId}`, body, options);
+      toast.success('Đổi chủ điểm thành công!', { autoClose: 3000 });
+    } catch (err) {
+      toast.error('Đổi chủ điểm thất bại!', { autoClose: 3000 });
+    }
+  };
+
   const created_at = new Date(timestamp);
 
   return (
@@ -72,9 +110,41 @@ const Post = ({
         <p>{message}</p>
       </div>
 
-      {/* TODO test image display on frontend */}
       <div className='post__image'>
         {image ? <img src={imageStream.content} /> : ''}
+      </div>
+
+      <div
+        style={{
+          'margin-top': '10px',
+          'padding-left': '25px',
+          'padding-bottom': '25px',
+        }}
+      >
+        {/* <TopicPicker currentTopic={currentTopic} topics={topics} /> */}
+        <form className='topic__select'>
+          <label>Chủ điểm </label>
+          <select onChange={(e) => changeTopicHandler(e)}>
+            {currentTopicState ? (
+              ''
+            ) : (
+              <option value='' select>
+                Chung
+              </option>
+            )}
+            {Array.isArray(topics) &&
+              topics.map((topic) => (
+                <option
+                  value={topic._id}
+                  selected={
+                    currentTopicState?._id?.toString() == topic._id.toString()
+                  }
+                >
+                  {topic.text}
+                </option>
+              ))}
+          </select>
+        </form>
       </div>
 
       <div className='post__options'>
@@ -104,7 +174,7 @@ const Post = ({
                 placeholder='Bình luận'
                 name='text'
               />
-              <button type='submit'>Post</button>
+              <button type='submit'>Đăng</button>
             </form>
           </div>
         </div>
@@ -140,13 +210,52 @@ const CommentItem = ({ comment }) => {
   );
 };
 
+const TopicPicker = ({ currentTopic, topics }) => {
+  const [click, setClick] = useState(false);
+
+  const handleClick = (e) => {
+    console.log('clicked');
+    setClick(!click);
+  };
+
+  const onChangeSelection = (e) => {
+    // send axios request to change topic
+    console.log(e.target.value);
+  };
+
+  return (
+    // <ul className={click ? 'dropdown-menu clicked' : 'dropdown-menu'}>
+    //   {currentTopic ? (
+    //     <li onClick={handleClick}>{currentTopic.text}</li>
+    //   ) : (
+    //     <li>general</li>
+    //   )}
+    //   {Array.isArray(topics) &&
+    //     topics.map((topic) => {
+    //       console.log({ topic });
+    //       return <li key={topic._id}>{topic.text}</li>;
+    //     })}
+    // </ul>
+    <select onChange={onChangeSelection}>
+      <option value='hello' selected>
+        Hello
+      </option>
+      <option value='world'>World</option>
+    </select>
+    // display general option also?
+    // what if general being clicked?
+  );
+};
+
 Post.propTypes = {
   addComment: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
+  topics: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
+  topics: state.topic.topics,
 });
 
 export default connect(mapStateToProps, { addComment })(Post);
